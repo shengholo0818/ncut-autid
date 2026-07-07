@@ -1070,24 +1070,21 @@ var successfullyPassedLinkIds = [];
 for (var sem in appState) {
 if (appState.hasOwnProperty(sem)) {
 var arr = appState[sem];
-for (var i = 0; i < arr.length; i++) {
+for (var i=0; i < arr.length; i++) {
 var item = arr[i]; if (item.linkId && (item.status === '通過' || item.status === '抵免')) {
 if (!hasItem(successfullyPassedLinkIds, item.linkId)) successfullyPassedLinkIds.push(item.linkId);
 }
 }
 }
 }
-
 var countedLinks = [];
-
 for (var sem in appState) {
 if (appState.hasOwnProperty(sem)) {
 var arr = appState[sem];
-for (var i = 0; i < arr.length; i++) {
+for (var i=0; i < arr.length; i++) {
 var item = arr[i]; if (item.name === "") continue;
 var isGroupPassed = item.linkId && hasItem(successfullyPassedLinkIds, item.linkId);
-
-if (item.status === '通過' || item.status === '抵免') {
+if (item.status === '通過' || item.status === '抵免'){
 if (item.linkId) {
 if (!hasItem(countedLinks, item.linkId)) {
 if (item.type === 'common') passedCommon += item.cre;
@@ -1103,8 +1100,8 @@ else if (item.type === 'prof') passedProfEl += item.cre;
 else if (item.type === 'other') localPassedOtherEl += item.cre;
 }
 } else if (isGroupPassed) {
-// Passed chain link
-} else if (item.status === '重修中') {
+// 鏈接通過
+} else if (item.status === '重修中'){
 if ((item.type === 'common' || item.type === 'prof-req') && !item.isRetakeCopy) {
 if (!hasItem(currentlyRetakingReq, item.name)) currentlyRetakingReq.push(item.name);
 }
@@ -1116,7 +1113,6 @@ if (!hasItem(completelyFailedReq, item.name)) completelyFailedReq.push(item.name
 }
 }
 }
-
 var sumRequiredPassed = passedCommon + passedProfReq;
 var sumElectivePassed = passedProfEl + localPassedOtherEl;
 var sumTotalPassed = sumRequiredPassed + sumElectivePassed;
@@ -1128,27 +1124,25 @@ document.getElementById('fill-total-bar').style.width = pct + "%";
 
 document.getElementById('lbl-req-cre').innerText = sumRequiredPassed + " / 86";
 document.getElementById('lbl-p-el-cre').innerText = passedProfEl + " / 30";
-document.getElementById('lbl-o-el-cre').innerText = localPassedOtherEl;
+document.getElementById('lbl-o-el-cre').innerText = localPassedOtherEl + " / 15";
 
 var reqDeficit = 86 - sumRequiredPassed;
 var lblReq = document.getElementById('lbl-req-stat');
 if (lblReq) {
-if (reqDeficit > 0) { lblReq.innerText = "還差 " + reqDeficit + " 學分"; lblReq.style.color = 'var(--cls-failed)'; }
+if (reqDeficit > 0) { lblReq.innerText="還差 "+reqDeficit+" 學分"; lblReq.style.color = 'var(--cls-failed)'; }
 else { lblReq.innerText = "已達標"; lblReq.style.color = 'var(--cls-passed)'; }
 }
-
 var pElDeficit = 30 - passedProfEl;
 var lblPEl = document.getElementById('lbl-p-el-stat');
 if (lblPEl) {
-if (pElDeficit > 0) { lblPEl.innerText = "還差 " + pElDeficit + " 學分"; lblPEl.style.color = 'var(--cls-failed)'; }
-else { lblPEl.innerText = "已達標"; lblPEl.style.color = 'var(--cls-passed)'; }
+if (pElDeficit > 0) { lblPEl.innerText="還差 "+pElDeficit+" 學分"; lblPEl.style.color = 'var(--cls-failed)'; }
+else { lblPEl.innerText="已達標"; lblPEl.style.color = 'var(--cls-passed)'; }
 }
-
 var elDeficit = 45 - sumElectivePassed;
 var lblO = document.getElementById('lbl-o-el-stat');
 if (lblO) {
-if (elDeficit > 0) { lblO.innerText = "還差 " + elDeficit + " 學分"; lblO.style.color = 'var(--cls-failed)'; }
-else { lblO.innerText = "已達標"; lblO.style.color = 'var(--cls-passed)'; }
+if (elDeficit > 0) { lblO.innerText="還差 " + elDeficit + " 學分"; lblO.style.color = 'var(--cls-failed)'; }
+else { lblO.innerText="已達標"; lblO.style.color = 'var(--cls-passed)'; }
 }
 
 var diagContent = document.getElementById('diag-content');
@@ -1156,214 +1150,203 @@ var diagBox = document.getElementById('diag-box');
 if (diagContent && diagBox) {
 diagContent.innerHTML = "";
 if (sumRequiredPassed >= 86 && passedProfEl >= 30 && sumElectivePassed >= 45 && sumTotalPassed >= 131) {
-var sOK = createEl('span', null, "🎉 恭喜！您已全部達成畢業規定學分！已具備畢業資格！", diagContent);
+var sOK = createEl('span', null, "恭喜!您已全部達成畢業規定學分!已具備畢業資格!", diagContent);
 sOK.style.color = "var(--cls-passed)"; sOK.style.fontWeight = "bold";
 diagBox.style.borderLeftColor = 'var(--cls-passed)';
 } else {
 diagBox.style.borderLeftColor = 'var(--cls-retake)';
 var ul = createEl('ul', null, null, diagContent);
-
 if (86 - sumRequiredPassed > 0) {
 var li = createEl('li', null, null, ul);
-li.appendChild(document.createTextNode("🚨 必修學分累計仍差 "));
-var st1 = createEl('strong', null, (86 - sumRequiredPassed), li);
+li.appendChild(document.createTextNode("必修學分累計仍差 "));
+createEl('strong', null, (86 - sumRequiredPassed), li);
 li.appendChild(document.createTextNode(" 學分。"));
 }
-if (30 - passedProfEl > 0) {
+if (30-passedProfEl > 0) {
 var li = createEl('li', null, null, ul);
-li.appendChild(document.createTextNode("🍊 專業選修尚差 "));
-var st2 = createEl('strong', null, (30 - passedProfEl), li);
-li.appendChild(document.createTextNode(" 學分 (底線30)。"));
+li.appendChild(document.createTextNode("專業選修尚差 "));
+createEl('strong', null, (30 - passedProfEl), li);
+li.appendChild(document.createTextNode(" 學分(底線30)。"));
 }
 if (sumElectivePassed < 45) {
 var li = createEl('li', null, null, ul);
-li.appendChild(document.createTextNode("🔮 選修總量 (專業選修+其他選修) 還缺 "));
-var st3 = createEl('strong', null, (45 - sumElectivePassed), li);
+li.appendChild(document.createTextNode("選修總量(專業選修+其他選修)還缺 "));
+createEl('strong', null, (45 - sumElectivePassed), li);
 li.appendChild(document.createTextNode(" 學分。"));
 }
-
 if (completelyFailedReq.length > 0) {
 var liA = createEl('li', null, null, ul);
-createEl('div', 'diag-section-title', "❌ 尚未修讀、轉學補修或未通過的必修：", liA);
-var sA = createEl('span', null, completelyFailedReq.join('、 '), liA);
+createEl('div', 'diag-section-title',"尚未修讀、轉學補修或未通過的必修:", liA);
+var sA = createEl('span', null, completelyFailedReq.join('、'), liA);
 sA.style.color = "var(--cls-failed)"; sA.style.fontWeight = "bold";
 }
 if (currentlyRetakingReq.length > 0) {
 var liB = createEl('li', null, null, ul);
-createEl('div', 'diag-section-title', "⏳ 正在重修或補修追蹤中的必修：", liB);
-var sB = createEl('span', null, currentlyRetakingReq.join('、 '), liB);
+createEl('div', 'diag-section-title',"正在重修或補修追蹤中的必修:", liB);
+var sB = createEl('span', null, currentlyRetakingReq.join('、'), liB);
 sB.style.color = "var(--accent-blue)"; sB.style.fontWeight = "bold";
 }
 }
 }
-// ================= 步驟三：自動抓取 appState 歷年科目成績編譯演算法 =================
-function compileDetailedReport() {
-var area = document.getElementById('report-print-area');
-if (!area) return;
 
-// 1. 動態年月日時分計算
+// 🎯 核心演算法智慧修復：精準對齊原始碼變數
+var smartAdvice = "根據機械工程系課程地圖核心演算法分析：";
+if (hasItem(completelyFailedReq, "微積分(一)") || hasItem(completelyFailedReq, "微積分(二)")) {
+smartAdvice += "微積分為工程學之本，建議紮實奠定數學工具基礎，以免影響後續高階工程數學等學科推導。";
+} else if (hasItem(completelyFailedReq, "靜力學") || hasItem(completelyFailedReq, "動力學(一)") || hasItem(completelyFailedReq, "流體力學(一)") || hasItem(completelyFailedReq, "熱力學(一)")) {
+smartAdvice += "力學學科（靜力、動力、流體、熱力）為機械工程核心基石，物理直覺與公式推導並重，建議於時程規劃內優先重點攻克。";
+} else if (sumRequiredPassed >= 86 && passedProfEl >= 30 && sumElectivePassed >= 45 && sumTotalPassed >= 131) {
+smartAdvice += "幹得漂亮！所有的必修魔王與選修學分已全數通關。這極具紀律的學分曲線就和完美的健身體態一樣無懈可擊，準備安心畢業邁向下一個人生航道！";
+} else {
+smartAdvice += "目前核心進度穩定，請持續保持穩健修課節奏，有條不紊地將剩餘的選修學分補齊即可。";
+}
+
+// 🎯 生成全新設計的高階對稱風 PDF 報告介面
+var area = document.getElementById('report-print-area');
+if (area) {
 var now = new Date();
 var timeStr = now.getFullYear() + " 年 " + (now.getMonth() + 1) + " 月 " + now.getDate() + " 日 " + now.getHours() + " 時 " + now.getMinutes() + " 分";
 
-// 2. 通識領域清查
 var genEdFields = [];
-for (var sem in appState) {
-if (appState.hasOwnProperty(sem)) {
-appState[sem].forEach(function(item){
+for (var semKey in appState) {
+if (appState.hasOwnProperty(semKey)) {
+appState[semKey].forEach(function(item){
 if(item.name === "博雅通識課程" && item.field && !hasItem(genEdFields, item.field)) { genEdFields.push(item.field); }
 });
 }
 }
 
-// 3. 彙整學分審查總標題狀態
-var isGraduated = (sumRequiredPassed >= 86 && passedProfEl >= 30 && sumElectivePassed >= 45 && sumTotalPassed >= 131);
-var statusText = isGraduated ? "🎉 恭喜！畢業資格學分審查核算：『 已完全達標 』" : "⚠️ 畢業資格學分審查核算：『 尚未達標 』，請依方針補齊";
-var statusColor = isGraduated ? "#10b981" : "#ef4444";
+var failedBadgesHtml = "";
+if (completelyFailedReq.length > 0) {
+completelyFailedReq.forEach(function(item) { failedBadgesHtml += `<span class="report-badge-failed">${item}</span>`; });
+}
 
-var html = `
+var retakeBadgesHtml = "";
+if (currentlyRetakingReq.length > 0) {
+currentlyRetakingReq.forEach(function(item) { retakeBadgesHtml += `<span class="report-badge-retake">${item}</span>`; });
+}
+
+area.innerHTML = `
 <div class="pdf-header">
-<h2 style="margin: 0; color: rgb(15, 23, 42); font-size: 1.35rem;">國立勤益科技大學 機械工程系</h2>
-<h3 style="margin: 5px 0 0 0; color: var(--accent-burgundy); font-size: 1.05rem; letter-spacing: 1px;">畢業資格核算與歷年成績學分審查診斷報告書</h3>
-<div style="font-size: 0.72rem; color: #94a3b8; margin-top: 6px;">核算時間戳記：${timeStr} / 勤益 ME 智慧審查核心 v5.0</div>
+<h2 style="margin: 0; color: rgb(15, 23, 42); font-size: 1.4rem; font-weight: 800;">國立勤益科技大學 機械工程系</h2>
+<h3 style="margin: 6px 0 0 0; color: var(--accent-burgundy); font-size: 1.1rem; letter-spacing: 1px;">畢業資格全方位深層審查診斷報告</h3>
+<div style="font-size: 0.75rem; color: #94a3b8; margin-top: 8px;">報告編譯時間：${timeStr} / 智慧工程審查系統 v4.6</div>
 </div>
 
-<div style="background: ${statusColor}10; border-left: 5px solid ${statusColor}; padding: 10px 14px; border-radius: 4px; margin-bottom: 15px; font-weight: bold; color: ${statusColor}; font-size: 0.82rem; text-align: center;">
-${statusText}
+<div style="background: ${statusColor}10; border-left: 5px solid ${statusColor}; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; font-weight: bold; color: ${statusColor}; font-size: 0.85rem; text-align: center; box-sizing: border-box; width: 100%;">
+當前審查狀態：${statusText}
 </div>
 
-<div class="pdf-section">
-<h4>📊 畢業規範學分統計與審查結構</h4>
-<table class="pdf-table">
-<thead>
-<tr>
-<th>審查項目</th>
-<th>系所基本門檻</th>
-<th>您目前已通過</th>
-<th>審查診斷結果</th>
-</tr>
-</thead>
-<tbody>
-<tr style="font-weight: 800; background: #fffbfa;">
-<td>畢業總學分總量</td><td>131 學分</td><td>${sumTotalPassed} 學分</td>
-<td style="color: ${sumTotalPassed >= 131 ? '#10b981':'#ef4444'}">${sumTotalPassed >= 131 ? '✓ 已達標':'還差 '+(131-sumTotalPassed)+' 學分'}</td>
-</tr>
-<tr>
-<td>核心必修累計 (共同+專必)</td><td>86 學分</td><td>${sumRequiredPassed} 學分</td>
-<td style="font-weight:700; color: ${sumRequiredPassed >= 86 ? '#10b981':'#ef4444'}">${sumRequiredPassed >= 86 ? '✓ 已達標':'還差 '+(86-sumRequiredPassed)+' 學分'}</td>
-</tr>
-<tr>
-<td>本系專業選修累計</td><td>30 學分</td><td>${passedProfEl} 學分</td>
-<td style="font-weight:700; color: ${passedProfEl >= 30 ? '#10b981':'#ef4444'}">${passedProfEl >= 30 ? '✓ 已達標':'還差 '+(30-passedProfEl)+' 學分'}</td>
-</tr>
-<tr>
-<td>其餘選修總量 (專選+他選)</td><td>45 學分</td><td>${sumElectivePassed} 學分</td>
-<td style="font-weight:700; color: ${sumElectivePassed >= 45 ? '#10b981':'#ef4444'}">${sumElectivePassed >= 45 ? '✓ 已達標':'還差 '+(45-sumElectivePassed)+' 學分'}</td>
-</tr>
-</tbody>
-</table>
+<div style="width: 100%; margin: 15px 0; box-sizing: border-box;">
+<div style="display: flex; gap: 12px; margin-bottom: 12px; width: 100%;">
+<div style="flex: 1; background: #fff; padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
+<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px;">總畢業進度</div>
+<div style="font-size:1.4rem; font-weight:800; color:#1e293b;">${sumTotalPassed} <span style="font-size: 0.85rem; font-weight: 600; color:#64748b;"> / 131 學分</span></div>
+<div style="font-size: 0.7rem; color: var(--accent-burgundy); font-weight: bold; margin-top: 4px;">達成率：${Math.floor((sumTotalPassed/131)*100)}%</div>
+</div>
+<div style="flex: 1; background: #fff; padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
+<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px;">核心必修累計</div>
+<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b;">${sumRequiredPassed} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 86 學分</span></div>
+<div style="font-size: 0.7rem; color: ${sumRequiredPassed >= 86 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px;">${sumRequiredPassed >= 86 ? '✓ 已達標' : '還差 '+(86-sumRequiredPassed)+' 學分'}</div>
+</div>
+</div>
+<div style="display: flex; gap: 12px; width: 100%;">
+<div style="flex: 1; background: #fff; padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
+<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px;">專業選修累計</div>
+<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b;">${passedProfEl} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 30 學分</span></div>
+<div style="font-size: 0.7rem; color: ${passedProfEl >= 30 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px;">${passedProfEl >= 30 ? '✓ 已達標' : '還差 '+(30-passedProfEl)+' 學分'}</div>
+</div>
+<div style="flex: 1; background: #fff; padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
+<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px;">選修總量 (專選+他選)</div>
+<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b;">${sumElectivePassed} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 45 學分</span></div>
+<div style="font-size: 0.7rem; color: ${sumElectivePassed >= 45 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px;">${sumElectivePassed >= 45 ? '✓ 已達標' : '還差 '+(45-sumElectivePassed)+' 學分'}</div>
+</div>
+</div>
 </div>
 
 <div class="pdf-section">
-<h4>💡 機械工程系課程地圖智慧方針</h4>
-<p style="margin: 0; font-size: 0.8rem; line-height: 1.45; color: #334155;">${smartAdvice}</p>
+<h4>💡 智慧大數據工程診斷評語</h4>
+<p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #334155;">${smartAdvice}</p>
+</div>
+
+<div class="pdf-section">
+<h4>🎯 博雅通識領域均衡度</h4>
+<p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #334155;">目前已確切修讀 <strong style="color:var(--accent-burgundy); font-weight:800;">${genEdFields.length}</strong> 個核心通識領域。已登錄之有效領域：${genEdFields.length > 0 ? genEdFields.join('、') : '暫無紀錄'}。</p>
 </div>
 
 <div class="pdf-section">
 <h4>📜 歷年修課、成績與學分明細清單</h4>
+<div id="pdf-dynamic-rows-area"></div>
+</div>
 `;
 
-var timeOrdered = getTimelineOrderedSemesters();
-var hasAnyGradesData = false;
+// 🎯 逐一撈取各學期科目明細，以精美的橫向清單對稱渲染
+var rowsArea = area.querySelector('#pdf-dynamic-rows-area');
+if (rowsArea) {
+var tOrdered = getTimelineOrderedSemesters();
+var rowsHtml = "";
+for (var t = 0; t < tOrdered.length; t++) {
+var sKey = tOrdered[t];
+var subs = appState[sKey];
+if (!subs || subs.length === 0) continue;
 
-for (var t = 0; t < timeOrdered.length; t++) {
-var semKey = timeOrdered[t];
-var subjects = appState[semKey];
-if (!subjects || subjects.length === 0) continue;
-
-// 解析學年、學期文字
-var yVal = parseInt(semKey.match(/^y(\d+)_/)[1]);
-var sVal = semKey.split('_')[1];
-var semesterTitle = getSemesterText(yVal, sVal);
-
-var subRowsHtml = "";
-subjects.forEach(function(sub) {
+var subRows = "";
+subs.forEach(function(sub) {
 if (sub.name.trim() === "") return;
-hasAnyGradesData = true;
+var bColor = "rgb(100, 116, 139)"; var bText = "必修";
+if (sub.type === 'prof-req') { bColor = "rgb(59, 130, 246)"; bText = "專必"; }
+else if (sub.type === 'prof') { bColor = "var(--cls-retake)"; bText = "專選"; }
+else if (sub.type === 'other') { bColor = "rgb(139, 92, 246)"; bText = "他選"; }
 
-var badgeColor = "rgb(100, 116, 139)";
-var badgeText = "必修";
-if (sub.type === 'prof-req') { badgeColor = "rgb(59, 130, 246)"; badgeText = "專必"; }
-else if (sub.type === 'prof') { badgeColor = "var(--cls-retake)"; badgeText = "專選"; }
-else if (sub.type === 'other') { badgeColor = "rgb(139, 92, 246)"; badgeText = "他選"; }
-
-var rowClass = "failed-row";
-if (sub.status === '通過' || sub.status === '抵免') { rowClass = "pass-row"; }
-else if (sub.status === '重修中' || sub.status === '轉學補修') { rowClass = ""; }
+var rStyle = "color: #e53e3e; background: #fff5f5;";
+if (sub.status === '通過' || sub.status === '抵免') { rStyle = "color: #10b981;"; }
+else if (sub.status === '重修中' || sub.status === '轉學補修') { rStyle = "color: #334155;"; }
 
 var scoreShow = sub.score !== "" ? sub.score + " 分" : sub.status;
-var genEdDetail = (sub.name === "博雅通識課程" && sub.field) ? `<br><span style="color:#64748b; font-size:0.7rem;">[${sub.field}]</span>` : "";
+var genEdShow = (sub.name === "博雅通識課程" && sub.field) ? `<br><span style="color:#64748b; font-size:0.7rem;">[${sub.field}]</span>` : "";
 
-subRowsHtml += `
-<tr class="${rowClass}">
-<td style="text-align: left; font-weight: 600;">${sub.name}${genEdDetail}</td>
-<td><span class="pdf-badge" style="background-color:${badgeColor}">${badgeText}</span></td>
-<td style="font-weight: bold;">${sub.cre}</td>
-<td style="font-weight: 700;">${scoreShow}</td>
+subRows += `
+<tr style="${rStyle}">
+<td style="padding: 7px; border: 1px solid #e2e8f0; text-align: left; font-weight: 600;">${sub.name}${genEdShow}</td>
+<td style="padding: 7px; border: 1px solid #e2e8f0;"><span class="pdf-badge" style="background-color:${bColor}">${bText}</span></td>
+<td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: bold;">${sub.cre}</td>
+<td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: 700;">${scoreShow}</td>
 </tr>
 `;
 });
 
-if (subRowsHtml !== "") {
-html += `
-<div style="margin-top: 12px; margin-bottom: 6px; font-weight: 800; font-size: 0.85rem; color: var(--accent-burgundy); border-bottom: 1px solid #cbd5e1; padding-bottom: 3px;">📍 ${semesterTitle}</div>
-<table class="pdf-table" style="margin-bottom: 15px;">
+if (subRows !== "") {
+var yV = parseInt(sKey.match(/^y(\d+)_/)[1]); var sV = sKey.split('_')[1];
+rowsHtml += `
+<div style="margin: 12px 0 6px 0; font-weight: 800; font-size: 0.85rem; color: var(--accent-burgundy); border-bottom: 1px solid #cbd5e1; padding-bottom: 2px;">📍 ${getSemesterText(yV, sV)}</div>
+<table class="pdf-table" style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: center; margin-bottom: 10px;">
 <thead>
-<tr>
-<th style="text-align: left; width: 45%;">科目名稱</th>
-<th style="width: 15%;">類別</th>
-<th style="width: 15%;">學分</th>
-<th style="width: 25%;">學期分數學態</th>
+<tr style="background: #f8fafc; color: #475569;">
+<th style="padding: 7px; border: 1px solid #e2e8f0; text-align: left;">科目名稱</th>
+<th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">類別</th>
+<th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">學分</th>
+<th style="padding: 7px; border: 1px solid #e2e8f0; width: 25%;">分數狀態</th>
 </tr>
 </thead>
-<tbody>
-${subRowsHtml}
-</tbody>
+<tbody>${subRows}</tbody>
 </table>
 `;
 }
 }
-
-if (!hasAnyGradesData) {
-html += `<p style="text-align: center; color: #94a3b8; font-size: 0.8rem; margin: 20px 0;">目前尚未輸入任何學期科目分數進度。</p>`;
+rowsArea.innerHTML = rowsHtml || `<p style="text-align: center; color: #94a3b8; font-size: 0.8rem; margin: 15px 0;">目前尚未登錄任何科目進度。</p>`;
+}
 }
 
-html += `
-<div style="margin-top: 15px; text-align: center; font-size: 0.68rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 8px;">
-博雅通識均衡度：目前已修讀變效 ${genEdFields.length} 個領域。已登錄領域：[${genEdFields.length > 0 ? genEdFields.join('、') : '無'}]
-</div>
-</div>
-`;
-area.innerHTML = html;
-}
-compileDetailedReport();
 } catch(err) {
-document.getElementById('diag-content').innerText = "運算失敗：" + err.message;
+document.getElementById('diag-content').innerText="運算失敗: " + err.message;
 }
 }
 
-function startApp() {
-checkStorageAvailability(); loadStateSafely();
-document.getElementById('global-search').addEventListener('input', doGlobalSearch);
-document.getElementById('btn-add-year').addEventListener('click', expandNewYear);
-document.getElementById('btn-del-year').addEventListener('click', shrinkLastYear);
-document.getElementById('btn-copy-backup').addEventListener('click', copyBackupCode);
-document.getElementById('btn-restore-backup').addEventListener('click', importBackupCode);
-// ================= 步驟四：綁定 PDF 下下載按鈕與手機端防碎裂列印核心 =================
-document.getElementById('btn-download-pdf').addEventListener('click', function() {
+// 🎯 原地秒變形列印與驅動核心 (完美綁定下載按鈕，徹底消滅白紙與亂碼)
+function downloadPDFReport() {
 var element = document.getElementById('report-print-area');
 if (!element) return;
 
-// 1. 瞬間原地固定 A4 比例視角，強迫手機端看得見、抓得對稱
 element.style.width = "640px";
 element.style.maxWidth = "640px";
 element.style.padding = "25px";
@@ -1378,7 +1361,7 @@ image: { type: 'jpeg', quality: 0.98 },
 html2canvas: {
 scale: 1.5,
 useCORS: true,
-letterRendering: false, // 💡 防碎裂必殺技：關閉逐字切割，徹底消滅「本丁日白」等錯字亂碼！
+letterRendering: false, // 關閉逐字切割，杜絕字體破碎與「本丁日白」錯字亂碼
 scrollY: 0, scrollX: 0,
 windowWidth: 720
 },
@@ -1386,29 +1369,31 @@ jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
 pagebreak: { mode: ['css', 'legacy'] }
 };
 
-// 2. 執行編譯與儲存
 html2pdf().set(opt).from(element).save().then(function() {
-// 3. 還原網頁響應式外觀
-element.style.width = ""; element.style.maxWidth = "";
-element.style.padding = ""; element.style.margin = "";
-element.style.boxSizing = ""; element.style.background = "";
+element.style.width = ""; element.style.maxWidth = ""; element.style.padding = ""; element.style.margin = ""; element.style.boxSizing = ""; element.style.background = "";
 }).catch(function(err) {
 console.error(err);
-element.style.width = ""; element.style.maxWidth = "";
-element.style.padding = ""; element.style.margin = "";
-element.style.boxSizing = ""; element.style.background = "";
+element.style.width = ""; element.style.maxWidth = ""; element.style.padding = ""; element.style.margin = ""; element.style.boxSizing = ""; element.style.background = "";
 });
-});
-rebuildTabsUI(); renderStructure(); renderAllBlocks(); calculateCredits();
 }
 
+function startApp() {
+checkStorageAvailability(); loadStateSafely();
+document.getElementById('global-search').addEventListener('input', doGlobalSearch);
+document.getElementById('btn-add-year').addEventListener('click', expandNewYear);
+document.getElementById('btn-del-year').addEventListener('click', shrinkLastYear);
+document.getElementById('btn-copy-backup').addEventListener('click', copyBackupCode);
+document.getElementById('btn-restore-backup').addEventListener('click', importBackupCode);
+document.getElementById('btn-download-pdf').addEventListener('click', downloadPDFReport);
+
+rebuildTabsUI(); renderStructure(); renderAllBlocks(); calculateCredits();
+}
 try {
 startApp();
 } catch (finalError) {
 var d = document.getElementById('diag-content');
-if (d) d.innerHTML = "<span style='color:red;font-weight:bold;'>語法載入異常：<br>" + finalError.message + "</span>";
+if (d) d.innerHTML = "<span style='color:red;font-weight:bold;'>語法載入異常:<br>" + finalError.message + "</span>";
 }
 </script>
-
 </body>
 </html>
