@@ -8,7 +8,6 @@
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<!-- 🚀 載入高階網頁轉 PDF 核心庫 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
@@ -177,7 +176,7 @@ width: 100%;
 }
 .card .status { font-size: 0.8rem; font-weight: 700; text-align: center; width: 100%; }
 
-/* 🌟 PDF 報告書專用高品質學術格式樣式 */
+/* 🌟 PDF 報告書專業學術外觀樣式 */
 .btn-pdf {
 background: linear-gradient(135deg, var(--accent-burgundy) 0%, #991b1b 100%);
 color: white; border: none; padding: 10px 20px; border-radius: 6px;
@@ -191,11 +190,11 @@ box-shadow: 0 4px 8px rgba(124, 45, 61, 0.2); transition: transform 0.1s;
 
 .pdf-section {
 margin-top: 16px; background: #fff; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: left; width: 100%; box-sizing: border-box;
-page-break-inside: avoid !important; break-inside: avoid !important; /* 🚀 防止整個大區塊內部無序斷裂 */
+page-break-inside: avoid !important; break-inside: avoid !important;
 }
 .pdf-section h4 { margin: 0 0 10px 0; font-size: 0.95rem; color: var(--accent-burgundy); border-left: 4px solid var(--accent-burgundy); padding-left: 8px; font-weight: 800; }
 
-/* 🚀 終極修復：強制讓每一個學年學期的「小區塊」與「表格橫列」具備防斷裂特性，絕對不從文字中間切斷 */
+/* 🚀 區塊防切斷控制樣式 */
 .pdf-semester-block {
 page-break-inside: avoid !important;
 break-inside: avoid !important;
@@ -454,14 +453,12 @@ letter-spacing: 0.5px;
 </div>
 </div>
 
-<!-- 深層分析報告生成與下載區塊 -->
 <div class="summary-card" style="border-top: 4px solid var(--accent-burgundy);">
 <div class="report-title-bar">
 <div class="summary-label" style="font-size: 1.05rem; color: var(--text); font-weight: 800; text-align: left;">📊 畢業資格深層核算與歷年成績報告書</div>
 <button class="btn-pdf" id="btn-download-pdf">📥 下載完整 A4 PDF 報告</button>
 </div>
 <div class="pdf-container" id="report-print-area">
-<!-- 智慧核心將自動在此動態鋪設正式證書報告 -->
 </div>
 </div>
 
@@ -568,7 +565,7 @@ decompressAndApplyState(parsed);
 saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks();
 calculateCredits();
 alert("歷史修課進度已完美復原校正!");
-} catch(e) { alert("× 代碼結構損毀，請確認是否複製完整。"); }
+} catch(e) { alert("× 代碼結構損毀,請確認是否複製完整。"); }
 }
 function checkStorageAvailability() {
 try {
@@ -1145,7 +1142,6 @@ subRows += `
 
 if (subRows !== "") {
 var yV = parseInt(sKey.match(/^y(\d+)_/)[1]); var sV = sKey.split('_')[1];
-// 🚀 技術核心：將「學期標題與表格」包裝進獨立防斷裂外殼中，強迫網頁轉圖時一律完整打包
 rowsHtml += `
 <div class="pdf-semester-block">
 <div style="margin: 12px 0 6px 0; font-weight: 800; font-size: 0.85rem; color: var(--accent-burgundy); border-bottom: 1px solid #cbd5e1; padding-bottom: 2px;">📍 ${getSemesterText(yV, sV)}</div>
@@ -1300,7 +1296,7 @@ sB.style.color = "var(--accent-blue)"; sB.style.fontWeight = "bold";
 }
 }
 
-// 🎯 同步更新 A4 PDF 內容
+// 同步更新 A4 PDF 內容
 generateDeepReportUI(sumTotalPassed, sumRequiredPassed, passedProfEl, localPassedOtherEl, completelyFailedReq, currentlyRetakingReq);
 
 } catch(err) {
@@ -1310,57 +1306,51 @@ document.getElementById('diag-content').innerText="運算失敗: " + err.message
 }
 }
 
-// 🎯 原地無痕移位列印核心（完美防止手機端大白紙，同時完全修正電腦版切邊 Bug）
+// 🎯 全裝置完美通關：動態覆蓋式獨立視窗捕捉架構（徹底終結電腦版左右跑位與手機版空白 Bug）
 function downloadPDFReport() {
 var element = document.getElementById('report-print-area');
 if (!element) return;
 
-// 💡 暫時備份原本網頁上的排版參數
-var oldWidth = element.style.width;
-var oldMaxWidth = element.style.maxWidth;
-var oldPadding = element.style.padding;
-var oldMargin = element.style.margin;
-var oldBg = element.style.background;
+// 1. 建立一個全新的獨立外部浮層節點，完全避開主畫面的 CSS Grid / Flex 留白干擾
+var renderLayer = document.createElement('div');
+renderLayer.id = 'render-layer-visual-fixed';
 
-// 🎯 下載瞬間：直接暫時改為「標準靠左無配重排版」，消滅電腦版螢幕置中的 left 偏置位移 Bug
-element.style.width = "650px";
-element.style.maxWidth = "650px";
-element.style.padding = "25px";
-element.style.margin = "0";
-element.style.background = "#ffffff";
+// 2. 採用固定全螢幕絕對定位 (0,0)，將其強制拉到最上層
+// 這樣 html2canvas 的視窗捕捉原點永遠是完美的 X=0, Y=0，全裝置排版絕對對稱、不切邊！
+renderLayer.style.position = 'fixed';
+renderLayer.style.top = '0';
+renderLayer.style.left = '0';
+renderLayer.style.width = '680px';
+renderLayer.style.background = '#ffffff';
+renderLayer.style.zIndex = '9999999';
+renderLayer.style.padding = '35px';
+renderLayer.style.boxSizing = 'border-box';
+
+// 3. 複製已經編譯好的最新數據內文
+renderLayer.innerHTML = element.innerHTML;
+document.body.appendChild(renderLayer);
 
 var opt = {
 margin: [15, 15, 15, 15],
 filename: 'NCUT_Mechanical_Credit_Report.pdf',
 image: { type: 'jpeg', quality: 0.98 },
 html2canvas: {
-scale: 1.5, // 最佳高解析縮放，防記憶體溢位
+scale: 2, // 保持極致清晰印刷紋理
 useCORS: true,
-letterRendering: false, // 停止逐字切碎，消滅文字破碎亂碼
-scrollY: 0,
-scrollX: 0,
-windowWidth: 720 // 強制虛擬捕捉寬度
+letterRendering: false, // 關閉文字碎裂，消滅亂碼
+scrollY: 0, scrollX: 0,
+windowWidth: 750 // 完美對稱寬度設定
 },
 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-// 🚀 強制開啟分頁防斷裂編譯核心
 pagebreak: { mode: ['css', 'legacy'] }
 };
 
-// 執行轉 PDF 流程
-html2pdf().set(opt).from(element).save().then(function() {
-// 🎉 下載完畢瞬間：光速復原原本網頁響應式排版，無痕回位
-element.style.width = oldWidth;
-element.style.maxWidth = oldMaxWidth;
-element.style.padding = oldPadding;
-element.style.margin = oldMargin;
-element.style.background = oldBg;
+// 4. 啟動列印流程並在其完成後瞬間無痕移除
+html2pdf().set(opt).from(renderLayer).save().then(function() {
+document.body.removeChild(renderLayer);
 }).catch(function(err) {
 console.error(err);
-element.style.width = oldWidth;
-element.style.maxWidth = oldMaxWidth;
-element.style.padding = oldPadding;
-element.style.margin = oldMargin;
-element.style.background = oldBg;
+if (renderLayer && renderLayer.parentNode) document.body.removeChild(renderLayer);
 });
 }
 
