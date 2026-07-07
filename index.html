@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NCUT Mechanical Credit Audit Tool | 勤益科大機械系學分審查</title>
-  <meta name="apple-mobile-web-app-title" content="學分審查系統">
+<title>NCUT Mechanical Credit Audit Tool 勤益科大機械系學分審查</title>
+<meta name="apple-mobile-web-app-title" content="學分審查系統">
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
 --accent-burgundy: rgb(124, 45, 61);
@@ -18,13 +18,11 @@
 --border: rgb(235, 233, 227);
 --text: rgb(45, 45, 45);
 --text-muted: rgb(125, 125, 125);
-
 --cls-passed: rgb(16, 185, 129);
 --cls-waived: rgb(6, 182, 212);
 --cls-retake: rgb(245, 158, 11);
 --cls-failed: rgb(239, 110, 110);
 }
-
 body {
 font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", "PingFang TC", Arial, sans-serif;
 background-color: var(--bg-main);
@@ -41,12 +39,11 @@ height: auto;
 margin: 20px auto;
 border-radius: 12px;
 }
-/* 📱 網頁最上面標題區塊：精準調整字體、融入多重立體深層陰影、內嵌高光頂線與酒紅立體厚底，呈現絕佳3D立體感 */
 .header-area {
 background: linear-gradient(180deg, rgb(30, 41, 59) 0%, rgb(15, 23, 42) 100%);
 color: #fff;
 padding: 18px 20px;
-border-radius: 0 0 14px 14px;
+border-radius: 0 14px 14px;
 width: 100%;
 max-width: 1360px;
 margin: 0 auto 20px auto;
@@ -58,7 +55,6 @@ inset 0 1px 0 rgba(255, 255, 255, 0.15),
 box-sizing: border-box;
 overflow: hidden;
 }
-
 .header-area h1 {
 margin: 0;
 font-size: 1.15rem;
@@ -69,8 +65,6 @@ letter-spacing: 0.5px;
 text-shadow: 0 2px 4px rgba(0,0,0,0.3);
 white-space: nowrap;
 }
-
-/* 🖥️ 電腦版整頁寬度完全釋放，在寬螢幕上完美滿格展開，不再縮在中央 */
 .container {
 max-width: 1360px;
 width: 100%;
@@ -78,7 +72,6 @@ margin: 0 auto;
 padding: 0 20px 20px 20px;
 box-sizing: border-box;
 }
-
 .summary-card {
 background: #fff;
 border-radius: 14px;
@@ -91,12 +84,14 @@ margin-bottom: 20px;
 font-size: 0.85rem;
 font-weight: bold;
 color: var(--text-muted);
+text-align: center;
 }
 .summary-main-row {
 display: flex;
-justify-content: space-between;
+justify-content: center;
 align-items: baseline;
-margin-top: 4px;
+gap: 15px;
+margin-top: 6px;
 }
 .summary-number {
 font-size: 2.2rem;
@@ -106,7 +101,7 @@ color: var(--accent-burgundy);
 .summary-number span {
 font-size: 0.9rem;
 color: var(--text);
-margin-left: 4px;
+margin-left: 6px;
 font-weight: 600;
 }
 .summary-percent {
@@ -131,8 +126,8 @@ transition: width 0.4s ease;
 font-size: 0.82rem;
 color: var(--text-muted);
 font-weight: 600;
+text-align: center;
 }
-
 .diagnostic-card {
 background: #fff;
 border: 1px solid var(--border);
@@ -147,30 +142,65 @@ box-shadow: 0 4px 8px -1px rgba(0,0,0,0.01);
 .diagnostic-card li { margin-bottom: 4px; }
 .diag-section-title { font-weight: bold; margin-top: 4px; color: var(--text); display: inline-block; }
 
-/* 🖥️ 資訊儀表板在電腦版會自動舒展成多橫列排開 */
 .dashboard {
 display: grid;
 grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
 gap: 12px;
 margin-bottom: 20px;
 }
-
 .card {
 background: #fff;
-padding: 14px;
+padding: 16px 14px;
 border-radius: 10px;
 border: 1px solid var(--border);
 border-top: 4px solid var(--accent-blue);
 text-align: center;
 box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+display: flex;
+flex-direction: column;
+align-items: center;
+justify-content: center;
 }
 .card.required { border-top-color: var(--accent-blue); }
 .card.prof-elective { border-top-color: var(--cls-retake); }
 .card.other-elective { border-top-color: rgb(139, 92, 246); }
+.card h3 { margin: 0 0 8px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 4px; }
 
-.card h3 { margin: 0 0 6px 0; font-size: 0.82rem; color: var(--text-muted); font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 4px; }
-.card .number { font-size: 1.5rem; font-weight: 800; color: var(--text); margin-bottom: 2px; }
-.card .status { font-size: 0.8rem; font-weight: 700; }
+/* 🎯 視覺細節優化：儀表板數字完美加粗、放大、置中 */
+.card .number {
+font-size: 1.6rem;
+font-weight: 800 !important;
+color: var(--text);
+margin-bottom: 6px;
+letter-spacing: 1px;
+text-align: center;
+width: 100%;
+}
+.card .status { font-size: 0.8rem; font-weight: 700; text-align: center; width: 100%; }
+
+/* 🌟 PDF 報告專屬高品質學術格式樣式 */
+.btn-pdf {
+background: linear-gradient(135deg, var(--accent-burgundy) 0%, #991b1b 100%);
+color: white; border: none; padding: 10px 20px; border-radius: 6px;
+font-weight: bold; font-size: 0.85rem; cursor: pointer;
+display: flex; align-items: center; gap: 6px;
+box-shadow: 0 4px 8px rgba(124, 45, 61, 0.2); transition: transform 0.1s;
+}
+.btn-pdf:active { transform: scale(0.97); }
+.pdf-container { background: #fafafa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; color: #334155; box-sizing: border-box; }
+.pdf-header { text-align: center; border-bottom: 2px solid var(--accent-burgundy); padding-bottom: 12px; margin-bottom: 18px; }
+.pdf-section {
+margin-top: 16px; background: #fff; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: left;
+page-break-inside: avoid !important; break-inside: avoid !important; /* 🚀 核心技術：強迫元件遇到分頁絕不截斷字體 */
+}
+.pdf-section h4 { margin: 0 0 10px 0; font-size: 0.95rem; color: var(--accent-burgundy); border-left: 4px solid var(--accent-burgundy); padding-left: 8px; font-weight: 800; }
+.pdf-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.82rem; text-align: center; }
+.pdf-table th { background-color: #f8fafc; color: #475569; font-weight: 700; padding: 8px; border: 1px solid #e2e8f0; }
+.pdf-table td { padding: 8px; border: 1px solid #e2e8f0; color: #334155; }
+.pdf-badge { display: inline-block; padding: 2px 6px; font-size: 0.68rem; font-weight: bold; border-radius: 4px; color: #fff; text-align: center; white-space: nowrap; }
+.report-badge-failed { display: inline-block; background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; margin: 3px; break-inside: avoid; }
+.report-badge-retake { display: inline-block; background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; margin: 3px; break-inside: avoid; }
+.report-badge-container { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; width: 100%; }
 
 .backup-panel {
 background: rgb(242, 247, 244);
@@ -181,7 +211,7 @@ margin-bottom: 20px;
 }
 .backup-panel h5 { margin: 0 0 4px 0; font-size: 0.82rem; color: rgb(40, 90, 50); font-weight: 800; }
 .backup-flex { display: flex; gap: 8px; align-items: center; }
-.backup-input { flex: 1; font-size: 0.78rem !important; height: 32px !important; padding: 4px 8px !important; border: 1px solid rgb(200, 220, 210) !important; border-radius: 5px; background: #fff; box-sizing: border-box; }
+.backup-input {flex: 1; font-size: 0.78rem !important; height: 32px !important; padding: 4px 8px !important; border: 1px solid rgb(200, 220, 210) !important; border-radius: 5px; background: #fff; box-sizing: border-box; }
 .btn-backup { background: rgb(40, 90, 50); color: white; border: none; padding: 0 14px; height: 32px; border-radius: 5px; font-weight: bold; font-size: 0.78rem; cursor: pointer; }
 
 .control-panel {
@@ -192,7 +222,6 @@ border: 1px solid var(--border);
 margin-bottom: 20px;
 box-shadow: 0 2px 6px rgba(0,0,0,0.01);
 }
-
 .search-box input {
 width: 100%;
 padding: 10px 14px;
@@ -205,7 +234,6 @@ background: rgb(245, 245, 242);
 }
 .search-box input:focus { border-color: var(--accent-blue); background: #fff; }
 .search-tip-box { display: none; font-size: 0.78rem; color: var(--accent-burgundy); font-weight: bold; margin-top: 6px; }
-
 .control-flex-row {
 display: flex;
 flex-direction: column;
@@ -213,7 +241,6 @@ gap: 10px;
 margin-top: 12px;
 width: 100%;
 }
-
 [id="year-tabs"] {
 display: flex;
 gap: 8px;
@@ -222,11 +249,9 @@ width: 100%;
 padding-bottom: 4px;
 -webkit-overflow-scrolling: touch;
 }
-
 .year-manage-btns { display: flex; gap: 8px; width: 100%; }
 .btn-manage {
-flex: 1; background: rgb(241, 245, 249); border: 1px solid rgb(215, 215, 210);
-padding: 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; color: rgb(30, 41, 59); text-align: center;
+flex: 1; background: rgb(241, 245, 249); border: 1px solid rgb(215, 215, 210); padding: 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; color: rgb(30, 41, 59); text-align: center;
 }
 @media (min-width: 768px) {
 .control-flex-row { flex-direction: row; justify-content: space-between; align-items: center; }
@@ -236,7 +261,6 @@ padding: 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: 
 }
 .btn-manage.add-year { background: rgb(239, 246, 255); color: rgb(37, 99, 235); border-color: rgb(191, 219, 254); }
 .btn-manage.del-year { background: rgb(254, 242, 242); color: rgb(220, 38, 38); border-color: rgb(254, 202, 202); }
-
 .tab-btn {
 background: rgb(240, 240, 235);
 border: none;
@@ -249,14 +273,10 @@ cursor: pointer;
 white-space: nowrap;
 }
 .tab-btn.active { background: var(--accent-burgundy); color: #fff; }
-
 .year-wrapper { display: none; }
 .year-wrapper.active { display: block; }
-
-/* 🖥️ 電腦版課表網格自適應：寬螢幕自動並排成雙大欄位，塞滿視窗 */
 .semester-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 @media (min-width: 850px) { .semester-grid { grid-template-columns: repeat(2, 1fr); } }
-
 .semester-card {
 background: #fff;
 border-radius: 12px;
@@ -264,7 +284,6 @@ border: 1px solid var(--border);
 padding: 16px;
 box-shadow: 0 4px 12px rgba(0,0,0,0.01);
 }
-
 .semester-header {
 font-size: 1.05rem;
 font-weight: 800;
@@ -273,8 +292,6 @@ margin-bottom: 12px;
 border-bottom: 2px solid rgb(245, 245, 242);
 padding-bottom: 6px;
 }
-
-/* 🖥️ 巧克力積木方塊自適應：電腦版寬度變大時，單行可容納多個方塊，飽滿精緻 */
 .subjects-box-matrix {
 display: grid;
 grid-template-columns: repeat(2, 1fr);
@@ -284,7 +301,6 @@ margin-bottom: 12px;
 @media (min-width: 600px) {
 .subjects-box-matrix { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
 }
-
 .subject-square {
 background: rgb(248, 250, 252);
 border: 1px solid var(--border);
@@ -298,9 +314,12 @@ box-sizing: border-box;
 position: relative;
 box-shadow: 0 2px 5px rgba(0,0,0,0.01);
 }
+.square-passed { border-left: 4px solid var(--cls-passed); }
+.square-waived { border-left: 4px solid var(--cls-waived); }
+.square-retake { border-left: 4px solid var(--cls-retake); }
+.square-failed { border-left: 4px solid var(--cls-failed); }
 
 .sub-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-
 .badge {
 display: inline-block;
 padding: 2px 8px;
@@ -315,9 +334,7 @@ white-space: nowrap;
 .bg-prof-req { background-color: rgb(59, 130, 246) !important; }
 .bg-prof-el { background-color: var(--cls-retake) !important; }
 .bg-other-el { background-color: rgb(139, 92, 246) !important; }
-
 .sub-cre { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; }
-
 .sub-title-area {
 font-size: 0.88rem;
 font-weight: 800;
@@ -328,9 +345,7 @@ min-height: 36px;
 display: flex;
 align-items: center;
 }
-
 .sub-controls { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-
 input[type="text"], input[type="number"], select {
 background: rgb(255, 255, 255);
 border: 1px solid rgb(210, 210, 205);
@@ -345,7 +360,6 @@ font-weight: 600;
 input[type="number"] { text-align: center; }
 select { width: 100%; cursor: pointer; }
 input:disabled { background: rgb(235, 235, 230); color: rgb(150, 150, 145); font-weight: 800; text-align: center; }
-
 .gen-ed-select {
 margin-bottom: 4px;
 border-color: rgb(59, 130, 246);
@@ -355,7 +369,6 @@ font-weight: 700;
 height: 28px;
 font-size: 0.78rem;
 }
-
 .retake-scheduler-zone {
 margin-top: 4px;
 border-top: 1px solid rgb(230, 230, 225);
@@ -371,21 +384,15 @@ color: rgb(180, 83, 9);
 font-weight: 700;
 padding: 2px;
 }
-
 .btn-set { display: flex; gap: 6px; margin-top: auto; }
 .btn-action {
-flex: 1; border: 1px solid rgb(210, 210, 205); background: #fff;
-padding: 6px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
+flex: 1; border: 1px solid rgb(210, 210, 205); background: #fff; padding: 6px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
 }
 .btn-p-el { color: rgb(180, 83, 9); border-color: rgb(253, 230, 138); background: rgb(255, 251, 235); }
 .btn-o-el { color: rgb(109, 40, 217); border-color: rgb(221, 214, 254); background: rgb(245, 243, 255); }
-
 .btn-box-del {
-position: absolute; top: -4px; right: -4px; background: rgb(239, 68, 68); color: white; border: none;
-width: 16px; height: 16px; font-size: 9px; font-weight: bold; border-radius: 50%;
-cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 5;
+position: absolute; top: -4px; right: -4px; background: rgb(239, 68, 68); color: white; border: none; width: 16px; height: 16px; font-size: 9px; font-weight: bold; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 5;
 }
-
 footer {
 margin-top: 50px;
 padding: 24px 0;
@@ -396,38 +403,13 @@ border-top: 1px solid var(--border);
 font-weight: 600;
 letter-spacing: 0.5px;
 }
-
-/* ================= 步驟二：報告書專屬學術美化樣式 ================= */
-.btn-pdf {
-background: linear-gradient(135deg, var(--accent-burgundy) 0%, #991b1b 100%);
-color: white; border: none; padding: 10px 20px; border-radius: 6px;
-font-weight: bold; font-size: 0.85rem; cursor: pointer;
-display: flex; align-items: center; gap: 6px;
-box-shadow: 0 4px 8px rgba(124, 45, 61, 0.2); transition: transform 0.1s;
-}
-.btn-pdf:active { transform: scale(0.97); }
-.pdf-container { background: #fafafa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; color: #334155; }
-.pdf-header { text-align: center; border-bottom: 2px solid var(--accent-burgundy); padding-bottom: 12px; margin-bottom: 18px; }
-.pdf-section {
-margin-top: 16px; background: #fff; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0;
-page-break-inside: avoid !important; break-inside: avoid !important; /* 🚀 技術核心：強迫整塊方針與學期不跨頁剖半 */
-}
-.pdf-section h4 { margin: 0 0 10px 0; font-size: 0.95rem; color: var(--accent-burgundy); border-left: 4px solid var(--accent-burgundy); padding-left: 8px; font-weight: 800; }
-.pdf-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.82rem; text-align: center; }
-.pdf-table th { background-color: #f8fafc; color: #475569; font-weight: 700; padding: 8px; border: 1px solid #e2e8f0; }
-.pdf-table td { padding: 8px; border: 1px solid #e2e8f0; color: #334155; }
-.pdf-table tr.fail-row td { background-color: #fff5f5; color: #e53e3e; }
-.pdf-table tr.pass-row td { color: #10b981; }
-.pdf-badge { display: inline-block; padding: 2px 6px; font-size: 0.68rem; font-weight: bold; border-radius: 4px; color: #fff; text-align: center; }
 </style>
 <link rel="icon" href="favicon.png" type="image/png">
 </head>
 <body>
-
 <div class="header-area">
-<h1>國立勤益科技大學 機械工程系學分審查</h1>
+<h1>國立勤益科技大學機械工程系學分審查</h1>
 </div>
-
 <div class="container">
 <div class="summary-card">
 <div class="summary-label">總畢業學分</div>
@@ -436,83 +418,78 @@ page-break-inside: avoid !important; break-inside: avoid !important; /* 🚀 技
 <div class="summary-percent" id="lbl-total-pct">0%</div>
 </div>
 <div class="progress-bar"><div class="progress-fill" id="fill-total-bar"></div></div>
-<div class="summary-subtext">含必修 86 學分 ・ 選修至少 45 學分</div>
+<div class="summary-subtext">含必修 86 學分 / 選修至少 45 學分</div>
 </div>
 
 <div class="diagnostic-card" id="diag-box">
-<h4>⚙️ 畢業學分狀態即時審查結果</h4>
+<h4>畢業學分狀態即時審查結果</h4>
 <div id="diag-content">正在運算最新狀態...</div>
 </div>
 
 <div class="dashboard">
 <div class="card required">
-<h3>📘 必修累計</h3>
+<h3>必修累計</h3>
 <div class="number" id="lbl-req-cre">0 / 86</div>
 <div class="status" id="lbl-req-stat">還差 86 學分</div>
 </div>
 <div class="card prof-elective">
-<h3>🍊 本系專業選修</h3>
+<h3>本系專業選修</h3>
 <div class="number" id="lbl-p-el-cre">0 / 30</div>
 <div class="status" id="lbl-p-el-stat">還差 30 學分</div>
 </div>
 <div class="card other-elective">
-<h3>🔮 其他選修總計</h3>
-<div class="number" id="lbl-o-el-cre">0</div>
+<h3>其他選修總計</h3>
+<div class="number" id="lbl-o-el-cre">0 / 15</div>
 <div class="status" id="lbl-o-el-stat">還差 45 學分</div>
 </div>
 </div>
 
 <div class="summary-card" style="border-top: 4px solid var(--accent-burgundy);">
 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px;">
-<div style="font-size: 1.05rem; color: var(--text); font-weight: 800;">📋 畢業資格全方位深層審查明細報告</div>
-<button class="btn-pdf" id="btn-download-pdf">📥 下載完整 A4 PDF 報告書</button>
+<div class="summary-label" style="font-size: 1.05rem; color: var(--text); font-weight: 800; text-align: left;">📊 畢業資格深層核算與歷年成績報告書</div>
+<button class="btn-pdf" id="btn-download-pdf">📥 下載完整 A4 PDF 報告</button>
 </div>
 <div class="pdf-container" id="report-print-area">
 </div>
 </div>
+
 <div class="backup-panel">
-<h5>📋 手動進度備份箱 (增量超短代碼版)</h5>
+<h5>手動進度備份箱(增量超短代碼版)</h5>
 <div class="backup-flex">
 <input type="text" id="backup-text-field" class="backup-input" placeholder="填寫分數後自動生成備份代碼">
 <button class="btn-backup" id="btn-copy-backup">複製</button>
-<button class="btn-backup" style="background:rgb(59, 130, 246);" id="btn-restore-backup">還原</button>
+<button class="btn-backup" style="background: rgb(59, 130, 246);" id="btn-restore-backup">還原</button>
 </div>
 </div>
-
 <div class="control-panel">
 <div class="search-box">
-<input type="text" id="global-search" placeholder="🔍 輸入科目關鍵字快搜... (支援跨學年跨學期檢索)">
-<div class="search-tip-box" id="search-tip">💡 目前處於「全域搜尋模式」，已排開分頁。清空搜尋框即可還原標準學年分頁。</div>
+<input type="text" id="global-search" placeholder="輸入科目關鍵字快搜... (支援跨學年跨學期檢索)">
+<div class="search-tip-box" id="search-tip">目前處於「全域搜尋模式」，已排開分頁。清空搜尋框即可還原標準學年分頁。</div>
 </div>
 <div class="control-flex-row" id="tab-controls-area">
 <div class="tabs" id="year-tabs"></div>
 <div class="year-manage-btns">
-<button class="btn-manage add-year" id="btn-add-year">＋ 擴充全新學年</button>
-<button class="btn-manage del-year" id="btn-del-year">✕ 刪除最後學年</button>
+<button class="btn-manage add-year" id="btn-add-year">+ 擴充全新學年</button>
+<button class="btn-manage del-year" id="btn-del-year">× 刪除最後學年</button>
 </div>
 </div>
 </div>
-
 <div id="main-schedule-box"></div>
-
 <footer>
 Copyright © 2026 羅聖閎. All Rights Reserved.
 </footer>
 </div>
-
 <script>
-// 🧱 100% 精準依據官方計畫表正本配置
 var defaultCurriculumMatrix = {
-"y1_s1": [["國文(一)",3,"common"],["大一英文(一)",2,"common"],["英文聽講(一)",1,"common"],["體育(一)",0,"common"],["微積分(一)",3,"prof-req"],["程式語言",3,"prof-req"],["工廠實習",1,"prof-req"],["電腦輔助機械製圖",1,"prof-req"]],
-"y1_s2": [["國文(二)",3,"common"],["大一英文(二)",2,"common"],["英文聽講(二)",1,"common"],["體育(二)",0,"common"],["微積分(二)",3,"prof-req"],["靜力學",3,"prof-req"],["材料科學與工程",3,"prof-req"],["精密製造實習",1,"prof-req"]],
-"y2_s1": [["憲法與民主(一)",2,"common"],["藝術鑑賞(一)",1,"common"],["音樂鑑賞(一)",1,"common"],["體育(三)",0,"common"],["工程數學(一)",3,"prof-req"],["電機學",3,"prof-req"],["機械工程實驗(一)",1,"prof-req"],["動力學(一)",3,"prof-req"],["製造學",3,"prof-req"]],
+"y1_s1": [["國文(一)",3,"common"],["大一英文(一)",2,"common"],["英文聽講(一)",1,"common"],["體育(一)", 0,"common"], ["微積分(一)",3,"prof-req"],["程式語言",3,"prof-req"],["工廠實習",1,"prof-req"],["電腦輔助機械製圖",1,"prof-req"]],
+"y1_s2": [["國文(二)",3,"common"],["大一英文(二)",2,"common"],["英文聽講(二)",1,"common"],["體育(二)", 0,"common"], ["微積分(二)",3,"prof-req"],["靜力學",3,"prof-req"],["材料科學與工程",3,"prof-req"],["精密製造實習",1,"prof-req"]],
+"y2_s1":[["憲法與民主(一)",2,"common"],["藝術鑑賞(一)",1,"common"],["音樂鑑賞(一)",1,"common"],["體育(三)",0,"common"],["工程數學(一)",3,"prof-req"],["電機學",3,"prof-req"],["機械工程實驗(一)",1,"prof-req"],["動力學(一)",3,"prof-req"],["製造學",3,"prof-req"]],
 "y2_s2": [["憲法與民主(二)",2,"common"],["藝術鑑賞(二)",1,"common"],["音樂鑑賞(二)",1,"common"],["體育(四)",0,"common"],["工程數學(二)",3,"prof-req"],["應用電子學(一)",3,"prof-req"],["機構學",3,"prof-req"],["材料力學(一)",3,"prof-req"]],
-"y3_s1": [["歷史與文化(一)",2,"common"],["博雅通識課程",2,"common"],["機械設計(一)",3,"prof-req"],["熱力學(一)",3,"prof-req"],["自動控制",3,"prof-req"],["材料試驗",1,"prof-req"]],
-"y3_s2": [["歷史與文化(二)",2,"common"],["博雅通識課程",2,"common"],["流體力學(一)",3,"prof-req"]],
+"y3_s1":[["歷史與文化(一)",2,"common"],["博雅通識課程",2,"common"],["機械設計(一)",3,"prof-req"],["熱力學(一)",3,"prof-req"],["自動控制",3,"prof-req"],["材料試驗",1,"prof-req"]],
+"y3_s2":[["歷史與文化(二)",2,"common"],["博雅通識課程",2,"common"],["流體力學(一)",3,"prof-req"]],
 "y4_s1": [["機械工程實驗(二)",1,"prof-req"]],
-"y4_s2": [["機械工程實驗(三)",1,"prof-req"]]
+"y4_s2": [["機械工程實驗(三)", 1,"prof-req"]]
 };
-
 var storageKey = "ncut_state_bulletproof_v32_final";
 var activeYear = 1;
 var maxYearInState = 4;
@@ -526,17 +503,14 @@ if (text !== undefined && text !== null) e.appendChild(document.createTextNode(t
 if (parent) parent.appendChild(e);
 return e;
 }
-
 function hasItem(arr, val) {
-for (var i = 0; i < arr.length; i++) { if (arr[i] === val) return true; }
+for (var i=0; i < arr.length; i++) { if (arr[i]==val) return true; }
 return false;
 }
-
 function findIdx(arr, val) {
-for (var i = 0; i < arr.length; i++) { if (arr[i] === val) return i; }
+for (var i=0; i < arr.length; i++) { if (arr[i]==val) return i; }
 return -1;
 }
-
 var passedColors = {
 '通過': 'square-passed',
 '抵免': 'square-waived',
@@ -545,11 +519,9 @@ var passedColors = {
 '未修': 'square-failed',
 '未通過': 'square-failed'
 };
-
 function getSquareClass(status) {
 return passedColors[status] || 'square-failed';
 }
-
 function getSelectedGenEdFields(currentSem, currentIdx) {
 var selected = [];
 for (var sem in appState) {
@@ -565,63 +537,56 @@ selected.push(item.field);
 }
 return selected;
 }
-
 function copyBackupCode() {
 var txtField = document.getElementById('backup-text-field');
-if (!txtField || txtField.value === "") { alert("目前尚無進度可供複製！"); return; }
+if (!txtField || txtField.value === "") { alert("目前尚無進度可供複製!"); return; }
 txtField.select(); txtField.setSelectionRange(0, 99999);
 try {
 document.execCommand('copy');
-alert("📋 智慧增量超短代碼已複製到剪貼簿！");
-} catch (err) { alert("請手動複製：" + txtField.value); }
+alert("智慧增量超短代碼已複製到剪貼簿!");
+} catch (err) { alert("請手動複製:"+txtField.value); }
 }
-
 function importBackupCode() {
 var txtField = document.getElementById('backup-text-field');
-if (!txtField || txtField.value.trim() === "") { alert("請先貼上進度代碼！"); return; }
+if (!txtField || txtField.value.trim() === "") { alert("請先貼上進度代碼!"); return; }
 try {
 var jsonString = decodeURIComponent(atob(txtField.value.trim()));
 var parsed = JSON.parse(jsonString);
 decompressAndApplyState(parsed);
-saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks(); calculateCredits();
-alert("🟢 歷史修課進度已完美復原校正！");
-} catch(e) { alert("✕ 代碼結構損毀，請確認是否複製完整。"); }
+saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks();
+calculateCredits();
+alert("歷史修課進度已完美復原校正!");
+} catch(e) { alert("× 代碼結構損毀，請確認是否複製完整。"); }
 }
-
 function checkStorageAvailability() {
 try {
-window.localStorage.setItem('__test__', '1'); window.localStorage.removeItem('__test__');
+window.localStorage.setItem('_test_', '1');
+window.localStorage.removeItem('_test_');
 isLocalStorageAvailable = true;
 } catch(e) { isLocalStorageAvailable = false; }
 }
-
 var passedOtherEl = 0;
-
-function getYearBaseLabel(yNum) { return (110 + yNum); }
-
+function getYearBaseLabel(yNum) { return (110+yNum); }
 function getSemesterText(y, sKey) {
 var base = getYearBaseLabel(y);
-if (sKey === 's1') return base + "-1上";
-if (sKey === 's2') return base + "-2下";
-if (sKey === 's3') return base + "-3暑修一";
-if (sKey === 's4') return base + "-4暑修二";
+if(sKey=='s1') return base + "-1學期";
+if(sKey=='s2') return base + "-2學期";
+if(sKey=='s3') return base + "-3暑修一";
+if(sKey=='s4') return base + "-4暑修二";
 return "";
 }
-
 function getYearName(yNum) {
-var chs = ["零", "第一", "第二", "第三", "第四", "第五", "第六", "第七", "第八", "第九", "第十"];
-return yNum < chs.length ? chs[yNum] + "學年" : "第 " + yNum + " 學年";
+var chs = ["零", "第一","第二","第三","第四","第五","第六","第七","第八","第九","第十"];
+return yNum < chs.length? chs[yNum]+"學年":"第"+yNum+"學年";
 }
-
 function getTimelineOrderedSemesters() {
 var list = [];
-for (var y = 1; y <= maxYearInState; y++) {
-list.push("y" + y + "_s1"); list.push("y" + y + "_s2");
-list.push("y" + y + "_s3"); list.push("y" + y + "_s4");
+for (var y=1; y <= maxYearInState; y++){
+list.push("y"+y+"_s1"); list.push("y"+y+"_s2");
+list.push("y"+y+"_s3"); list.push("y"+y+"_s4");
 }
 return list;
 }
-
 function loadStateSafely() {
 var savedObj = null;
 if (isLocalStorageAvailable) {
@@ -632,18 +597,15 @@ if (raw) savedObj = JSON.parse(raw);
 }
 decompressAndApplyState(savedObj);
 }
-
 function saveState() {
 var compressed = compressState();
 var jsonStr = JSON.stringify(compressed);
 var txtField = document.getElementById('backup-text-field');
 if (txtField) txtField.value = btoa(encodeURIComponent(jsonStr));
-
 if (isLocalStorageAvailable) {
 try { window.localStorage.setItem(storageKey, jsonStr); } catch(e) {}
 }
 }
-
 function compressState() {
 var payload = [];
 for (var sem in appState) {
@@ -661,33 +623,31 @@ payload.push(['o', sem, idx, item.score, item.status, item.field, item.retakeTar
 }
 }
 }
-return { m: maxYearInState, d: payload };
+return {m: maxYearInState, d: payload };
 }
-
 function decompressAndApplyState(savedObj) {
-maxYearInState = (savedObj && savedObj.m) ? savedObj.m : 4;
-
+maxYearInState = (savedObj && savedObj.m)? savedObj.m: 4;
+appState = {};
 for (var sem in defaultCurriculumMatrix) {
 if (defaultCurriculumMatrix.hasOwnProperty(sem)) {
 var src = defaultCurriculumMatrix[sem]; appState[sem] = [];
-for (var i = 0; i < src.length; i++) {
+for (var i=0; i < src.length; i++) {
 appState[sem].push({
 id: "off_" + sem + "_" + i, name: src[i][0], cre: src[i][1], type: src[i][2],
-score: "", status: "未修", field: "", linkId: null, isRetakeCopy: false, retakeTarget: "", isCustom: false
+score: "", status: "未修", field: "", linkId: null, isRetakeCopy: false, retakeTarget: "",
+isCustom: false
 });
 }
 }
 }
-
 for (var y = 1; y <= maxYearInState; y++) {
 if (!appState["y" + y + "_s1"]) appState["y" + y + "_s1"] = [];
 if (!appState["y" + y + "_s2"]) appState["y" + y + "_s2"] = [];
 if (!appState["y" + y + "_s3"]) appState["y" + y + "_s3"] = [];
 if (!appState["y" + y + "_s4"]) appState["y" + y + "_s4"] = [];
 }
-
 if (savedObj && Array.isArray(savedObj.d)) {
-for (var k = 0; k < savedObj.d.length; k++) {
+for (var k=0; k < savedObj.d.length; k++) {
 var arr = savedObj.d[k]; var marker = arr[0];
 if (marker === 'o') {
 var sem = arr[1]; var idx = arr[2];
@@ -699,7 +659,8 @@ appState[sem][idx].linkId = arr[7];
 } else if (marker === 'c') {
 var sem = arr[1]; if (!appState[sem]) appState[sem] = [];
 appState[sem].push({
-id: "cust_" + Date.now() + "_" + Math.floor(Math.random()*10000), name: arr[2], cre: arr[3], type: arr[4],
+id: "cust_" + Date.now() + "_" + Math.floor(Math.random()*10000), name: arr[2],
+cre: arr[3], type: arr[4],
 score: arr[5], status: arr[6], field: arr[7], linkId: arr[8],
 isRetakeCopy: (arr[2] && (arr[2].indexOf("[重修]") === 0 || arr[2].indexOf("[補修]") === 0)),
 retakeTarget: "", isCustom: true
@@ -708,192 +669,165 @@ retakeTarget: "", isCustom: true
 }
 }
 }
-
 function expandNewYear() {
 maxYearInState++;
 appState["y" + maxYearInState + "_s1"] = []; appState["y" + maxYearInState + "_s2"] = [];
 appState["y" + maxYearInState + "_s3"] = []; appState["y" + maxYearInState + "_s4"] = [];
-saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks(); calculateCredits();
+saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks();
+calculateCredits();
 tabToYear(maxYearInState);
 }
-
 function shrinkLastYear() {
-if (maxYearInState <= 4) { alert("✕ 前四學年為基定對齊配置，不可再刪除！"); return; }
-if (confirm("⚠️ 確定要刪除整個學年與自訂資料嗎？")) {
+if (maxYearInState <= 4) { alert("× 前四學年為基定對齊配置，不可再刪除!"); return; }
+if (confirm("確定要刪除整個學年與自訂資料嗎?")) {
 delete appState["y" + maxYearInState + "_s1"]; delete appState["y" + maxYearInState + "_s2"];
 delete appState["y" + maxYearInState + "_s3"]; delete appState["y" + maxYearInState + "_s4"];
 maxYearInState--; if (activeYear > maxYearInState) activeYear = maxYearInState;
-saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks(); calculateCredits();
+saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks();
+calculateCredits();
 tabToYear(activeYear);
 }
 }
-
 function rebuildTabsUI() {
 var tabsBox = document.getElementById('year-tabs'); if (!tabsBox) return;
 tabsBox.innerHTML = "";
-for (var y = 1; y <= maxYearInState; y++) {
+for (var y=1; y <= maxYearInState; y++) {
 var btn = createEl('button', 'tab-btn', getYearName(y), tabsBox);
 if (y === activeYear) btn.className = "tab-btn active";
 (function(num) { btn.addEventListener('click', function() { tabToYear(num); }); })(y);
 }
 }
-
 function renderStructure() {
 var container = document.getElementById('main-schedule-box'); if (!container) return;
 container.innerHTML = "";
-
-for (var y = 1; y <= maxYearInState; y++) {
+for (var y=1; y <= maxYearInState; y++) {
 var yWrapper = createEl('div', 'year-wrapper', null, container);
 if (y === activeYear) yWrapper.className = "year-wrapper active";
 yWrapper.id = "year-block-" + y;
-
 var grid = createEl('div', 'semester-grid', null, yWrapper);
-var sKeys = ['s1', 's2', 's3', 's4'];
-for (var sIdx = 0; sIdx < sKeys.length; sIdx++) {
-var sKey = sKeys[sIdx]; var semKey = "y" + y + "_" + sKey;
-
+var skeys = ['s1', 's2', 's3', 's4'];
+for (var sIdx = 0; sIdx < skeys.length; sIdx++) {
+var skey = skeys[sIdx]; var semKey = "y" + y + "_" + skey;
 var semCard = createEl('div', 'semester-card', null, grid); semCard.id = "card-" + semKey;
 var hDiv = createEl('div', 'semester-header', null, semCard);
-createEl('span', null, getSemesterText(y, sKey), hDiv);
-
+createEl('span', null, getSemesterText(y, skey), hDiv);
 var matrixDiv = createEl('div', 'subjects-box-matrix', null, semCard);
 matrixDiv.id = "matrix-" + semKey;
-
 var btnSetDiv = createEl('div', 'btn-set', null, semCard);
-var btnProf = createEl('button', 'btn-action btn-p-el', "＋加選 專選", btnSetDiv);
+var btnProf = createEl('button', 'btn-action btn-p-el', "+加選專選",btnSetDiv);
 (function(sk) { btnProf.addEventListener('click', function() { addCustomBox(sk, 'prof'); }); })(semKey);
-
-var btnOther = createEl('button', 'btn-action btn-o-el', "＋加選 他選", btnSetDiv);
+var btnOther = createEl('button', 'btn-action btn-o-el', "+加選他選",btnSetDiv);
 (function(sk) { btnOther.addEventListener('click', function() { addCustomBox(sk, 'other'); }); })(semKey);
 }
 }
 }
-
 function tabToYear(yNum) {
 activeYear = yNum; var tabBtns = document.querySelectorAll('.tab-btn');
-for (var i = 0; i < tabBtns.length; i++) { tabBtns[i].className = "tab-btn"; }
+for (var i=0; i < tabBtns.length; i++) { tabBtns[i].className = "tab-btn"; }
 if (tabBtns[yNum - 1]) tabBtns[yNum - 1].className = "tab-btn active";
-
 var wrappers = document.querySelectorAll('.year-wrapper');
-for (var j = 0; j < wrappers.length; j++) { wrappers[j].className = "year-wrapper"; }
+for (var j=0; j < wrappers.length; j++) { wrappers[j].className = "year-wrapper"; }
 var targetBlock = document.getElementById("year-block-" + yNum);
 if (targetBlock) targetBlock.className = "year-wrapper active";
 }
-
 function createBoxDOM(sem, idx, item) {
 var box = createEl('div', 'subject-square ' + getSquareClass(item.status), null, null);
 box.id = "box-" + sem + "-" + idx; box.setAttribute('data-name', item.name);
-
 if (item.isCustom && !item.isRetakeCopy) {
-var delBtn = createEl('button', 'btn-box-del', "✕", box);
+var delBtn = createEl('button', 'btn-box-del', "X", box);
 delBtn.addEventListener('click', function() { deleteCustomBox(sem, idx); });
 }
-
 var topDiv = createEl('div', 'sub-top', null, box);
 var badge = createEl('span', 'badge', null, topDiv);
-
 if (item.type === 'common') { badge.className = "badge bg-common"; badge.innerText = "必修"; }
-else if (item.type === 'prof-req') { badge.className = "badge bg-prof-req"; badge.innerText = "專必"; }
-else if (item.type === 'prof') { badge.className = "badge bg-prof-el"; badge.innerText = "專選"; }
+else if (item.type === 'prof-req') { badge.className = "badge bg-prof-req"; badge.innerText = "專必";}
+else if (item.type === 'prof') { badge.className = "badge bg-prof-el"; badge.innerText = "專選";}
 else if (item.type === 'other') { badge.className = "badge bg-other-el"; badge.innerText = "他選"; }
-
 if (item.isCustom && !item.isRetakeCopy) {
 var creInput = createEl('input', 'cre-input', null, topDiv);
 creInput.type = "number"; creInput.min = "0"; creInput.max = "10";
-creInput.style.width = "34px"; creInput.style.fontSize = "0.7rem"; creInput.style.padding = "1px"; creInput.style.height = "20px";
+creInput.style.width = "34px"; creInput.style.fontSize = "0.7rem";
+creInput.style.padding = "1px"; creInput.style.height = "20px";
 creInput.value = item.cre;
 creInput.addEventListener('input', function() { updateCustomCre(sem, idx, this.value); });
 } else {
-createEl('span', 'sub-cre', item.cre + "學分", topDiv);
+createEl('span', 'sub-cre', item.cre+"學分", topDiv);
 }
-
 var titleDiv = createEl('div', 'sub-title-area', null, box);
 if (item.isCustom && !item.isRetakeCopy) {
 var nameInput = createEl('input', 'name-input', null, titleDiv);
-nameInput.type = "text"; nameInput.placeholder = "科目名稱"; nameInput.value = item.name;
+nameInput.type = "text"; nameInput.placeholder="科目名稱"; nameInput.value = item.name;
 nameInput.style.width = "100%"; nameInput.style.height = "24px";
 nameInput.addEventListener('input', function() { updateCustomName(sem, idx, this.value); });
 } else {
 titleDiv.appendChild(document.createTextNode(item.name));
 }
-
-if (item.name === "博雅通識課程") {
+if (item.name ==="博雅通識課程"){
 var otherSelected = getSelectedGenEdFields(sem, idx);
-var fieldsList = ["人文藝術領域", "社會科學領域", "自然科學領域", "生命教育領域"];
+var fieldsList = ["人文藝術領域","社會科學領域","自然科學領域","生命教育領域"];
 var genEdSelect = createEl('select', 'gen-ed-select', null, box);
-createEl('option', null, "⚙️ 選擇領域...", genEdSelect).value = "";
-
+createEl('option', null, "選擇領域...", genEdSelect).value = "";
 for (var fIdx = 0; fIdx < fieldsList.length; fIdx++) {
 var f = fieldsList[fIdx]; var opt = createEl('option', null, f, genEdSelect); opt.value = f;
-if (hasItem(otherSelected, f)) { opt.disabled = true; opt.innerText += " (已選)"; }
+if (hasItem(otherSelected, f)) { opt.disabled = true; opt.innerText += "(重)"; }
 if (item.field === f) opt.selected = true;
 }
 genEdSelect.addEventListener('change', function() { updateGenEdField(sem, idx, this.value); });
 }
-
 var ctrlDiv = createEl('div', 'sub-controls', null, box);
 var scoreInput = createEl('input', 'score-input', null, ctrlDiv);
 scoreInput.type = "number"; scoreInput.min = "0"; scoreInput.max = "100";
-scoreInput.placeholder = (item.status === '抵免' || item.status === '轉學補修') ? "免" : "分數";
+scoreInput.placeholder = (item.status === '抵免' || item.status === '轉學補修')?"免":"分數";
 scoreInput.value = item.score;
 if (item.status === '抵免' || item.status === '轉學補修') scoreInput.disabled = true;
 scoreInput.addEventListener('input', function() { updateScore(sem, idx, this.value); });
 
 var statusSelect = document.createElement('select'); statusSelect.className = "status-select";
 statusSelect.addEventListener('change', function() { updateStatus(sem, idx, this.value); });
-
-var statusOptions = [["未修", "❌ 未修"], ["未通過", "🔴 未通過"], ["重修中", "⚠️ 重修中"], ["轉學補修", "🔷 轉學補修"], ["抵免", "⚡ 已抵免"], ["通過", "🟢 已通過"]];
+var statusOptions = [["未修", "未修"],["未通過","未通過"],["重修中","重修中"],["通過","已通過"],["轉學補修","轉學補修"],["抵免","已抵免"]];
 for (var oIdx = 0; oIdx < statusOptions.length; oIdx++) {
 var optPair = statusOptions[oIdx]; var opt = createEl('option', null, optPair[1], statusSelect); opt.value = optPair[0];
 if (item.status === optPair[0]) opt.selected = true;
 }
 ctrlDiv.appendChild(statusSelect);
-
 var schedulerDiv = createEl('div', 'retake-scheduler-zone', null, box);
-schedulerDiv.style.display = (item.status === '未通過' || item.status === '轉學補修') ? "block" : "none";
-
+schedulerDiv.style.display = (item.status === '未通過' || item.status === '轉學補修')? "block": "none";
 var retakeSelect = createEl('select', 'retake-select', null, schedulerDiv);
-var label = (item.status === '轉學補修') ? "➔ 安排哪學期補修？" : "➔ 安排哪學期重修？";
+var label = (item.status === '轉學補修')?"安排哪學期補修?":"安排哪學期重修?";
 createEl('option', null, label, retakeSelect).value = "";
-
 var timeOrdered = getTimelineOrderedSemesters(); var currentPos = findIdx(timeOrdered, sem);
 for (var tIdx = 0; tIdx < timeOrdered.length; tIdx++) {
 if (tIdx > currentPos) {
 var targetSemKey = timeOrdered[tIdx]; var yVal = parseInt(targetSemKey.match(/^y(\d+)_/)[1]); var sVal = targetSemKey.split('_')[1];
-var opt = createEl('option', null, "修讀: " + getSemesterText(yVal, sVal), retakeSelect); opt.value = targetSemKey;
+var opt = createEl('option', null, "修讀:"+getSemesterText(yVal, sVal), retakeSelect); opt.value = targetSemKey;
 if (item.retakeTarget === targetSemKey) opt.selected = true;
 }
 }
 retakeSelect.addEventListener('change', function() { scheduleRetakeRoute(sem, idx, this.value); });
-
 if (item.isRetakeCopy) {
 var tagDiv = createEl('div', null, null, box); tagDiv.style.fontSize = "0.7rem"; tagDiv.style.fontWeight = "bold"; tagDiv.style.marginTop = "4px"; tagDiv.style.textAlign = "right";
-if (item.name.indexOf("[補修]") === 0) { tagDiv.style.color = "rgb(59, 130, 246)"; tagDiv.innerText = "🔄 補修追蹤卡"; }
-else { tagDiv.style.color = "rgb(245, 158, 11)"; tagDiv.innerText = "🔄 重修追蹤卡"; }
+if (item.name.indexOf("[補修]") === 0) { tagDiv.style.color = "rgb(59,130,246)"; tagDiv.innerText="補修追蹤卡"; }
+else { tagDiv.style.color = "rgb(245,158,11)"; tagDiv.innerText = "重修追蹤卡"; }
 }
 return box;
 }
-
 function renderSemesterMatrix(sem) {
 var matrix = document.getElementById("matrix-" + sem); if (!matrix) return;
 matrix.innerHTML = "";
 if (appState[sem]) {
-for (var i = 0; i < appState[sem].length; i++) { matrix.appendChild(createBoxDOM(sem, i, appState[sem][i])); }
+for (var i=0; i < appState[sem].length; i++) { matrix.appendChild(createBoxDOM(sem, i, appState[sem][i])); }
 }
 }
-
 function updateScore(sem, idx, val) {
 var item = appState[sem][idx]; if (!item) return;
 var trimmed = val.trim(); item.score = trimmed;
-
 if (trimmed !== "") {
 var scoreNum = parseFloat(trimmed);
 if (scoreNum > 100) { scoreNum = 100; item.score = "100"; }
 if (scoreNum < 0) { scoreNum = 0; item.score = "0"; }
 if (scoreNum >= 60) { item.status = "通過"; }
-else { if (item.status !== "重修中" && item.status !== "轉學補修" && item.status !== "抵免") item.status = "未通過"; }
-} else { if (item.status === "通過" || item.status === "未通過") item.status = "未修"; }
-
+else { if (item.status!== "重修中" && item.status!== "轉學補修" && item.status!== "抵免") item.status = "未通過";}
+} else { if (item.status ==="通過" || item.status ==="未通過") item.status = "未修"; }
 saveState();
 var box = document.getElementById("box-" + sem + "-" + idx);
 if (box) {
@@ -905,20 +839,19 @@ if (existingZone) {
 if (item.status === '未通過' || item.status === '轉學補修') {
 existingZone.style.display = "block";
 var rSelect = existingZone.querySelector('.retake-select');
-if (rSelect) rSelect.options[0].text = (item.status === '轉學補修') ? "➔ 安排哪學期補修？" : "➔ 安排哪學期重修？";
+if (rSelect) rSelect.options[0].text = (item.status === '轉學補修')?"→ 安排哪學期補修?":"安排哪學期重修?";
 } else { existingZone.style.display = "none"; }
 }
 }
 calculateCredits();
 }
-
 function scheduleRetakeRoute(originSem, idx, targetSem) {
 var item = appState[originSem][idx]; if (!item) return;
 if (item.linkId) {
 for (var semKey in appState) {
 if (appState.hasOwnProperty(semKey)) {
 var newArr = [];
-for (var x = 0; x < appState[semKey].length; x++) {
+for (var x=0; x < appState[semKey].length; x++) {
 var c = appState[semKey][x];
 if (!(c.linkId === item.linkId && c.isRetakeCopy && semKey === item.retakeTarget)) newArr.push(c);
 }
@@ -926,40 +859,35 @@ appState[semKey] = newArr;
 }
 }
 }
-
 if (targetSem === "") {
-item.linkId = null; item.retakeTarget = ""; saveState(); renderSemesterMatrix(originSem); calculateCredits(); return;
+item.linkId = null; item.retakeTarget = ""; saveState();
+renderSemesterMatrix(originSem); calculateCredits(); return;
 }
-
-var sharedLinkId = item.linkId ? item.linkId : "link_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
+var sharedLinkId = item.linkId? item.linkId: "link_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
 item.linkId = sharedLinkId; item.retakeTarget = targetSem;
-
-var prefix = (item.status === '轉學補修') ? "[補修] " : "[重修] "; var cleanName = item.name;
-if (cleanName.indexOf("[重修] ") === 0) cleanName = cleanName.substring(5);
-if (cleanName.indexOf("[補修] ") === 0) cleanName = cleanName.substring(5);
-
+var prefix = (item.status === '轉學補修')?"[補修]": "[重修]"; var cleanName = item.name;
+if (cleanName.indexOf("[重修]") === 0) cleanName = cleanName.substring(5);
+if (cleanName.indexOf("[補修]") === 0) cleanName = cleanName.substring(5);
 appState[targetSem].push({
 id: "retake_copy_" + Date.now(), name: prefix + cleanName, cre: item.cre, type: item.type,
-score: "", status: "未修", field: "", linkId: sharedLinkId, isRetakeCopy: true, retakeTarget: "", isCustom: true
+score: "", status: "未修", field: "", linkId: sharedLinkId, isRetakeCopy: true,
+retakeTarget: "", isCustom: true
 });
-
-saveState(); renderAllBlocks(); calculateCredits(); alert("🚀 已成功排入追蹤時程選單！");
+saveState(); renderAllBlocks(); calculateCredits(); alert("已成功排入追蹤時程選單!");
 }
-
 function updateGenEdField(sem, idx, fieldVal) {
-if (appState[sem] && appState[sem][idx]) { appState[sem][idx].field = fieldVal; saveState(); renderAllBlocks(); calculateCredits(); }
+if (appState[sem] && appState[sem][idx]) { appState[sem][idx].field = fieldVal;
+saveState(); renderAllBlocks(); calculateCredits(); }
 }
-
 function addCustomBox(sem, elType) {
 if (!appState[sem]) appState[sem] = [];
 appState[sem].push({
 id: "cust_" + Date.now() + "_" + Math.floor(Math.random()*10000), name: "", cre: 3, type: elType,
-score: "", status: "未修", field: "", linkId: null, isRetakeCopy: false, retakeTarget: "", isCustom: true
+score: "", status: "未修", field: "", linkId: null, isRetakeCopy: false, retakeTarget: "",
+isCustom: true
 });
 saveState(); renderSemesterMatrix(sem); calculateCredits();
 }
-
-// 🧱 當自訂選修方塊被刪除時，同步清理重修/補修連動卡片鏈
 function deleteCustomBox(sem, idx) {
 if (appState[sem]) {
 var item = appState[sem][idx];
@@ -967,8 +895,8 @@ if (item && item.linkId && item.isRetakeCopy) {
 for (var sKey in appState) {
 if (appState.hasOwnProperty(sKey)) {
 var arr = appState[sKey];
-for (var i = 0; i < arr.length; i++) {
-var originItem = arr[i]; if (originItem.linkId === item.linkId && !originItem.isRetakeCopy) { originItem.linkId = null; originItem.retakeTarget = ""; }
+for (var i=0; i < arr.length; i++) {
+var originItem = arr[i]; if (originItem.linkId === item.linkId && !originItem.isRetakeCopy) { originItem.linkId = null; originItem.retakeTarget = "";}
 }
 }
 }
@@ -976,14 +904,12 @@ var originItem = arr[i]; if (originItem.linkId === item.linkId && !originItem.is
 appState[sem].splice(idx, 1); saveState(); renderAllBlocks(); calculateCredits();
 }
 }
-
 function updateStatus(sem, idx, val) {
 var item = appState[sem][idx]; if (!item) return;
 item.status = val;
-if (val === "抵免" || val === "轉學補修") { item.score = ""; }
+if (val === "抵免" || val === "轉學補修"){ item.score = ""; }
 else if (val === "通過" && item.score === "") { item.score = "60"; }
-else if ((val === "未修" || val === "未通過") && parseFloat(item.score) >= 60) { item.score = ""; }
-
+else if (val === "未修" || (val === "未通過" && parseFloat(item.score) >= 60)) { item.score = ""; }
 saveState();
 var box = document.getElementById("box-" + sem + "-" + idx);
 if (box) {
@@ -991,19 +917,18 @@ box.className = "subject-square " + getSquareClass(item.status);
 var scoreInp = box.querySelector('.score-input');
 if (scoreInp) {
 scoreInp.value = item.score; scoreInp.disabled = (val === '抵免' || val === '轉學補修');
-scoreInp.placeholder = (val === '抵免' || val === '轉學補修') ? "免" : "分數";
+scoreInp.placeholder = (val === '抵免' || val === '轉學補修')?"免":"分數";
 }
 var existingZone = box.querySelector('.retake-scheduler-zone');
 if (existingZone) {
 if (val === '未通過' || val === '轉學補修') {
 existingZone.style.display = "block"; var rSelect = existingZone.querySelector('.retake-select');
-if (rSelect) rSelect.options[0].text = (val === '轉學補修') ? "➔ 安排哪學期補修？" : "➔ 安排哪學期重修？";
+if (rSelect) rSelect.options[0].text = (val === '轉學補修')?"安排哪學期補修?":"安排哪學期重修?";
 } else { existingZone.style.display = "none"; }
 }
 }
 calculateCredits();
 }
-
 function updateCustomName(sem, idx, val) {
 if (appState[sem] && appState[sem][idx]) {
 appState[sem][idx].name = val.trim(); saveState();
@@ -1011,52 +936,215 @@ var box = document.getElementById("box-" + sem + "-" + idx); if (box) box.setAtt
 calculateCredits();
 }
 }
-
 function updateCustomCre(sem, idx, val) {
 if (appState[sem] && appState[sem][idx]) { appState[sem][idx].cre = parseFloat(val) || 0; saveState(); calculateCredits(); }
 }
-
 function doGlobalSearch() {
 var q = document.getElementById('global-search').value.toLowerCase().trim();
 var tabControls = document.getElementById('tab-controls-area'); var tip = document.getElementById('search-tip');
 var wrappers = document.querySelectorAll('.year-wrapper'); var cards = document.querySelectorAll('.semester-card');
-
 if (q === "") {
 if (tabControls) tabControls.style.display = 'flex';
 if (tip) tip.style.display = 'none';
 var allBoxes = document.querySelectorAll('.subject-square');
-for (var a = 0; a < allBoxes.length; a++) { allBoxes[a].style.display = ''; }
-for (var c = 0; c < cards.length; c++) { cards[c].style.display = ''; }
+for (var a=0; a < allBoxes.length; a++) { allBoxes[a].style.display = ""; }
+for (var c=0; c < cards.length; c++) { cards[c].style.display = ""; }
 tabToYear(activeYear); return;
 }
-
 if (tabControls) tabControls.style.display = 'none';
 if (tip) tip.style.display = 'block';
-for (var w = 0; w < wrappers.length; w++) { wrappers[w].style.display = 'block'; }
-
+for (var w=0; w < wrappers.length; w++) { wrappers[w].style.display = 'block'; }
 for (var cIdx = 0; cIdx < cards.length; cIdx++) {
 var card = cards[cIdx]; var hasMatch = false; var boxes = card.querySelectorAll('.subject-square');
 for (var bIdx = 0; bIdx < boxes.length; bIdx++) {
 var box = boxes[bIdx]; var currentName = box.getAttribute('data-name') || "";
 var input = box.querySelector('.name-input'); if (input) currentName = input.value;
-if (currentName.toLowerCase().indexOf(q) !== -1) { box.style.display = ''; hasMatch = true; } else { box.style.display = 'none'; }
+if (currentName.toLowerCase().indexOf(q) !== -1) { box.style.display = ""; hasMatch = true; } else { box.style.display = 'none'; }
 }
-card.style.display = hasMatch ? '' : 'none';
+card.style.display = hasMatch?"": 'none';
 }
 }
-
 function renderAllBlocks() {
 var semesters = getTimelineOrderedSemesters();
 for (var i = 0; i < semesters.length; i++) { renderSemesterMatrix(semesters[i]); }
 }
 
-function updateLabelDeficit(id, deficit) {
-var el = document.getElementById(id); if (!el) return;
-if (deficit > 0) { el.innerText = "還差 " + deficit + " 學分"; el.style.color = 'var(--cls-failed)'; }
-else { el.innerText = "已達標"; el.style.color = 'var(--cls-passed)'; }
+// 🎯 全新學術官方風格式樣：獨立 A4 PDF 報告書動態渲染核心
+function generateDeepReportUI(total, req, prof, other, failedList, retakeList) {
+var area = document.getElementById('report-print-area');
+if (!area) return;
+
+var isGraduated = (req >= 86 && prof >= 30 && (prof + other) >= 45 && total >= 131);
+var statusText = isGraduated ? "🎉 恭喜！畢業資格學分審查核算：『 已完全達標 』" : "⚠️ 畢業資格學分審查核算：『 尚未達標 』";
+var statusColor = isGraduated ? "#10b981" : "#ef4444";
+
+// 🎯 報告時間動態精準至年月日時分
+var now = new Date();
+var timeStr = now.getFullYear() + " 年 " + (now.getMonth() + 1) + " 月 " + now.getDate() + " 日 " + now.getHours() + " 時 " + now.getMinutes() + " 分";
+
+var genEdFields = [];
+for (var sem in appState) {
+if (appState.hasOwnProperty(sem)) {
+appState[sem].forEach(function(item){
+if(item.name === "博雅通識課程" && item.field && !hasItem(genEdFields, item.field)) { genEdFields.push(item.field); }
+});
+}
 }
 
-// 🧱 100% 內聯完全焊接，修復所有變數鏈與重修/補修連動統計邏輯
+var smartAdvice = "根據機械工程系課程地圖核心演算法分析：";
+if (hasItem(failedList, "微積分(一)") || hasItem(failedList, "微積分(二)")) {
+smartAdvice += "微積分為工程學之本，建議紮實奠定數學工具基礎，以免影響後續高階工程數學等學科推導。";
+} else if (hasItem(failedList, "靜力學") || hasItem(failedList, "動力學(一)") || hasItem(failedList, "流體力學(一)") || hasItem(failedList, "熱力學(一)")) {
+smartAdvice += "力學學科（靜力、動力、流體、熱力）為機械工程核心基石，物理直覺與公式推導並重，建議於時程規劃內優先重點攻克。";
+} else if (isGraduated) {
+smartAdvice += "幹得漂亮！所有的必修魔王與選修學分已全數通關。這極具紀律的學分曲線就和完美的健身體態一樣無懈可擊，準備安心畢業邁向下一個人生航道！";
+} else {
+smartAdvice += "目前核心進度穩定，請持續保持穩健修課節奏，有條不紊地將剩餘的選修學分補齊即可。";
+}
+
+var failedBadgesHtml = "";
+if (failedList.length > 0) {
+failedList.forEach(function(item) { failedBadgesHtml += `<span class="report-badge-failed">${item}</span>`; });
+}
+
+var retakeBadgesHtml = "";
+if (retakeList.length > 0) {
+retakeList.forEach(function(item) { retakeBadgesHtml += `<span class="report-badge-retake">${item}</span>`; });
+}
+
+var html = `
+<div class="pdf-header">
+<h2 style="margin: 0; color: rgb(15, 23, 42); font-size: 1.4rem; font-weight: 800; text-align: center;">國立勤益科技大學 機械工程系</h2>
+<h3 style="margin: 6px 0 0 0; color: var(--accent-burgundy); font-size: 1.1rem; letter-spacing: 1px; text-align: center;">畢業資格全方位深層審查診斷報告</h3>
+<div style="font-size: 0.75rem; color: #94a3b8; margin-top: 8px; text-align: center;">報告編譯時間：${timeStr} / 智慧工程審查系統 v5.0</div>
+</div>
+
+<div style="background: ${statusColor}10; border-left: 5px solid ${statusColor}; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; color: ${statusColor}; font-size: 0.85rem; text-align: center; box-sizing: border-box; width: 100%;">
+當前審查狀態：${statusText}
+</div>
+
+<div style="width: 100%; margin: 15px 0; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;">
+<div style="flex: 1; min-width: 45%; background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; box-sizing: border-box;">
+<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px; text-align: center;">總畢業進度</div>
+<div style="font-size:1.4rem; font-weight:800; color:#1e293b; text-align: center;">${total} <span style="font-size: 0.85rem; font-weight: 600; color:#64748b;"> / 131 學分</span></div>
+<div style="font-size: 0.7rem; color: var(--accent-burgundy); font-weight: bold; margin-top: 4px; text-align: center;">達成率：${Math.floor((total/131)*100)}%</div>
+</div>
+<div style="flex: 1; min-width: 45%; background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
+<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px; text-align: center;">核心必修累計</div>
+<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b; text-align: center;">${req} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 86 學分</span></div>
+<div style="font-size: 0.7rem; color: ${req >= 86 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px; text-align: center;">${req >= 86 ? '✓ 已達標' : '還差 '+(86-req)+' 學分'}</div>
+</div>
+<div style="flex: 1; min-width: 45%; background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; box-sizing: border-box;">
+<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px; text-align: center;">專業選修累計</div>
+<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b; text-align: center;">${prof} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 30 學分</span></div>
+<div style="font-size: 0.7rem; color: ${prof >= 30 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px; text-align: center;">${prof >= 30 ? '✓ 已達標' : '還差 '+(30-prof)+' 學分'}</div>
+</div>
+<div style="flex: 1; min-width: 45%; background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; box-sizing: border-box;">
+<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px; text-align: center;">選修總量 (專選+他選)</div>
+<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b; text-align: center;">${prof + other} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 45 學分</span></div>
+<div style="font-size: 0.7rem; color: ${(prof + other) >= 45 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px; text-align: center;">${(prof + other) >= 45 ? '✓ 已達標' : '還差 '+(45-(prof+other))+' 學分'}</div>
+</div>
+</div>
+
+<div class="pdf-section">
+<h4>💡 智慧大數據工程診斷評語</h4>
+<p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #334155;">${smartAdvice}</p>
+</div>
+
+<div class="pdf-section">
+<h4>🎯 博雅通識領域均衡度</h4>
+<p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #334155;">目前已確切修讀 <strong style="color:var(--accent-burgundy); font-weight:800;">${genEdFields.length}</strong> 個核心通識領域。已登錄之有效領域：${genEdFields.length > 0 ? genEdFields.join('、') : '暫無紀錄'}。</p>
+</div>
+
+<div class="pdf-section">
+<h4>📜 歷年修課、成績與學分明細清單</h4>
+<div id="pdf-dynamic-rows-area"></div>
+</div>
+
+${failedList.length > 0 ? `
+<div class="pdf-section">
+<h4 style="color: #ef4444; border-left-color: #ef4444;">🚨 尚未修讀、轉學補修或未通過的核心科目</h4>
+<div class="report-badge-container">${failedBadgesHtml}</div>
+</div>
+` : `
+<div class="pdf-section">
+<h4 style="color: #10b981; border-left-color: #10b981;">🏆 核心必修進度狀態</h4>
+<p style="margin: 0; font-size: 0.82rem; color: #334155; font-weight: 600;">優秀！目前無任何處於未通過或未修狀態的重大核心必修學科。</p>
+</div>
+`}
+
+${retakeList.length > 0 ? `
+<div class="pdf-section">
+<h4 style="color: var(--accent-blue); border-left-color: var(--accent-blue);">⏳ 正在重修或補修追蹤中的排程科目</h4>
+<div class="report-badge-container">${retakeBadgesHtml}</div>
+</div>
+` : ''}
+
+<div style="margin-top: 20px; text-align: center; font-size: 0.65rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 8px; width:100%;">
+本報告由 NCUT 機械系學分審查工具自動編譯導出 • 僅供修課進度審查參考使用
+</div>
+`;
+
+// 渲染學期細項表格
+var rowsArea = html ? document.createElement('div') : null;
+var tOrdered = getTimelineOrderedSemesters();
+var rowsHtml = "";
+for (var t = 0; t < tOrdered.length; t++) {
+var sKey = tOrdered[t];
+var subs = appState[sKey];
+if (!subs || subs.length === 0) continue;
+
+var subRows = "";
+subs.forEach(function(sub) {
+if (sub.name.trim() === "") return;
+var bColor = "rgb(100, 116, 139)"; var bText = "必修";
+if (sub.type === 'prof-req') { bColor = "rgb(59, 130, 246)"; bText = "專必"; }
+else if (sub.type === 'prof') { bColor = "var(--cls-retake)"; bText = "專選"; }
+else if (sub.type === 'other') { bColor = "rgb(139, 92, 246)"; bText = "他選"; }
+
+var rStyle = "color: #e53e3e; background: #fff5f5;";
+if (sub.status === '通過' || sub.status === '抵免') { rStyle = "color: #10b981;"; }
+else if (sub.status === '重修中' || sub.status === '轉學補修') { rStyle = "color: #334155;"; }
+
+var scoreShow = sub.score !== "" ? sub.score + " 分" : sub.status;
+var genEdShow = (sub.name === "博雅通識課程" && sub.field) ? `<br><span style="color:#64748b; font-size:0.7rem;">[${sub.field}]</span>` : "";
+
+subRows += `
+<tr style="${rStyle}">
+<td style="padding: 7px; border: 1px solid #e2e8f0; text-align: left; font-weight: 600;">${sub.name}${genEdShow}</td>
+<td style="padding: 7px; border: 1px solid #e2e8f0;"><span class="pdf-badge" style="background-color:${bColor}">${bText}</span></td>
+<td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: bold;">${sub.cre}</td>
+<td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: 700;">${scoreShow}</td>
+</tr>
+`;
+});
+
+if (subRows !== "") {
+var yV = parseInt(sKey.match(/^y(\d+)_/)[1]); var sV = sKey.split('_')[1];
+rowsHtml += `
+<div style="margin: 12px 0 6px 0; font-weight: 800; font-size: 0.85rem; color: var(--accent-burgundy); border-bottom: 1px solid #cbd5e1; padding-bottom: 2px;">📍 ${getSemesterText(yV, sV)}</div>
+<table class="pdf-table" style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: center; margin-bottom: 10px;">
+<thead>
+<tr style="background: #f8fafc; color: #475569;">
+<th style="padding: 7px; border: 1px solid #e2e8f0; text-align: left;">科目名稱</th>
+<th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">類別</th>
+<th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">學分</th>
+<th style="padding: 7px; border: 1px solid #e2e8f0; width: 25%;">分數狀態</th>
+</tr>
+</thead>
+<tbody>${subRows}</tbody>
+</table>
+`;
+}
+}
+
+area.innerHTML = html;
+var dynamicRowsZone = area.querySelector('#pdf-dynamic-rows-area');
+if (dynamicRowsZone) {
+dynamicRowsZone.innerHTML = rowsHtml || `<p style="text-align: center; color: #94a3b8; font-size: 0.8rem; margin: 15px 0;">目前尚未登錄任何科目進度。</p>`;
+}
+}
+
 function calculateCredits() {
 try {
 var passedCommon = 0;
@@ -1100,7 +1188,7 @@ else if (item.type === 'prof') passedProfEl += item.cre;
 else if (item.type === 'other') localPassedOtherEl += item.cre;
 }
 } else if (isGroupPassed) {
-// 鏈接通過
+// Linked pass
 } else if (item.status === '重修中'){
 if ((item.type === 'common' || item.type === 'prof-req') && !item.isRetakeCopy) {
 if (!hasItem(currentlyRetakingReq, item.name)) currentlyRetakingReq.push(item.name);
@@ -1117,6 +1205,7 @@ var sumRequiredPassed = passedCommon + passedProfReq;
 var sumElectivePassed = passedProfEl + localPassedOtherEl;
 var sumTotalPassed = sumRequiredPassed + sumElectivePassed;
 
+// 🎯 主網頁配重優化：加入完美的對稱空格
 document.getElementById('lbl-total-cre').innerHTML = sumTotalPassed + " / 131<span>學分</span>";
 var pct = Math.floor((sumTotalPassed / 131) * 100); if (pct > 100) pct = 100;
 document.getElementById('lbl-total-pct').innerText = pct + "%";
@@ -1189,160 +1278,17 @@ sB.style.color = "var(--accent-blue)"; sB.style.fontWeight = "bold";
 }
 }
 
-// 🎯 核心演算法智慧修復：精準對齊原始碼變數
-var smartAdvice = "根據機械工程系課程地圖核心演算法分析：";
-if (hasItem(completelyFailedReq, "微積分(一)") || hasItem(completelyFailedReq, "微積分(二)")) {
-smartAdvice += "微積分為工程學之本，建議紮實奠定數學工具基礎，以免影響後續高階工程數學等學科推導。";
-} else if (hasItem(completelyFailedReq, "靜力學") || hasItem(completelyFailedReq, "動力學(一)") || hasItem(completelyFailedReq, "流體力學(一)") || hasItem(completelyFailedReq, "熱力學(一)")) {
-smartAdvice += "力學學科（靜力、動力、流體、熱力）為機械工程核心基石，物理直覺與公式推導並重，建議於時程規劃內優先重點攻克。";
-} else if (sumRequiredPassed >= 86 && passedProfEl >= 30 && sumElectivePassed >= 45 && sumTotalPassed >= 131) {
-smartAdvice += "幹得漂亮！所有的必修魔王與選修學分已全數通關。這極具紀律的學分曲線就和完美的健身體態一樣無懈可擊，準備安心畢業邁向下一個人生航道！";
-} else {
-smartAdvice += "目前核心進度穩定，請持續保持穩健修課節奏，有條不紊地將剩餘的選修學分補齊即可。";
-}
-
-// 🎯 生成全新設計的高階對稱風 PDF 報告介面
-var area = document.getElementById('report-print-area');
-if (area) {
-var now = new Date();
-var timeStr = now.getFullYear() + " 年 " + (now.getMonth() + 1) + " 月 " + now.getDate() + " 日 " + now.getHours() + " 時 " + now.getMinutes() + " 分";
-
-var genEdFields = [];
-for (var semKey in appState) {
-if (appState.hasOwnProperty(semKey)) {
-appState[semKey].forEach(function(item){
-if(item.name === "博雅通識課程" && item.field && !hasItem(genEdFields, item.field)) { genEdFields.push(item.field); }
-});
-}
-}
-
-var failedBadgesHtml = "";
-if (completelyFailedReq.length > 0) {
-completelyFailedReq.forEach(function(item) { failedBadgesHtml += `<span class="report-badge-failed">${item}</span>`; });
-}
-
-var retakeBadgesHtml = "";
-if (currentlyRetakingReq.length > 0) {
-currentlyRetakingReq.forEach(function(item) { retakeBadgesHtml += `<span class="report-badge-retake">${item}</span>`; });
-}
-
-area.innerHTML = `
-<div class="pdf-header">
-<h2 style="margin: 0; color: rgb(15, 23, 42); font-size: 1.4rem; font-weight: 800;">國立勤益科技大學 機械工程系</h2>
-<h3 style="margin: 6px 0 0 0; color: var(--accent-burgundy); font-size: 1.1rem; letter-spacing: 1px;">畢業資格全方位深層審查診斷報告</h3>
-<div style="font-size: 0.75rem; color: #94a3b8; margin-top: 8px;">報告編譯時間：${timeStr} / 智慧工程審查系統 v4.6</div>
-</div>
-
-<div style="background: ${statusColor}10; border-left: 5px solid ${statusColor}; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; font-weight: bold; color: ${statusColor}; font-size: 0.85rem; text-align: center; box-sizing: border-box; width: 100%;">
-當前審查狀態：${statusText}
-</div>
-
-<div style="width: 100%; margin: 15px 0; box-sizing: border-box;">
-<div style="display: flex; gap: 12px; margin-bottom: 12px; width: 100%;">
-<div style="flex: 1; background: #fff; padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
-<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px;">總畢業進度</div>
-<div style="font-size:1.4rem; font-weight:800; color:#1e293b;">${sumTotalPassed} <span style="font-size: 0.85rem; font-weight: 600; color:#64748b;"> / 131 學分</span></div>
-<div style="font-size: 0.7rem; color: var(--accent-burgundy); font-weight: bold; margin-top: 4px;">達成率：${Math.floor((sumTotalPassed/131)*100)}%</div>
-</div>
-<div style="flex: 1; background: #fff; padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
-<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px;">核心必修累計</div>
-<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b;">${sumRequiredPassed} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 86 學分</span></div>
-<div style="font-size: 0.7rem; color: ${sumRequiredPassed >= 86 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px;">${sumRequiredPassed >= 86 ? '✓ 已達標' : '還差 '+(86-sumRequiredPassed)+' 學分'}</div>
-</div>
-</div>
-<div style="display: flex; gap: 12px; width: 100%;">
-<div style="flex: 1; background: #fff; padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
-<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px;">專業選修累計</div>
-<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b;">${passedProfEl} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 30 學分</span></div>
-<div style="font-size: 0.7rem; color: ${passedProfEl >= 30 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px;">${passedProfEl >= 30 ? '✓ 已達標' : '還差 '+(30-passedProfEl)+' 學分'}</div>
-</div>
-<div style="flex: 1; background: #fff; padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
-<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px;">選修總量 (專選+他選)</div>
-<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b;">${sumElectivePassed} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 45 學分</span></div>
-<div style="font-size: 0.7rem; color: ${sumElectivePassed >= 45 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px;">${sumElectivePassed >= 45 ? '✓ 已達標' : '還差 '+(45-sumElectivePassed)+' 學分'}</div>
-</div>
-</div>
-</div>
-
-<div class="pdf-section">
-<h4>💡 智慧大數據工程診斷評語</h4>
-<p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #334155;">${smartAdvice}</p>
-</div>
-
-<div class="pdf-section">
-<h4>🎯 博雅通識領域均衡度</h4>
-<p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #334155;">目前已確切修讀 <strong style="color:var(--accent-burgundy); font-weight:800;">${genEdFields.length}</strong> 個核心通識領域。已登錄之有效領域：${genEdFields.length > 0 ? genEdFields.join('、') : '暫無紀錄'}。</p>
-</div>
-
-<div class="pdf-section">
-<h4>📜 歷年修課、成績與學分明細清單</h4>
-<div id="pdf-dynamic-rows-area"></div>
-</div>
-`;
-
-// 🎯 逐一撈取各學期科目明細，以精美的橫向清單對稱渲染
-var rowsArea = area.querySelector('#pdf-dynamic-rows-area');
-if (rowsArea) {
-var tOrdered = getTimelineOrderedSemesters();
-var rowsHtml = "";
-for (var t = 0; t < tOrdered.length; t++) {
-var sKey = tOrdered[t];
-var subs = appState[sKey];
-if (!subs || subs.length === 0) continue;
-
-var subRows = "";
-subs.forEach(function(sub) {
-if (sub.name.trim() === "") return;
-var bColor = "rgb(100, 116, 139)"; var bText = "必修";
-if (sub.type === 'prof-req') { bColor = "rgb(59, 130, 246)"; bText = "專必"; }
-else if (sub.type === 'prof') { bColor = "var(--cls-retake)"; bText = "專選"; }
-else if (sub.type === 'other') { bColor = "rgb(139, 92, 246)"; bText = "他選"; }
-
-var rStyle = "color: #e53e3e; background: #fff5f5;";
-if (sub.status === '通過' || sub.status === '抵免') { rStyle = "color: #10b981;"; }
-else if (sub.status === '重修中' || sub.status === '轉學補修') { rStyle = "color: #334155;"; }
-
-var scoreShow = sub.score !== "" ? sub.score + " 分" : sub.status;
-var genEdShow = (sub.name === "博雅通識課程" && sub.field) ? `<br><span style="color:#64748b; font-size:0.7rem;">[${sub.field}]</span>` : "";
-
-subRows += `
-<tr style="${rStyle}">
-<td style="padding: 7px; border: 1px solid #e2e8f0; text-align: left; font-weight: 600;">${sub.name}${genEdShow}</td>
-<td style="padding: 7px; border: 1px solid #e2e8f0;"><span class="pdf-badge" style="background-color:${bColor}">${bText}</span></td>
-<td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: bold;">${sub.cre}</td>
-<td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: 700;">${scoreShow}</td>
-</tr>
-`;
-});
-
-if (subRows !== "") {
-var yV = parseInt(sKey.match(/^y(\d+)_/)[1]); var sV = sKey.split('_')[1];
-rowsHtml += `
-<div style="margin: 12px 0 6px 0; font-weight: 800; font-size: 0.85rem; color: var(--accent-burgundy); border-bottom: 1px solid #cbd5e1; padding-bottom: 2px;">📍 ${getSemesterText(yV, sV)}</div>
-<table class="pdf-table" style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: center; margin-bottom: 10px;">
-<thead>
-<tr style="background: #f8fafc; color: #475569;">
-<th style="padding: 7px; border: 1px solid #e2e8f0; text-align: left;">科目名稱</th>
-<th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">類別</th>
-<th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">學分</th>
-<th style="padding: 7px; border: 1px solid #e2e8f0; width: 25%;">分數狀態</th>
-</tr>
-</thead>
-<tbody>${subRows}</tbody>
-</table>
-`;
-}
-}
-rowsArea.innerHTML = rowsHtml || `<p style="text-align: center; color: #94a3b8; font-size: 0.8rem; margin: 15px 0;">目前尚未登錄任何科目進度。</p>`;
-}
-}
+// 🎯 即時觸發深層 A4 報告書同步刷新
+generateDeepReportUI(sumTotalPassed, sumRequiredPassed, passedProfEl, localPassedOtherEl, completelyFailedReq, currentlyRetakingReq);
 
 } catch(err) {
+if(document.getElementById('diag-content')) {
 document.getElementById('diag-content').innerText="運算失敗: " + err.message;
 }
 }
+}
 
-// 🎯 原地秒變形列印與驅動核心 (完美綁定下載按鈕，徹底消滅白紙與亂碼)
+// 🎯 原地變形捕捉控制核：完美支援 iOS Safari 列印，徹底杜絕大白紙與亂碼
 function downloadPDFReport() {
 var element = document.getElementById('report-print-area');
 if (!element) return;
@@ -1359,9 +1305,9 @@ margin: [15, 15, 15, 12],
 filename: 'NCUT_Mechanical_Credit_Report.pdf',
 image: { type: 'jpeg', quality: 0.98 },
 html2canvas: {
-scale: 1.5,
+scale: 1.5, // 防止 iPhone canvas 記憶體超載翻白紙
 useCORS: true,
-letterRendering: false, // 關閉逐字切割，杜絕字體破碎與「本丁日白」錯字亂碼
+letterRendering: false, // 💡 終極修復：不切細碎字體，消滅「本丁日白」錯字亂碼
 scrollY: 0, scrollX: 0,
 windowWidth: 720
 },
