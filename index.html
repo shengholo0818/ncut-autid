@@ -8,6 +8,7 @@
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- 🚀 核心引入：全平台轉 PDF 穩定套件 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
@@ -176,7 +177,7 @@ width: 100%;
 }
 .card .status { font-size: 0.8rem; font-weight: 700; text-align: center; width: 100%; }
 
-/* 🌟 PDF 報告書專業學術外觀樣式 */
+/* 🌟 PDF 報告書專用高品質學術格式樣式 */
 .btn-pdf {
 background: linear-gradient(135deg, var(--accent-burgundy) 0%, #991b1b 100%);
 color: white; border: none; padding: 10px 20px; border-radius: 6px;
@@ -194,7 +195,6 @@ page-break-inside: avoid !important; break-inside: avoid !important;
 }
 .pdf-section h4 { margin: 0 0 10px 0; font-size: 0.95rem; color: var(--accent-burgundy); border-left: 4px solid var(--accent-burgundy); padding-left: 8px; font-weight: 800; }
 
-/* 🚀 區塊防切斷控制樣式 */
 .pdf-semester-block {
 page-break-inside: avoid !important;
 break-inside: avoid !important;
@@ -453,12 +453,14 @@ letter-spacing: 0.5px;
 </div>
 </div>
 
+<!-- 深層分析報告生成與下載區塊 -->
 <div class="summary-card" style="border-top: 4px solid var(--accent-burgundy);">
 <div class="report-title-bar">
 <div class="summary-label" style="font-size: 1.05rem; color: var(--text); font-weight: 800; text-align: left;">📊 畢業資格深層核算與歷年成績報告書</div>
 <button class="btn-pdf" id="btn-download-pdf">📥 下載完整 A4 PDF 報告</button>
 </div>
 <div class="pdf-container" id="report-print-area">
+<!-- 智慧核心將自動在此動態鋪設正式證書報告 -->
 </div>
 </div>
 
@@ -565,7 +567,7 @@ decompressAndApplyState(parsed);
 saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks();
 calculateCredits();
 alert("歷史修課進度已完美復原校正!");
-} catch(e) { alert("× 代碼結構損毀,請確認是否複製完整。"); }
+} catch(e) { alert("× 代碼結構損毀，請確認是否複製完整。"); }
 }
 function checkStorageAvailability() {
 try {
@@ -687,8 +689,8 @@ calculateCredits();
 tabToYear(maxYearInState);
 }
 function shrinkLastYear() {
-if (maxYearInState <= 4) { alert("× 前四學年為基定對齊配置,不可再刪除!"); return; }
-if (confirm(" 確定要刪除整個學年與自訂資料嗎?")) {
+if (maxYearInState <= 4) { alert("× 前四學年為基定對齊配置，不可再刪除!"); return; }
+if (confirm("確定要刪除整個學年與自訂資料嗎?")) {
 delete appState["y" + maxYearInState + "_s1"]; delete appState["y" + maxYearInState + "_s2"];
 delete appState["y" + maxYearInState + "_s3"]; delete appState["y" + maxYearInState + "_s4"];
 maxYearInState--; if (activeYear > maxYearInState) activeYear = maxYearInState;
@@ -706,6 +708,7 @@ if (y === activeYear) btn.className = "tab-btn active";
 (function(num) { btn.addEventListener('click', function() { tabToYear(num); }); })(y);
 }
 }
+/* 🎯 關鍵修復：校正變數拼寫，將 keys 補回 sKeys，讓課表元件不再當機隱形 */
 function renderStructure() {
 var container = document.getElementById('main-schedule-box'); if (!container) return;
 container.innerHTML = "";
@@ -714,9 +717,9 @@ var yWrapper = createEl('div', 'year-wrapper', null, container);
 if (y === activeYear) yWrapper.className = "year-wrapper active";
 yWrapper.id = "year-block-" + y;
 var grid = createEl('div', 'semester-grid', null, yWrapper);
-var skeys = ['s1', 's2', 's3', 's4'];
-for (var sIdx = 0; sIdx < skeys.length; sIdx++) {
-var skey = skeys[sIdx]; var semKey = "y" + y + "_" + skey;
+var sKeys = ['s1', 's2', 's3', 's4'];
+for (var sIdx = 0; sIdx < sKeys.length; sIdx++) {
+var skey = sKeys[sIdx]; var semKey = "y" + y + "_" + skey;
 var semCard = createEl('div', 'semester-card', null, grid); semCard.id = "card-" + semKey;
 var hDiv = createEl('div', 'semester-header', null, semCard);
 createEl('span', null, getSemesterText(y, skey), hDiv);
@@ -1306,52 +1309,50 @@ document.getElementById('diag-content').innerText="運算失敗: " + err.message
 }
 }
 
-// 🎯 全裝置完美通關：動態覆蓋式獨立視窗捕捉架構（徹底終結電腦版左右跑位與手機版空白 Bug）
+// 🎯 降維打擊終極補強：頂層絕對定位原點 + 150ms 渲染異步緩衝核心（完美通關電腦版切邊與手機版大白紙）
 function downloadPDFReport() {
 var element = document.getElementById('report-print-area');
 if (!element) return;
 
-// 1. 建立一個全新的獨立外部浮層節點，完全避開主畫面的 CSS Grid / Flex 留白干擾
-var renderLayer = document.createElement('div');
-renderLayer.id = 'render-layer-visual-fixed';
+// 1. 直接創建一個獨立實體的置頂容器，強制拉到全螢幕最左上角原點 (0,0)
+var printContainer = document.createElement('div');
+printContainer.style.position = 'absolute';
+printContainer.style.top = '0';
+printContainer.style.left = '0';
+printContainer.style.width = '660px';
+printContainer.style.padding = '30px';
+printContainer.style.boxSizing = 'border-box';
+printContainer.style.background = '#ffffff';
+printContainer.style.zIndex = '9999999'; // 實體頂層，讓手機 WebKit 引擎看得到、老實畫圖
 
-// 2. 採用固定全螢幕絕對定位 (0,0)，將其強制拉到最上層
-// 這樣 html2canvas 的視窗捕捉原點永遠是完美的 X=0, Y=0，全裝置排版絕對對稱、不切邊！
-renderLayer.style.position = 'fixed';
-renderLayer.style.top = '0';
-renderLayer.style.left = '0';
-renderLayer.style.width = '680px';
-renderLayer.style.background = '#ffffff';
-renderLayer.style.zIndex = '9999999';
-renderLayer.style.padding = '35px';
-renderLayer.style.boxSizing = 'border-box';
-
-// 3. 複製已經編譯好的最新數據內文
-renderLayer.innerHTML = element.innerHTML;
-document.body.appendChild(renderLayer);
+printContainer.innerHTML = element.innerHTML;
+document.body.appendChild(printContainer);
 
 var opt = {
 margin: [15, 15, 15, 15],
 filename: 'NCUT_Mechanical_Credit_Report.pdf',
 image: { type: 'jpeg', quality: 0.98 },
 html2canvas: {
-scale: 2, // 保持極致清晰印刷紋理
+scale: 1.5, // 最佳高解析缩放，防止手機板 canvas 超載
 useCORS: true,
-letterRendering: false, // 關閉文字碎裂，消滅亂碼
-scrollY: 0, scrollX: 0,
-windowWidth: 750 // 完美對稱寬度設定
+letterRendering: false, // 停止逐字切碎，消滅文字亂碼
+scrollY: 0,
+scrollX: 0,
+windowWidth: 720 // 鎖定虛擬捕捉寬度
 },
 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
 pagebreak: { mode: ['css', 'legacy'] }
 };
 
-// 4. 啟動列印流程並在其完成後瞬間無痕移除
-html2pdf().set(opt).from(renderLayer).save().then(function() {
-document.body.removeChild(renderLayer);
+// 2. 💡 核心必殺技：給予異步渲染 150 毫秒黃金緩衝！
+setTimeout(function() {
+html2pdf().set(opt).from(printContainer).save().then(function() {
+document.body.removeChild(printContainer); // 儲存完畢後，不留痕跡光速拆卸看板
 }).catch(function(err) {
 console.error(err);
-if (renderLayer && renderLayer.parentNode) document.body.removeChild(renderLayer);
+if (printContainer && printContainer.parentNode) document.body.removeChild(printContainer);
 });
+}, 200);
 }
 
 function startApp() {
