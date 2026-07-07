@@ -176,7 +176,7 @@ width: 100%;
 }
 .card .status { font-size: 0.8rem; font-weight: 700; text-align: center; width: 100%; }
 
-/* 🌟 PDF 報告書網頁版專屬美化外觀 */
+/* 🌟 PDF 報告書專用高品質學術格式樣式 */
 .btn-pdf {
 background: linear-gradient(135deg, var(--accent-burgundy) 0%, #991b1b 100%);
 color: white; border: none; padding: 10px 20px; border-radius: 6px;
@@ -194,15 +194,17 @@ page-break-inside: avoid !important; break-inside: avoid !important;
 }
 .pdf-section h4 { margin: 0 0 10px 0; font-size: 0.95rem; color: var(--accent-burgundy); border-left: 4px solid var(--accent-burgundy); padding-left: 8px; font-weight: 800; }
 
-/* 🚀 核心防斷裂機制：強迫整學期表格橫列與區塊不跨頁攔腰剖半 */
 .pdf-semester-block {
-page-break-inside: avoid !important;
-break-inside: avoid !important;
 margin-bottom: 15px;
 width: 100%;
 }
 .pdf-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.82rem; text-align: center; table-layout: fixed; }
-.pdf-table tr { page-break-inside: avoid !important; break-inside: avoid !important; }
+
+/* 🚀 核心防斷裂技術：僅讓表格橫列 tr 防切割，確保表格緊湊補滿，且字體絕不切半 */
+.pdf-table tr {
+page-break-inside: avoid !important;
+break-inside: avoid !important;
+}
 .pdf-table th { background-color: #f8fafc; color: #475569; font-weight: 700; padding: 8px; border: 1px solid #e2e8f0; }
 .pdf-table td { padding: 8px; border: 1px solid #e2e8f0; color: #334155; word-break: break-all; }
 
@@ -706,7 +708,8 @@ if (y === activeYear) btn.className = "tab-btn active";
 (function(num) { btn.addEventListener('click', function() { tabToYear(num); }); })(y);
 }
 }
-/* 🎯 變數名修正：將 keys 全數改回 skeys 變數，解決死當問題 */
+
+/* 🎯 變數與大小寫核心修復：將 sKeys 改回正確的小寫 skeys，解決網頁全面白屏的死當大 bug */
 function renderStructure() {
 var container = document.getElementById('main-schedule-box'); if (!container) return;
 container.innerHTML = "";
@@ -979,7 +982,7 @@ var semesters = getTimelineOrderedSemesters();
 for (var i = 0; i < semesters.length; i++) { renderSemesterMatrix(semesters[i]); }
 }
 
-// 🎯 高階深層報告自動編譯 (雙欄對稱式結構，標準 HTML Table 完美排版)
+// 🎯 高階深層報告自動編譯 (完全修復變數作用域，且將紅框、藍框卡片完美移到修課成績的上方)
 function generateDeepReportUI(total, req, prof, other, failedList, retakeList) {
 var area = document.getElementById('report-print-area');
 if (!area) return;
@@ -1021,7 +1024,62 @@ if (retakeList.length > 0) {
 retakeList.forEach(function(item) { retakeBadgesHtml += `<span class="report-badge-retake">${item}</span>`; });
 }
 
-var html = `
+// 先在背景拼裝好歷年課表清單 HTML
+var rowsHtml = "";
+var tOrdered = getTimelineOrderedSemesters();
+for (var t = 0; t < tOrdered.length; t++) {
+var sKey = tOrdered[t];
+var subs = appState[sKey];
+if (!subs || subs.length === 0) continue;
+
+var subRows = "";
+subs.forEach(function(sub) {
+if (sub.name.trim() === "") return;
+var bColor = "rgb(100, 116, 139)"; var bText = "必修";
+if (sub.type === 'prof-req') { bColor = "rgb(59, 130, 246)"; bText = "專必"; }
+else if (sub.type === 'prof') { bColor = "var(--cls-retake)"; bText = "專選"; }
+else if (sub.type === 'other') { bColor = "rgb(139, 92, 246)"; bText = "他選"; }
+
+var rStyle = "color: #e53e3e; background: #fff5f5;";
+if (sub.status === '通過' || sub.status === '抵免') { rStyle = "color: #10b981;"; }
+else if (sub.status === '重修中' || sub.status === '轉學補修') { rStyle = "color: #334155;"; }
+
+var scoreShow = sub.score !== "" ? sub.score + " 分" : sub.status;
+var genEdShow = (sub.name === "博雅通識課程" && sub.field) ? `<br><span style="color:#64748b; font-size:0.7rem;">[${sub.field}]</span>` : "";
+
+subRows += `
+<tr style="${rStyle}">
+<td style="padding: 7px; border: 1px solid #e2e8f0; text-align: left; font-weight: 600;">${sub.name}${genEdShow}</td>
+<td style="padding: 7px; border: 1px solid #e2e8f0;"><span class="pdf-badge" style="background-color:${bColor}">${bText}</span></td>
+<td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: bold;">${sub.cre}</td>
+<td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: 700;">${scoreShow}</td>
+</tr>
+`;
+});
+
+if (subRows !== "") {
+var yV = parseInt(sKey.match(/^y(\d+)_/)[1]); var sV = sKey.split('_')[1];
+rowsHtml += `
+<div class="pdf-semester-block">
+<div style="margin: 12px 0 6px 0; font-weight: 800; font-size: 0.85rem; color: var(--accent-burgundy); border-bottom: 1px solid #cbd5e1; padding-bottom: 2px;">📍 ${getSemesterText(yV, sV)}</div>
+<table class="pdf-table">
+<thead>
+<tr style="background: #f8fafc; color: #475569;">
+<th style="padding: 7px; border: 1px solid #e2e8f0; text-align: left;">科目名稱</th>
+<th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">類別</th>
+<th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">學分</th>
+<th style="padding: 7px; border: 1px solid #e2e8f0; width: 25%;">分數狀態</th>
+</tr>
+</thead>
+<tbody>${subRows}</tbody>
+</table>
+</div>
+`;
+}
+}
+
+// 🎯 重新編排 A4 證書架構：Failed卡片跟Retake卡片全部提升到歷史課表表格的「上面」！
+area.innerHTML = `
 <div class="pdf-header">
 <h2 style="margin: 0; color: rgb(15, 23, 42); font-size: 1.4rem; font-weight: 800; text-align: center;">國立勤益科技大學 機械工程系</h2>
 <h3 style="margin: 6px 0 0 0; color: var(--accent-burgundy); font-size: 1.1rem; letter-spacing: 1px; text-align: center;">畢業資格全方位深層審查診斷報告</h3>
@@ -1077,11 +1135,6 @@ var html = `
 <p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #334155;">目前已確切修讀 <strong style="color:var(--accent-burgundy); font-weight:800;">${genEdFields.length}</strong> 個核心通識領域。已登錄之有效領域：${genEdFields.length > 0 ? genEdFields.join('、') : '暫無紀錄'}。</p>
 </div>
 
-<div class="pdf-section">
-<h4>📜 歷年修課、成績與學分明細清單</h4>
-<div id="pdf-dynamic-rows-area"></div>
-</div>
-
 ${failedList.length > 0 ? `
 <div class="pdf-section">
 <h4 style="color: #ef4444; border-left-color: #ef4444;">🚨 尚未修讀、轉學補修或未通過的核心科目</h4>
@@ -1090,7 +1143,7 @@ ${failedList.length > 0 ? `
 ` : `
 <div class="pdf-section">
 <h4 style="color: #10b981; border-left-color: #10b981;">🏆 核心必修進度狀態</h4>
-<p style="margin: 0; font-size: 0.82rem; color: #334155; font-weight: 600;">🏆 優秀！目前無 any 處於未通過或未修狀態的重大核心必修學科。</p>
+<p style="margin: 0; font-size: 0.82rem; color: #334155; font-weight: 600;">🏆 優秀！目前無任何處於未通過或未修狀態的重大核心必修學科。</p>
 </div>
 `}
 
@@ -1101,71 +1154,16 @@ ${retakeList.length > 0 ? `
 </div>
 ` : ''}
 
-<div style="margin-top: 20px; text-align: center; font-size: 0.65rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 8px; width:100%;">
-本報告由 NCUT 機械系學分審查工具自動編譯導出 • 僅供修課進度審查參考使用
+<div class="pdf-section">
+<h4>📜 歷年修課、成績與學分明細清單</h4>
+<div id="pdf-dynamic-rows-area"></div>
 </div>
 `;
 
-area.innerHTML = html;
-var dynamicRowsZone = area.querySelector('#pdf-dynamic-rows-area');
-if (dynamicRowsZone) {
-var tOrdered = getTimelineOrderedSemesters();
-var rowsHtml = "";
-for (var t = 0; t < tOrdered.length; t++) {
-var sKey = tOrdered[t];
-var subs = appState[sKey];
-if (!subs || subs.length === 0) continue;
-
-var subRows = "";
-subs.forEach(function(sub) {
-if (sub.name.trim() === "") return;
-var bColor = "rgb(100, 116, 139)"; var bText = "必修";
-if (sub.type === 'prof-req') { bColor = "rgb(59, 130, 246)"; bText = "專必"; }
-else if (sub.type === 'prof') { bColor = "var(--cls-retake)"; bText = "專選"; }
-else if (sub.type === 'other') { bColor = "rgb(139, 92, 246)"; bText = "他選"; }
-
-var rStyle = "color: #e53e3e; background: #fff5f5;";
-if (sub.status === '通過' || sub.status === '抵免') { rStyle = "color: #10b981;"; }
-else if (sub.status === '重修中' || sub.status === '轉學補修') { rStyle = "color: #334155;"; }
-
-var scoreShow = sub.score !== "" ? sub.score + " 分" : sub.status;
-var genEdShow = (sub.name === "博雅通識課程" && sub.field) ? `<br><span style="color:#64748b; font-size:0.7rem;">[${sub.field}]</span>` : "";
-
-subRows += `
-<tr style="${rStyle}">
-<td style="padding: 7px; border: 1px solid #e2e8f0; text-align: left; font-weight: 600;">${sub.name}${genEdShow}</td>
-<td style="padding: 7px; border: 1px solid #e2e8f0;"><span class="pdf-badge" style="background-color:${bColor}">${bText}</span></td>
-<td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: bold;">${sub.cre}</td>
-<td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: 700;">${scoreShow}</td>
-</tr>
-`;
-});
-
-if (subRows !== "") {
-var yV = parseInt(sKey.match(/^y(\d+)_/)[1]); var sV = sKey.split('_')[1];
-rowsHtml += `
-<div class="pdf-semester-block">
-<div style="margin: 12px 0 6px 0; font-weight: 800; font-size: 0.85rem; color: var(--accent-burgundy); border-bottom: 1px solid #cbd5e1; padding-bottom: 2px;">📍 ${getSemesterText(yV, sV)}</div>
-<table class="pdf-table" style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: center; margin-bottom: 10px;">
-<thead>
-<tr style="background: #f8fafc; color: #475569;">
-<th style="padding: 7px; border: 1px solid #e2e8f0; text-align: left;">科目名稱</th>
-<th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">類別</th>
-<th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">學分</th>
-<th style="padding: 7px; border: 1px solid #e2e8f0; width: 25%;">分數狀態</th>
-</tr>
-</thead>
-<tbody>${subRows}</tbody>
-</table>
-</div>
-`;
-}
-}
-dynamicRowsZone.innerHTML = rowsHtml || `<p style="text-align: center; color: #94a3b8; font-size: 0.8rem; margin: 15px 0;">目前尚未登錄任何科目進度。</p>`;
-}
+var rowsZone = area.querySelector('#pdf-dynamic-rows-area');
+if (rowsZone) { rowsZone.innerHTML = rowsHtml || `<p style="text-align: center; color: #94a3b8; font-size: 0.8rem; margin: 15px 0;">目前尚未登錄任何科目進度。</p>`; }
 }
 
-/* 🎯 變數與語法核心校正：百分百對齊數據鏈，修復崩潰死當 */
 function calculateCredits() {
 try {
 var passedCommon = 0;
@@ -1308,19 +1306,17 @@ document.getElementById('diag-content').innerText="運算失敗: " + err.message
 }
 }
 
-// 🎯 全端對稱列印核心：原地視角移位 + X/Y 坐標軸歸零技術（徹底解決電腦版切邊、同時保證手機網頁版 100% 成功有字）
+// 🎯 原地無痕移位列印核心（完美防止手機端大白紙，同時完全修正電腦版切邊 Bug）
 function downloadPDFReport() {
 var element = document.getElementById('report-print-area');
 if (!element) return;
 
-// 💡 暫時備份原本網頁上的排版參數
 var oldWidth = element.style.width;
 var oldMaxWidth = element.style.maxWidth;
 var oldPadding = element.style.padding;
 var oldMargin = element.style.margin;
 var oldBg = element.style.background;
 
-// 🎯 下載瞬間：直接暫時改為「標準靠左無配重排版」，消滅電腦版螢幕置中的 left 偏置位移 Bug
 element.style.width = "650px";
 element.style.maxWidth = "650px";
 element.style.padding = "25px";
@@ -1332,21 +1328,19 @@ margin: [15, 15, 15, 15],
 filename: 'NCUT_Mechanical_Credit_Report.pdf',
 image: { type: 'jpeg', quality: 0.98 },
 html2canvas: {
-scale: 1.5, // 穩定縮放比，防手機 canvas 溢位
+scale: 1.5,
 useCORS: true,
-letterRendering: false, // 停止逐字切碎，消滅文字破碎與亂碼
+letterRendering: false,
 scrollY: 0,
-scrollX: 0, // 🚀 關鍵核心：強迫 X/Y 軸完全歸零，徹底治好電腦網頁版左邊被削掉的問題
-windowWidth: 720 // 強制虛擬捕捉寬度
+scrollX: 0,
+windowWidth: 720
 },
 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
 pagebreak: { mode: ['css', 'legacy'] }
 };
 
-// 💡 給予異步上色 200 毫秒黃金緩衝，強迫手機網頁版老實繪圖，絕不吐白紙
 setTimeout(function() {
 html2pdf().set(opt).from(element).save().then(function() {
-// 🎉 下載完畢瞬間：光速復原原本網頁響應式排版，無痕回位
 element.style.width = oldWidth;
 element.style.maxWidth = oldMaxWidth;
 element.style.padding = oldPadding;
