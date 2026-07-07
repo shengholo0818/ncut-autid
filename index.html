@@ -4,10 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>NCUT Mechanical Credit Audit Tool 勤益科大機械系學分審查</title>
-<meta name="apple-mobile-web-app-title" content="學分審查系統">
+<meta name="apple-mobile-web-app-title" content="勤益 ME學分">
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<!-- 🚀 載入高階網頁轉 PDF 核心庫 -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
@@ -165,8 +166,6 @@ justify-content: center;
 .card.prof-elective { border-top-color: var(--cls-retake); }
 .card.other-elective { border-top-color: rgb(139, 92, 246); }
 .card h3 { margin: 0 0 8px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 4px; }
-
-/* 🎯 視覺細節優化：儀表板數字完美加粗、放大、置中 */
 .card .number {
 font-size: 1.6rem;
 font-weight: 800 !important;
@@ -178,7 +177,7 @@ width: 100%;
 }
 .card .status { font-size: 0.8rem; font-weight: 700; text-align: center; width: 100%; }
 
-/* 🌟 PDF 報告專屬高品質學術格式樣式 */
+/* 🌟 PDF 報告書專用高品質學術格式樣式 */
 .btn-pdf {
 background: linear-gradient(135deg, var(--accent-burgundy) 0%, #991b1b 100%);
 color: white; border: none; padding: 10px 20px; border-radius: 6px;
@@ -187,16 +186,27 @@ display: flex; align-items: center; gap: 6px;
 box-shadow: 0 4px 8px rgba(124, 45, 61, 0.2); transition: transform 0.1s;
 }
 .btn-pdf:active { transform: scale(0.97); }
-.pdf-container { background: #fafafa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; color: #334155; box-sizing: border-box; }
-.pdf-header { text-align: center; border-bottom: 2px solid var(--accent-burgundy); padding-bottom: 12px; margin-bottom: 18px; }
+.pdf-container { background: #fafafa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; color: #334155; box-sizing: border-box; width: 100%; }
+.pdf-header { text-align: center; border-bottom: 2px solid var(--accent-burgundy); padding-bottom: 12px; margin-bottom: 18px; width: 100%; }
+
 .pdf-section {
-margin-top: 16px; background: #fff; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: left;
-page-break-inside: avoid !important; break-inside: avoid !important; /* 🚀 核心技術：強迫元件遇到分頁絕不截斷字體 */
+margin-top: 16px; background: #fff; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: left; width: 100%; box-sizing: border-box;
+page-break-inside: avoid !important; break-inside: avoid !important; /* 🚀 防止整個大區塊內部無序斷裂 */
 }
 .pdf-section h4 { margin: 0 0 10px 0; font-size: 0.95rem; color: var(--accent-burgundy); border-left: 4px solid var(--accent-burgundy); padding-left: 8px; font-weight: 800; }
-.pdf-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.82rem; text-align: center; }
+
+/* 🚀 終極修復：強制讓每一個學年學期的「小區塊」與「表格橫列」具備防斷裂特性，絕對不從文字中間切斷 */
+.pdf-semester-block {
+page-break-inside: avoid !important;
+break-inside: avoid !important;
+margin-bottom: 15px;
+width: 100%;
+}
+.pdf-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.82rem; text-align: center; table-layout: fixed; }
+.pdf-table tr { page-break-inside: avoid !important; break-inside: avoid !important; }
 .pdf-table th { background-color: #f8fafc; color: #475569; font-weight: 700; padding: 8px; border: 1px solid #e2e8f0; }
-.pdf-table td { padding: 8px; border: 1px solid #e2e8f0; color: #334155; }
+.pdf-table td { padding: 8px; border: 1px solid #e2e8f0; color: #334155; word-break: break-all; }
+
 .pdf-badge { display: inline-block; padding: 2px 6px; font-size: 0.68rem; font-weight: bold; border-radius: 4px; color: #fff; text-align: center; white-space: nowrap; }
 .report-badge-failed { display: inline-block; background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; margin: 3px; break-inside: avoid; }
 .report-badge-retake { display: inline-block; background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; margin: 3px; break-inside: avoid; }
@@ -444,12 +454,14 @@ letter-spacing: 0.5px;
 </div>
 </div>
 
+<!-- 深層分析報告生成與下載區塊 -->
 <div class="summary-card" style="border-top: 4px solid var(--accent-burgundy);">
-<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px;">
+<div class="report-title-bar">
 <div class="summary-label" style="font-size: 1.05rem; color: var(--text); font-weight: 800; text-align: left;">📊 畢業資格深層核算與歷年成績報告書</div>
 <button class="btn-pdf" id="btn-download-pdf">📥 下載完整 A4 PDF 報告</button>
 </div>
 <div class="pdf-container" id="report-print-area">
+<!-- 智慧核心將自動在此動態鋪設正式證書報告 -->
 </div>
 </div>
 
@@ -678,8 +690,8 @@ calculateCredits();
 tabToYear(maxYearInState);
 }
 function shrinkLastYear() {
-if (maxYearInState <= 4) { alert("× 前四學年為基定對齊配置，不可再刪除!"); return; }
-if (confirm("確定要刪除整個學年與自訂資料嗎?")) {
+if (maxYearInState <= 4) { alert("× 前四學年為基定對齊配置,不可再刪除!"); return; }
+if (confirm(" 確定要刪除整個學年與自訂資料嗎?")) {
 delete appState["y" + maxYearInState + "_s1"]; delete appState["y" + maxYearInState + "_s2"];
 delete appState["y" + maxYearInState + "_s3"]; delete appState["y" + maxYearInState + "_s4"];
 maxYearInState--; if (activeYear > maxYearInState) activeYear = maxYearInState;
@@ -969,7 +981,7 @@ var semesters = getTimelineOrderedSemesters();
 for (var i = 0; i < semesters.length; i++) { renderSemesterMatrix(semesters[i]); }
 }
 
-// 🎯 全新學術官方風格式樣：獨立 A4 PDF 報告書動態渲染核心
+// 🎯 高階深層報告自動編譯 (雙欄對稱式結構，標準 HTML Table 完美排版)
 function generateDeepReportUI(total, req, prof, other, failedList, retakeList) {
 var area = document.getElementById('report-print-area');
 if (!area) return;
@@ -978,7 +990,6 @@ var isGraduated = (req >= 86 && prof >= 30 && (prof + other) >= 45 && total >= 1
 var statusText = isGraduated ? "🎉 恭喜！畢業資格學分審查核算：『 已完全達標 』" : "⚠️ 畢業資格學分審查核算：『 尚未達標 』";
 var statusColor = isGraduated ? "#10b981" : "#ef4444";
 
-// 🎯 報告時間動態精準至年月日時分
 var now = new Date();
 var timeStr = now.getFullYear() + " 年 " + (now.getMonth() + 1) + " 月 " + now.getDate() + " 日 " + now.getHours() + " 時 " + now.getMinutes() + " 分";
 
@@ -1019,32 +1030,44 @@ var html = `
 <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 8px; text-align: center;">報告編譯時間：${timeStr} / 智慧工程審查系統 v5.0</div>
 </div>
 
-<div style="background: ${statusColor}10; border-left: 5px solid ${statusColor}; padding: 12px 15px; border-radius: 6px; margin-bottom: 20px; font-weight: bold; color: ${statusColor}; font-size: 0.85rem; text-align: center; box-sizing: border-box; width: 100%;">
+<div style="background: ${statusColor}10; border-left: 5px solid ${statusColor}; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; font-weight: bold; color: ${statusColor}; font-size: 0.85rem; text-align: center; box-sizing: border-box; width: 100%;">
 當前審查狀態：${statusText}
 </div>
 
-<div style="width: 100%; margin: 15px 0; box-sizing: border-box; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px;">
-<div style="flex: 1; min-width: 45%; background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; box-sizing: border-box;">
-<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px; text-align: center;">總畢業進度</div>
-<div style="font-size:1.4rem; font-weight:800; color:#1e293b; text-align: center;">${total} <span style="font-size: 0.85rem; font-weight: 600; color:#64748b;"> / 131 學分</span></div>
+<table style="width: 100%; border-collapse: collapse; margin: 15px 0; table-layout: fixed;">
+<tr>
+<td style="width: 50%; padding: 6px; box-sizing: border-box; vertical-align: middle;">
+<div style="background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; min-height: 75px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+<div style="margin:0 0 4px 0; font-size:0.8rem; color:#64748b; font-weight: 700; text-align: center;">總畢業進度</div>
+<div style="font-size:1.35rem; font-weight:800; color:#1e293b; text-align: center;">${total}<span style="font-size: 0.8rem; font-weight: 600; color:#64748b;"> / 131 學分</span></div>
 <div style="font-size: 0.7rem; color: var(--accent-burgundy); font-weight: bold; margin-top: 4px; text-align: center;">達成率：${Math.floor((total/131)*100)}%</div>
 </div>
-<div style="flex: 1; min-width: 45%; background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
-<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px; text-align: center;">核心必修累計</div>
-<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b; text-align: center;">${req} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 86 學分</span></div>
+</td>
+<td style="width: 50%; padding: 6px; box-sizing: border-box; vertical-align: middle;">
+<div style="background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; min-height: 75px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+<div style="margin:0 0 4px 0; font-size:0.8rem; color:#64748b; font-weight: 700; text-align: center;">核心必修累計</div>
+<div style="font-size:1.35rem; font-weight:800; color:#1e293b; text-align: center;">${req}<span style="font-size: 0.8rem; font-weight: 600; color:#64748b;"> / 86 學分</span></div>
 <div style="font-size: 0.7rem; color: ${req >= 86 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px; text-align: center;">${req >= 86 ? '✓ 已達標' : '還差 '+(86-req)+' 學分'}</div>
 </div>
-<div style="flex: 1; min-width: 45%; background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; box-sizing: border-box;">
-<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px; text-align: center;">專業選修累計</div>
-<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b; text-align: center;">${prof} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 30 學分</span></div>
+</td>
+</tr>
+<tr>
+<td style="width: 50%; padding: 6px; box-sizing: border-box; vertical-align: middle;">
+<div style="background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; min-height: 75px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+<div style="margin:0 0 4px 0; font-size:0.8rem; color:#64748b; font-weight: 700; text-align: center;">專業選修累計</div>
+<div style="font-size:1.35rem; font-weight:800; color:#1e293b; text-align: center;">${prof}<span style="font-size: 0.8rem; font-weight: 600; color:#64748b;"> / 30 學分</span></div>
 <div style="font-size: 0.7rem; color: ${prof >= 30 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px; text-align: center;">${prof >= 30 ? '✓ 已達標' : '還差 '+(30-prof)+' 學分'}</div>
 </div>
-<div style="flex: 1; min-width: 45%; background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; box-sizing: border-box;">
-<div style="font-size:0.8rem; color:#64748b; font-weight: 700; margin-bottom: 4px; text-align: center;">選修總量 (專選+他選)</div>
-<div style="font-size: 1.4rem; font-weight: 800; color: #1e293b; text-align: center;">${prof + other} <span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"> / 45 學分</span></div>
+</td>
+<td style="width: 50%; padding: 6px; box-sizing: border-box; vertical-align: middle;">
+<div style="background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; min-height: 75px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+<div style="margin:0 0 4px 0; font-size:0.8rem; color:#64748b; font-weight: 700; text-align: center;">選修總量 (專選+他選)</div>
+<div style="font-size:1.35rem; font-weight:800; color:#1e293b; text-align: center;">${prof + other}<span style="font-size: 0.8rem; font-weight: 600; color:#64748b;"> / 45 學分</span></div>
 <div style="font-size: 0.7rem; color: ${(prof + other) >= 45 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px; text-align: center;">${(prof + other) >= 45 ? '✓ 已達標' : '還差 '+(45-(prof+other))+' 學分'}</div>
 </div>
-</div>
+</td>
+</tr>
+</table>
 
 <div class="pdf-section">
 <h4>💡 智慧大數據工程診斷評語</h4>
@@ -1069,7 +1092,7 @@ ${failedList.length > 0 ? `
 ` : `
 <div class="pdf-section">
 <h4 style="color: #10b981; border-left-color: #10b981;">🏆 核心必修進度狀態</h4>
-<p style="margin: 0; font-size: 0.82rem; color: #334155; font-weight: 600;">優秀！目前無任何處於未通過或未修狀態的重大核心必修學科。</p>
+<p style="margin: 0; font-size: 0.82rem; color: #334155; font-weight: 600;">🏆 優秀！目前無 any 處於未通過或未修狀態的重大核心必修學科。</p>
 </div>
 `}
 
@@ -1085,8 +1108,9 @@ ${retakeList.length > 0 ? `
 </div>
 `;
 
-// 渲染學期細項表格
-var rowsArea = html ? document.createElement('div') : null;
+area.innerHTML = html;
+var dynamicRowsZone = area.querySelector('#pdf-dynamic-rows-area');
+if (dynamicRowsZone) {
 var tOrdered = getTimelineOrderedSemesters();
 var rowsHtml = "";
 for (var t = 0; t < tOrdered.length; t++) {
@@ -1121,7 +1145,9 @@ subRows += `
 
 if (subRows !== "") {
 var yV = parseInt(sKey.match(/^y(\d+)_/)[1]); var sV = sKey.split('_')[1];
+// 🚀 技術核心：將「學期標題與表格」包裝進獨立防斷裂外殼中，強迫網頁轉圖時一律完整打包
 rowsHtml += `
+<div class="pdf-semester-block">
 <div style="margin: 12px 0 6px 0; font-weight: 800; font-size: 0.85rem; color: var(--accent-burgundy); border-bottom: 1px solid #cbd5e1; padding-bottom: 2px;">📍 ${getSemesterText(yV, sV)}</div>
 <table class="pdf-table" style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: center; margin-bottom: 10px;">
 <thead>
@@ -1134,13 +1160,10 @@ rowsHtml += `
 </thead>
 <tbody>${subRows}</tbody>
 </table>
+</div>
 `;
 }
 }
-
-area.innerHTML = html;
-var dynamicRowsZone = area.querySelector('#pdf-dynamic-rows-area');
-if (dynamicRowsZone) {
 dynamicRowsZone.innerHTML = rowsHtml || `<p style="text-align: center; color: #94a3b8; font-size: 0.8rem; margin: 15px 0;">目前尚未登錄任何科目進度。</p>`;
 }
 }
@@ -1205,7 +1228,6 @@ var sumRequiredPassed = passedCommon + passedProfReq;
 var sumElectivePassed = passedProfEl + localPassedOtherEl;
 var sumTotalPassed = sumRequiredPassed + sumElectivePassed;
 
-// 🎯 主網頁配重優化：加入完美的對稱空格
 document.getElementById('lbl-total-cre').innerHTML = sumTotalPassed + " / 131<span>學分</span>";
 var pct = Math.floor((sumTotalPassed / 131) * 100); if (pct > 100) pct = 100;
 document.getElementById('lbl-total-pct').innerText = pct + "%";
@@ -1278,7 +1300,7 @@ sB.style.color = "var(--accent-blue)"; sB.style.fontWeight = "bold";
 }
 }
 
-// 🎯 即時觸發深層 A4 報告書同步刷新
+// 🎯 同步更新 A4 PDF 內容
 generateDeepReportUI(sumTotalPassed, sumRequiredPassed, passedProfEl, localPassedOtherEl, completelyFailedReq, currentlyRetakingReq);
 
 } catch(err) {
@@ -1288,38 +1310,57 @@ document.getElementById('diag-content').innerText="運算失敗: " + err.message
 }
 }
 
-// 🎯 原地變形捕捉控制核：完美支援 iOS Safari 列印，徹底杜絕大白紙與亂碼
+// 🎯 原地無痕移位列印核心（完美防止手機端大白紙，同時完全修正電腦版切邊 Bug）
 function downloadPDFReport() {
 var element = document.getElementById('report-print-area');
 if (!element) return;
 
-element.style.width = "640px";
-element.style.maxWidth = "640px";
+// 💡 暫時備份原本網頁上的排版參數
+var oldWidth = element.style.width;
+var oldMaxWidth = element.style.maxWidth;
+var oldPadding = element.style.padding;
+var oldMargin = element.style.margin;
+var oldBg = element.style.background;
+
+// 🎯 下載瞬間：直接暫時改為「標準靠左無配重排版」，消滅電腦版螢幕置中的 left 偏置位移 Bug
+element.style.width = "650px";
+element.style.maxWidth = "650px";
 element.style.padding = "25px";
-element.style.margin = "0 auto";
-element.style.boxSizing = "border-box";
+element.style.margin = "0";
 element.style.background = "#ffffff";
 
 var opt = {
-margin: [15, 15, 15, 12],
+margin: [15, 15, 15, 15],
 filename: 'NCUT_Mechanical_Credit_Report.pdf',
 image: { type: 'jpeg', quality: 0.98 },
 html2canvas: {
-scale: 1.5, // 防止 iPhone canvas 記憶體超載翻白紙
+scale: 1.5, // 最佳高解析縮放，防記憶體溢位
 useCORS: true,
-letterRendering: false, // 💡 終極修復：不切細碎字體，消滅「本丁日白」錯字亂碼
-scrollY: 0, scrollX: 0,
-windowWidth: 720
+letterRendering: false, // 停止逐字切碎，消滅文字破碎亂碼
+scrollY: 0,
+scrollX: 0,
+windowWidth: 720 // 強制虛擬捕捉寬度
 },
 jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+// 🚀 強制開啟分頁防斷裂編譯核心
 pagebreak: { mode: ['css', 'legacy'] }
 };
 
+// 執行轉 PDF 流程
 html2pdf().set(opt).from(element).save().then(function() {
-element.style.width = ""; element.style.maxWidth = ""; element.style.padding = ""; element.style.margin = ""; element.style.boxSizing = ""; element.style.background = "";
+// 🎉 下載完畢瞬間：光速復原原本網頁響應式排版，無痕回位
+element.style.width = oldWidth;
+element.style.maxWidth = oldMaxWidth;
+element.style.padding = oldPadding;
+element.style.margin = oldMargin;
+element.style.background = oldBg;
 }).catch(function(err) {
 console.error(err);
-element.style.width = ""; element.style.maxWidth = ""; element.style.padding = ""; element.style.margin = ""; element.style.boxSizing = ""; element.style.background = "";
+element.style.width = oldWidth;
+element.style.maxWidth = oldMaxWidth;
+element.style.padding = oldPadding;
+element.style.margin = oldMargin;
+element.style.background = oldBg;
 });
 }
 
