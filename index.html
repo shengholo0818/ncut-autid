@@ -396,6 +396,29 @@ border-top: 1px solid var(--border);
 font-weight: 600;
 letter-spacing: 0.5px;
 }
+
+/* ================= 步驟二：報告書專屬學術美化樣式 ================= */
+.btn-pdf {
+background: linear-gradient(135deg, var(--accent-burgundy) 0%, #991b1b 100%);
+color: white; border: none; padding: 10px 20px; border-radius: 6px;
+font-weight: bold; font-size: 0.85rem; cursor: pointer;
+display: flex; align-items: center; gap: 6px;
+box-shadow: 0 4px 8px rgba(124, 45, 61, 0.2); transition: transform 0.1s;
+}
+.btn-pdf:active { transform: scale(0.97); }
+.pdf-container { background: #fafafa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; color: #334155; }
+.pdf-header { text-align: center; border-bottom: 2px solid var(--accent-burgundy); padding-bottom: 12px; margin-bottom: 18px; }
+.pdf-section {
+margin-top: 16px; background: #fff; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0;
+page-break-inside: avoid !important; break-inside: avoid !important; /* 🚀 技術核心：強迫整塊方針與學期不跨頁剖半 */
+}
+.pdf-section h4 { margin: 0 0 10px 0; font-size: 0.95rem; color: var(--accent-burgundy); border-left: 4px solid var(--accent-burgundy); padding-left: 8px; font-weight: 800; }
+.pdf-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.82rem; text-align: center; }
+.pdf-table th { background-color: #f8fafc; color: #475569; font-weight: 700; padding: 8px; border: 1px solid #e2e8f0; }
+.pdf-table td { padding: 8px; border: 1px solid #e2e8f0; color: #334155; }
+.pdf-table tr.fail-row td { background-color: #fff5f5; color: #e53e3e; }
+.pdf-table tr.pass-row td { color: #10b981; }
+.pdf-badge { display: inline-block; padding: 2px 6px; font-size: 0.68rem; font-weight: bold; border-radius: 4px; color: #fff; text-align: center; }
 </style>
 <link rel="icon" href="favicon.png" type="image/png">
 </head>
@@ -439,6 +462,14 @@ letter-spacing: 0.5px;
 </div>
 </div>
 
+<div class="summary-card" style="border-top: 4px solid var(--accent-burgundy);">
+<div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--border); padding-bottom: 10px; margin-bottom: 15px;">
+<div style="font-size: 1.05rem; color: var(--text); font-weight: 800;">📋 畢業資格全方位深層審查明細報告</div>
+<button class="btn-pdf" id="btn-download-pdf">📥 下載完整 A4 PDF 報告書</button>
+</div>
+<div class="pdf-container" id="report-print-area">
+</div>
+</div>
 <div class="backup-panel">
 <h5>📋 手動進度備份箱 (增量超短代碼版)</h5>
 <div class="backup-flex">
@@ -1165,6 +1196,156 @@ sB.style.color = "var(--accent-blue)"; sB.style.fontWeight = "bold";
 }
 }
 }
+// ================= 步驟三：自動抓取 appState 歷年科目成績編譯演算法 =================
+function compileDetailedReport() {
+var area = document.getElementById('report-print-area');
+if (!area) return;
+
+// 1. 動態年月日時分計算
+var now = new Date();
+var timeStr = now.getFullYear() + " 年 " + (now.getMonth() + 1) + " 月 " + now.getDate() + " 日 " + now.getHours() + " 時 " + now.getMinutes() + " 分";
+
+// 2. 通識領域清查
+var genEdFields = [];
+for (var sem in appState) {
+if (appState.hasOwnProperty(sem)) {
+appState[sem].forEach(function(item){
+if(item.name === "博雅通識課程" && item.field && !hasItem(genEdFields, item.field)) { genEdFields.push(item.field); }
+});
+}
+}
+
+// 3. 彙整學分審查總標題狀態
+var isGraduated = (sumRequiredPassed >= 86 && passedProfEl >= 30 && sumElectivePassed >= 45 && sumTotalPassed >= 131);
+var statusText = isGraduated ? "🎉 恭喜！畢業資格學分審查核算：『 已完全達標 』" : "⚠️ 畢業資格學分審查核算：『 尚未達標 』，請依方針補齊";
+var statusColor = isGraduated ? "#10b981" : "#ef4444";
+
+var html = `
+<div class="pdf-header">
+<h2 style="margin: 0; color: rgb(15, 23, 42); font-size: 1.35rem;">國立勤益科技大學 機械工程系</h2>
+<h3 style="margin: 5px 0 0 0; color: var(--accent-burgundy); font-size: 1.05rem; letter-spacing: 1px;">畢業資格核算與歷年成績學分審查診斷報告書</h3>
+<div style="font-size: 0.72rem; color: #94a3b8; margin-top: 6px;">核算時間戳記：${timeStr} / 勤益 ME 智慧審查核心 v5.0</div>
+</div>
+
+<div style="background: ${statusColor}10; border-left: 5px solid ${statusColor}; padding: 10px 14px; border-radius: 4px; margin-bottom: 15px; font-weight: bold; color: ${statusColor}; font-size: 0.82rem; text-align: center;">
+${statusText}
+</div>
+
+<div class="pdf-section">
+<h4>📊 畢業規範學分統計與審查結構</h4>
+<table class="pdf-table">
+<thead>
+<tr>
+<th>審查項目</th>
+<th>系所基本門檻</th>
+<th>您目前已通過</th>
+<th>審查診斷結果</th>
+</tr>
+</thead>
+<tbody>
+<tr style="font-weight: 800; background: #fffbfa;">
+<td>畢業總學分總量</td><td>131 學分</td><td>${sumTotalPassed} 學分</td>
+<td style="color: ${sumTotalPassed >= 131 ? '#10b981':'#ef4444'}">${sumTotalPassed >= 131 ? '✓ 已達標':'還差 '+(131-sumTotalPassed)+' 學分'}</td>
+</tr>
+<tr>
+<td>核心必修累計 (共同+專必)</td><td>86 學分</td><td>${sumRequiredPassed} 學分</td>
+<td style="font-weight:700; color: ${sumRequiredPassed >= 86 ? '#10b981':'#ef4444'}">${sumRequiredPassed >= 86 ? '✓ 已達標':'還差 '+(86-sumRequiredPassed)+' 學分'}</td>
+</tr>
+<tr>
+<td>本系專業選修累計</td><td>30 學分</td><td>${passedProfEl} 學分</td>
+<td style="font-weight:700; color: ${passedProfEl >= 30 ? '#10b981':'#ef4444'}">${passedProfEl >= 30 ? '✓ 已達標':'還差 '+(30-passedProfEl)+' 學分'}</td>
+</tr>
+<tr>
+<td>其餘選修總量 (專選+他選)</td><td>45 學分</td><td>${sumElectivePassed} 學分</td>
+<td style="font-weight:700; color: ${sumElectivePassed >= 45 ? '#10b981':'#ef4444'}">${sumElectivePassed >= 45 ? '✓ 已達標':'還差 '+(45-sumElectivePassed)+' 學分'}</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<div class="pdf-section">
+<h4>💡 機械工程系課程地圖智慧方針</h4>
+<p style="margin: 0; font-size: 0.8rem; line-height: 1.45; color: #334155;">${smartAdvice}</p>
+</div>
+
+<div class="pdf-section">
+<h4>📜 歷年修課、成績與學分明細清單</h4>
+`;
+
+var timeOrdered = getTimelineOrderedSemesters();
+var hasAnyGradesData = false;
+
+for (var t = 0; t < timeOrdered.length; t++) {
+var semKey = timeOrdered[t];
+var subjects = appState[semKey];
+if (!subjects || subjects.length === 0) continue;
+
+// 解析學年、學期文字
+var yVal = parseInt(semKey.match(/^y(\d+)_/)[1]);
+var sVal = semKey.split('_')[1];
+var semesterTitle = getSemesterText(yVal, sVal);
+
+var subRowsHtml = "";
+subjects.forEach(function(sub) {
+if (sub.name.trim() === "") return;
+hasAnyGradesData = true;
+
+var badgeColor = "rgb(100, 116, 139)";
+var badgeText = "必修";
+if (sub.type === 'prof-req') { badgeColor = "rgb(59, 130, 246)"; badgeText = "專必"; }
+else if (sub.type === 'prof') { badgeColor = "var(--cls-retake)"; badgeText = "專選"; }
+else if (sub.type === 'other') { badgeColor = "rgb(139, 92, 246)"; badgeText = "他選"; }
+
+var rowClass = "failed-row";
+if (sub.status === '通過' || sub.status === '抵免') { rowClass = "pass-row"; }
+else if (sub.status === '重修中' || sub.status === '轉學補修') { rowClass = ""; }
+
+var scoreShow = sub.score !== "" ? sub.score + " 分" : sub.status;
+var genEdDetail = (sub.name === "博雅通識課程" && sub.field) ? `<br><span style="color:#64748b; font-size:0.7rem;">[${sub.field}]</span>` : "";
+
+subRowsHtml += `
+<tr class="${rowClass}">
+<td style="text-align: left; font-weight: 600;">${sub.name}${genEdDetail}</td>
+<td><span class="pdf-badge" style="background-color:${badgeColor}">${badgeText}</span></td>
+<td style="font-weight: bold;">${sub.cre}</td>
+<td style="font-weight: 700;">${scoreShow}</td>
+</tr>
+`;
+});
+
+if (subRowsHtml !== "") {
+html += `
+<div style="margin-top: 12px; margin-bottom: 6px; font-weight: 800; font-size: 0.85rem; color: var(--accent-burgundy); border-bottom: 1px solid #cbd5e1; padding-bottom: 3px;">📍 ${semesterTitle}</div>
+<table class="pdf-table" style="margin-bottom: 15px;">
+<thead>
+<tr>
+<th style="text-align: left; width: 45%;">科目名稱</th>
+<th style="width: 15%;">類別</th>
+<th style="width: 15%;">學分</th>
+<th style="width: 25%;">學期分數學態</th>
+</tr>
+</thead>
+<tbody>
+${subRowsHtml}
+</tbody>
+</table>
+`;
+}
+}
+
+if (!hasAnyGradesData) {
+html += `<p style="text-align: center; color: #94a3b8; font-size: 0.8rem; margin: 20px 0;">目前尚未輸入任何學期科目分數進度。</p>`;
+}
+
+html += `
+<div style="margin-top: 15px; text-align: center; font-size: 0.68rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 8px;">
+博雅通識均衡度：目前已修讀變效 ${genEdFields.length} 個領域。已登錄領域：[${genEdFields.length > 0 ? genEdFields.join('、') : '無'}]
+</div>
+</div>
+`;
+area.innerHTML = html;
+}
+compileDetailedReport();
 } catch(err) {
 document.getElementById('diag-content').innerText = "運算失敗：" + err.message;
 }
@@ -1177,6 +1358,47 @@ document.getElementById('btn-add-year').addEventListener('click', expandNewYear)
 document.getElementById('btn-del-year').addEventListener('click', shrinkLastYear);
 document.getElementById('btn-copy-backup').addEventListener('click', copyBackupCode);
 document.getElementById('btn-restore-backup').addEventListener('click', importBackupCode);
+// ================= 步驟四：綁定 PDF 下下載按鈕與手機端防碎裂列印核心 =================
+document.getElementById('btn-download-pdf').addEventListener('click', function() {
+var element = document.getElementById('report-print-area');
+if (!element) return;
+
+// 1. 瞬間原地固定 A4 比例視角，強迫手機端看得見、抓得對稱
+element.style.width = "640px";
+element.style.maxWidth = "640px";
+element.style.padding = "25px";
+element.style.margin = "0 auto";
+element.style.boxSizing = "border-box";
+element.style.background = "#ffffff";
+
+var opt = {
+margin: [15, 15, 15, 12],
+filename: 'NCUT_Mechanical_Credit_Report.pdf',
+image: { type: 'jpeg', quality: 0.98 },
+html2canvas: {
+scale: 1.5,
+useCORS: true,
+letterRendering: false, // 💡 防碎裂必殺技：關閉逐字切割，徹底消滅「本丁日白」等錯字亂碼！
+scrollY: 0, scrollX: 0,
+windowWidth: 720
+},
+jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+pagebreak: { mode: ['css', 'legacy'] }
+};
+
+// 2. 執行編譯與儲存
+html2pdf().set(opt).from(element).save().then(function() {
+// 3. 還原網頁響應式外觀
+element.style.width = ""; element.style.maxWidth = "";
+element.style.padding = ""; element.style.margin = "";
+element.style.boxSizing = ""; element.style.background = "";
+}).catch(function(err) {
+console.error(err);
+element.style.width = ""; element.style.maxWidth = "";
+element.style.padding = ""; element.style.margin = "";
+element.style.boxSizing = ""; element.style.background = "";
+});
+});
 rebuildTabsUI(); renderStructure(); renderAllBlocks(); calculateCredits();
 }
 
