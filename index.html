@@ -65,6 +65,11 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 .btn-hub-ocr { border-color: var(--accent-secondary); color: var(--accent-secondary); }
 .btn-hub-ocr:hover { background: var(--accent-secondary); color: #fff; }
 
+.diagnostic-card { background: #fff; border: 1px solid var(--border); border-left: 5px solid var(--cls-retake); border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
+.diagnostic-card h4 { margin: 0 0 6px 0; font-size: 0.92rem; color: var(--accent-primary); font-weight: 800; }
+.diagnostic-card ul { margin: 0; padding-left: 15px; font-size: 0.82rem; color: #444; }
+.diagnostic-card li { margin-bottom: 4px; }
+
 .dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px; }
 .card { background: #fff; padding: 16px 14px; border-radius: 10px; border: 1px solid var(--border); border-top: 4px solid var(--accent-secondary); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .card.required { border-top-color: var(--accent-blue); }
@@ -74,7 +79,26 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 .card .number { font-size: 1.6rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
 .card .status { font-size: 0.8rem; font-weight: 700; text-align: center; width: 100%; }
 
-/* 課表區塊樣式 (改為純視覺展示，無輸入框) */
+/* 🤖 AI OCR 匯入面板樣式 */
+.ocr-panel { background: #e0f2fe; border: 1px solid #bae6fd; padding: 16px; border-radius: 10px; margin-bottom: 20px; }
+.ocr-panel h5 { margin: 0 0 8px 0; font-size: 0.9rem; color: #0284c7; font-weight: 800; display: flex; align-items: center; gap: 6px; }
+.ocr-panel p { margin: 0 0 10px 0; font-size: 0.75rem; color: #0369a1; line-height: 1.4; }
+.ocr-controls { display: flex; flex-direction: column; gap: 10px; }
+.ocr-textarea { width: 100%; height: 90px; padding: 10px; border: 1px dashed #7dd3fc; border-radius: 6px; font-size: 0.8rem; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; resize: vertical; }
+.ocr-action-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.ocr-select { padding: 6px; border: 1px solid #7dd3fc; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #0284c7; background: #fff; flex: 1; min-width: 120px; }
+.btn-ocr-import { background: #0284c7; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; cursor: pointer; flex: 2; min-width: 150px; }
+
+.btn-pdf { background: linear-gradient(135deg, var(--accent-primary) 0%, #1a252f 100%); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+.btn-pdf:active { transform: scale(0.98); }
+
+.backup-panel { background: rgb(241, 245, 249); border: 1px solid #cbd5e1; padding: 12px; border-radius: 10px; margin-bottom: 20px; }
+.backup-panel h5 { margin: 0 0 6px 0; font-size: 0.82rem; color: var(--accent-primary); font-weight: 800; }
+.backup-flex { display: flex; gap: 8px; align-items: center; }
+.backup-input { flex: 1; font-size: 0.78rem; height: 32px; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 5px; box-sizing: border-box; }
+.btn-backup { background: var(--accent-primary); color: white; border: none; padding: 0 14px; height: 32px; border-radius: 5px; font-weight: bold; font-size: 0.78rem; cursor: pointer; }
+
+/* 課表區塊樣式 */
 .control-panel { background: #fff; padding: 14px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 20px; }
 .control-flex-row { display: flex; flex-direction: column; gap: 10px; width: 100%; }
 [id="year-tabs"] { display: flex; gap: 8px; overflow-x: auto; width: 100%; padding-bottom: 4px; }
@@ -92,7 +116,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 .semester-header { font-size: 1.05rem; font-weight: 800; color: #1e293b; margin-bottom: 12px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; }
 .subjects-box-matrix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 @media (min-width: 600px) { .subjects-box-matrix { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } }
-.subject-square { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; min-height: 100px; box-sizing: border-box; }
+.subject-square { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; min-height: 100px; box-sizing: border-box; position: relative; }
 .square-passed { border-left: 4px solid var(--cls-passed); }
 .square-waived { border-left: 4px solid var(--cls-waived); }
 .square-retake { border-left: 4px solid var(--cls-retake); }
@@ -136,11 +160,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 .ocr-upload-box:hover { background: #e0f2fe; }
 .ocr-upload-box input[type="file"] { display: none; }
 .ocr-preview { max-width: 100%; max-height: 200px; border-radius: 8px; display: none; margin: 10px auto; object-fit: contain; }
-.ocr-textarea { width: 100%; height: 100px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; box-sizing: border-box; resize: vertical; margin-bottom: 15px; font-family: monospace; }
 .ocr-status { font-size: 0.85rem; font-weight: bold; color: var(--accent-secondary); margin-bottom: 10px; text-align: center; }
-
-.btn-pdf { background: linear-gradient(135deg, var(--accent-primary) 0%, #1a252f 100%); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin-bottom: 20px;}
-.btn-pdf:active { transform: scale(0.98); }
 
 /* 🚀 PDF 沙盒專屬列印樣式配置 */
 .sandbox-pdf-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; color: #1e293b; background: #ffffff; width: 100%; }
@@ -152,6 +172,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 .sandbox-pdf-table td { padding: 9px; border: 1px solid #cbd5e1; color: #334155; word-break: break-all; }
 .sandbox-pdf-semester-block { page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 18px; width: 100%; }
 .sandbox-pdf-badge { display: inline-block; padding: 3px 7px; font-size: 0.7rem; font-weight: bold; border-radius: 4px; color: #fff !important; text-align: center; white-space: nowrap; }
+
 .report-badge-failed { display: inline-block; background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; margin: 3px; break-inside: avoid; }
 .report-badge-retake { display: inline-block; background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; margin: 3px; break-inside: avoid; }
 .report-badge-container { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; width: 100%; }
@@ -169,7 +190,7 @@ footer { margin-top: 50px; padding: 24px 0; text-align: center; font-size: 0.78r
 </div>
 
 <div class="container">
-<!-- ⚙️ 系統設定 -->
+<!-- ⚙️ 自訂校系與門檻面板 -->
 <div class="settings-panel" id="settings-panel">
     <h3>⚙️ 自訂校系與入學學年 (全域通用設定)</h3>
     <div class="settings-grid">
@@ -325,6 +346,7 @@ Copyright © 2026. Universal Credit Audit System.
             <textarea id="ocr-textarea" class="ocr-textarea" placeholder="在此貼上您複製的成績單文字... (例：計算機程式 3 85)"></textarea>
             
             <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <select id="ocr-target-sem" class="ocr-select"></select>
                 <button style="background:var(--accent-primary); color:white; border:none; padding:10px; border-radius:6px; flex:1; font-weight:bold; cursor:pointer;" onclick="runSmartParser()">✨ 第1步：開始解析文字</button>
             </div>
 
@@ -383,8 +405,8 @@ var defaultCurriculumMatrix = {
 "y4_s2": [["機械工程實驗(三)", 1,"prof-req"]]
 };
 
-var storageKey = "univ_credit_audit_data_v4"; 
-var configKey = "univ_credit_audit_config_v4";
+var storageKey = "univ_credit_audit_data_v5"; 
+var configKey = "univ_credit_audit_config_v5";
 var activeYear = 1;
 var maxYearInState = 4;
 var appState = {};
@@ -421,7 +443,7 @@ function applyConfigToUI() {
 function saveConfigAndReload() {
     appConfig.school = document.getElementById('cfg-school').value || "學校名稱"; appConfig.dept = document.getElementById('cfg-dept').value || "科系名稱"; appConfig.baseEnrollYear = parseInt(document.getElementById('cfg-baseyear').value) || 111; appConfig.targetTotal = parseInt(document.getElementById('cfg-total').value) || 131; appConfig.targetReq = parseInt(document.getElementById('cfg-req').value) || 86; appConfig.targetProf = parseInt(document.getElementById('cfg-prof').value) || 30; appConfig.targetElective = parseInt(document.getElementById('cfg-elec').value) || 45;
     try { window.localStorage.setItem(configKey, JSON.stringify(appConfig)); } catch(e) {}
-    applyConfigToUI(); rebuildTabsUI(); renderStructure(); calculateCredits(); toggleSettings();
+    applyConfigToUI(); rebuildTabsUI(); renderStructure(); calculateCredits(); updateOCRSelectOptions(); toggleSettings();
     alert("設定已儲存！學年標籤已自動更新。");
 }
 
@@ -429,7 +451,7 @@ function clearAllToBlank() {
     if(!confirm("⚠️ 警告：這將會刪除當前所有的預設課表與您的修課紀錄，將系統初始化為一張白紙。確定要繼續嗎？")) return;
     appState = {};
     for (var y = 1; y <= 4; y++) { appState["y" + y + "_s1"] = []; appState["y" + y + "_s2"] = []; appState["y" + y + "_s3"] = []; appState["y" + y + "_s4"] = []; }
-    maxYearInState = 4; saveState(); rebuildTabsUI(); renderStructure(); calculateCredits(); toggleSettings();
+    maxYearInState = 4; saveState(); rebuildTabsUI(); renderStructure(); calculateCredits(); updateOCRSelectOptions(); toggleSettings();
     alert("已成功清空！現在您可以利用「AI 快捷匯入」開始建立您的專屬課表。");
 }
 
@@ -437,7 +459,6 @@ function createEl(tag, className, text, parent) {
 var e = document.createElement(tag); if (className) e.className = className; if (text !== undefined && text !== null) e.appendChild(document.createTextNode(text)); if (parent) parent.appendChild(e); return e;
 }
 function hasItem(arr, val) { for (var i=0; i < arr.length; i++) { if (arr[i]==val) return true; } return false; }
-function findIdx(arr, val) { for (var i=0; i < arr.length; i++) { if (arr[i]==val) return i; } return -1; }
 
 function getSquareClass(status) { var colors = {'通過':'square-passed','抵免':'square-waived','重修中':'square-retake','轉學補修':'square-retake','未修':'square-failed','未通過':'square-failed'}; return colors[status] || 'square-failed'; }
 function getTypeText(type) { var map = {'common':'必修','prof-req':'專必','prof':'專選','other':'他選'}; return map[type] || '未知'; }
@@ -455,7 +476,7 @@ var txtField = document.getElementById('restore-text-field');
 if (!txtField || txtField.value.trim() === "") { alert("請先貼上進度代碼!"); return; }
 try {
 var jsonString = decodeURIComponent(atob(txtField.value.trim())); var parsed = JSON.parse(jsonString);
-decompressAndApplyState(parsed); saveState(); rebuildTabsUI(); renderStructure(); calculateCredits();
+decompressAndApplyState(parsed); saveState(); rebuildTabsUI(); renderStructure(); calculateCredits(); updateOCRSelectOptions();
 alert("歷史修課進度已完美復原！");
 } catch(e) { alert("× 代碼結構損毀，請確認是否複製完整。"); }
 }
@@ -520,14 +541,14 @@ appState[sem].push({ id: "cust_" + Date.now() + "_" + Math.floor(Math.random()*1
 
 function expandNewYear() {
 maxYearInState++; appState["y" + maxYearInState + "_s1"] = []; appState["y" + maxYearInState + "_s2"] = []; appState["y" + maxYearInState + "_s3"] = []; appState["y" + maxYearInState + "_s4"] = [];
-saveState(); rebuildTabsUI(); renderStructure(); calculateCredits(); tabToYear(maxYearInState);
+saveState(); rebuildTabsUI(); renderStructure(); calculateCredits(); updateOCRSelectOptions(); tabToYear(maxYearInState);
 }
 function shrinkLastYear() {
 if (maxYearInState <= 1) { alert("至少需保留一學年!"); return; }
 if (confirm("確定要刪除最後一個學年與裡面的資料嗎?")) {
 delete appState["y" + maxYearInState + "_s1"]; delete appState["y" + maxYearInState + "_s2"]; delete appState["y" + maxYearInState + "_s3"]; delete appState["y" + maxYearInState + "_s4"];
 maxYearInState--; if (activeYear > maxYearInState) activeYear = maxYearInState;
-saveState(); rebuildTabsUI(); renderStructure(); calculateCredits(); tabToYear(activeYear);
+saveState(); rebuildTabsUI(); renderStructure(); calculateCredits(); updateOCRSelectOptions(); tabToYear(activeYear);
 }
 }
 
@@ -792,7 +813,6 @@ function runSmartParser() {
     var statusTxt = document.getElementById('ocr-status-text');
     
     if(fileInput.files && fileInput.files[0]) {
-        // 使用 Tesseract.js 解析圖片
         statusTxt.innerText = "⏳ 正在啟動 AI 影像辨識引擎，請稍候...";
         txtArea.value = "解析中，這可能需要幾十秒...";
         
@@ -808,14 +828,12 @@ function runSmartParser() {
             statusTxt.innerText = "❌ 辨識失敗: " + err.message;
         });
     } else {
-        // 直接解析文字框內的文字
         if(txtArea.value.trim() === "") { alert("請先上傳圖片或貼上文字！"); return; }
         statusTxt.innerText = "✅ 正在解析貼上的文字...";
         processRawTextToStaging(txtArea.value);
     }
 }
 
-// 超強寬鬆正則引擎，專門對付亂七八糟的成績單結構
 function processRawTextToStaging(text) {
     stagingOCRData = [];
     var lines = text.split('\n');
@@ -824,43 +842,47 @@ function processRawTextToStaging(text) {
         var line = lines[i].trim();
         if(!line || line.length < 3) continue;
         
-        // 過濾表頭雜訊
         if(/學年|學期|學分|成績|備註|必選修|科目名稱|總計|平均|流水號/.test(line)) continue;
 
-        // 找學分 (優先找獨立的 1~9 數字，或小數點 1.0)
         var creMatch = line.match(/\b([1-9])(?:\.0)?\b/);
-        var scoreMatch = line.match(/\b(\d{1,3}(?:\.\d+)?)\b/g); // 找所有可能是分數的數字
+        var scoreMatch = line.match(/\b(\d{1,3}(?:\.\d+)?)\b/g); 
         var statusMatch = line.match(/(通過|及格|抵免|免修|未通過|不及格|停修|未修)/);
+        var typeMatch = line.match(/(必修|專必|選修|專選|通識|博雅|他選)/);
         
-        if(!creMatch) continue; // 如果一行連學分都找不到，跳過
+        if(!creMatch) continue; 
 
         var cre = parseInt(creMatch[1]);
         var score = "";
         var status = "未修";
+        var type = "prof"; // 預設歸類專選
+
+        if (typeMatch) {
+            if(/必修|專必/.test(typeMatch[1])) type = 'prof-req';
+            else if(/通識|博雅/.test(typeMatch[1])) type = 'common';
+            else if(/選修|專選/.test(typeMatch[1])) type = 'prof';
+        }
         
         if(statusMatch) {
             var s = statusMatch[1];
             status = (s==='抵免'||s==='免修') ? '抵免' : (s==='通過'||s==='及格'?'通過':'未通過');
         } else if(scoreMatch) {
-            // 找分數：必須是數字，不能跟學分數一樣，且小於等於 100
             var possibleScores = scoreMatch.map(Number).filter(n => n !== cre && n <= 100);
             if(possibleScores.length > 0) {
-                score = possibleScores[possibleScores.length - 1]; // 通常分數在最後面
+                score = possibleScores[possibleScores.length - 1]; 
                 status = score >= 60 ? "通過" : "未通過";
             }
         }
         
-        // 抓取科目名稱：移除不相干的數字、代碼和英文
         var name = line
             .replace(creMatch[0], '') 
-            .replace(/[A-Za-z0-9\-\_]{5,15}/g, '') // 移除開課代碼
+            .replace(/[A-Za-z0-9\-\_]{5,15}/g, '') 
             .replace(/(必修|專必|選修|專選|通識|博雅|他選|通過|及格|抵免|免修|未通過|不及格|停修|未修)/g, '')
-            .replace(/\b\d{1,3}(\.\d+)?\b/g, '') // 移除殘留數字
+            .replace(/\b\d{1,3}(\.\d+)?\b/g, '') 
             .replace(/[\s\-\_\/]+/g, ' ') 
             .trim();
             
         if(name.length > 1) {
-            stagingOCRData.push({ name: name, cre: cre, score: score, status: status, sem: "" });
+            stagingOCRData.push({ name: name, cre: cre, score: score, status: status, type: type, sem: "" });
         }
     }
     
@@ -939,7 +961,7 @@ function confirmStagingImport() {
             if(!appState[item.sem]) appState[item.sem] = [];
             appState[item.sem].push({
                 id: "cust_" + Date.now() + "_" + Math.floor(Math.random()*10000),
-                name: item.name.trim(), cre: item.cre, type: 'prof', // 預設專選
+                name: item.name.trim(), cre: item.cre, type: item.type || 'prof',
                 score: item.score, status: item.status, field: "", linkId: null, isRetakeCopy: false, retakeTarget: "", isCustom: true
             });
             addedCount++;
@@ -1055,6 +1077,7 @@ var liB = createEl('li', null, null, ul); createEl('div', 'diag-section-title',"
 }
 }
 
+// 暫存全域供 PDF 調用
 window.cachedTotal = sumTotalPassed;
 window.cachedReq = sumRequiredPassed;
 window.cachedProf = passedProfEl;
@@ -1068,7 +1091,7 @@ if(document.getElementById('diag-content')) document.getElementById('diag-conten
 }
 }
 
-/* 🚀 PDF 專用：實體遮罩防白紙、精準原點防切邊列印技術 */
+/* 🚀 PDF 專用：全裝置防白紙實體覆蓋層繪圖技術 */
 function triggerPDFDownload() {
     var overlay = document.getElementById('pdf-overlay-generator');
     var canvas = document.getElementById('pdf-sandbox-canvas');
@@ -1101,6 +1124,7 @@ function triggerPDFDownload() {
     var retakeBadgesHtml = "";
     if (window.cachedRetakeList.length > 0) { window.cachedRetakeList.forEach(function(item) { retakeBadgesHtml += `<span class="report-badge-retake">${item}</span>`; }); }
 
+    // 2. 構建歷年成績表格
     var rowsHtml = "";
     var tOrdered = getTimelineOrderedSemesters();
     for (var t = 0; t < tOrdered.length; t++) {
@@ -1153,6 +1177,7 @@ function triggerPDFDownload() {
         }
     }
 
+    // 3. 將 HTML 注入 PDF 沙盒實體畫布
     canvas.innerHTML = `
         <div class="sandbox-pdf-header">
             <h2 style="margin: 0; color: var(--accent-primary); font-size: 1.5rem; font-weight: 800;">${appConfig.school} ${appConfig.dept}</h2>
@@ -1234,7 +1259,7 @@ function triggerPDFDownload() {
         </div>
     `;
 
-    // 4. 強制實體遮罩顯示，讓手機網頁必須畫圖 (100% 防白紙)
+    // 4. 強制打開畫面實體遮罩，讓系統強制渲染 (絕不變白紙)
     overlay.style.display = 'block';
     
     var opt = {
@@ -1253,10 +1278,10 @@ function triggerPDFDownload() {
         pagebreak:    { mode: ['css', 'legacy'] }
     };
     
-    // 5. 600ms 絕對緩衝時間，保證不切圖、不變白
+    // 5. 給予 600ms 黃金緩衝，讓所有手機型號都能確保繪圖完成
     setTimeout(function() {
         html2pdf().set(opt).from(canvas).save().then(function() {
-            overlay.style.display = 'none'; 
+            overlay.style.display = 'none'; // 完成後關閉遮罩
         }).catch(function(err) {
             console.error(err);
             overlay.style.display = 'none';
@@ -1264,42 +1289,17 @@ function triggerPDFDownload() {
     }, 600);
 }
 
-function doGlobalSearch() {
-var q = document.getElementById('global-search').value.toLowerCase().trim();
-var tabControls = document.getElementById('tab-controls-area'); var tip = document.getElementById('search-tip');
-var wrappers = document.querySelectorAll('.year-wrapper'); var cards = document.querySelectorAll('.semester-card');
-if (q === "") {
-if (tabControls) tabControls.style.display = 'flex';
-if (tip) tip.style.display = 'none';
-var allBoxes = document.querySelectorAll('.subject-square'); for (var a=0; a < allBoxes.length; a++) { allBoxes[a].style.display = ""; }
-for (var c=0; c < cards.length; c++) { cards[c].style.display = ""; }
-tabToYear(activeYear); return;
-}
-if (tabControls) tabControls.style.display = 'none';
-if (tip) tip.style.display = 'block';
-for (var w=0; w < wrappers.length; w++) { wrappers[w].style.display = 'block'; }
-for (var cIdx = 0; cIdx < cards.length; cIdx++) {
-var card = cards[cIdx]; var hasMatch = false; var boxes = card.querySelectorAll('.subject-square');
-for (var bIdx = 0; bIdx < boxes.length; bIdx++) {
-var box = boxes[bIdx]; var currentName = box.getAttribute('data-name') || "";
-if (currentName.toLowerCase().indexOf(q) !== -1) { box.style.display = ""; hasMatch = true; } else { box.style.display = 'none'; }
-}
-card.style.display = hasMatch?"": 'none';
-}
-}
-
 function startApp() {
 checkStorageAvailability(); 
-loadConfigSafely(); 
-loadStateSafely();  
+loadConfigSafely(); // 載入自訂門檻
+loadStateSafely();  // 載入課表
+
 document.getElementById('global-search').addEventListener('input', doGlobalSearch);
 document.getElementById('btn-add-year').addEventListener('click', expandNewYear);
 document.getElementById('btn-del-year').addEventListener('click', shrinkLastYear);
 document.getElementById('btn-copy-backup').addEventListener('click', copyBackupCode);
-document.getElementById('btn-restore-backup').addEventListener('click', importBackupCode);
 
-updateOCRSelectOptions();
-rebuildTabsUI(); renderStructure(); calculateCredits();
+rebuildTabsUI(); renderStructure(); calculateCredits(); updateOCRSelectOptions();
 }
 try {
 startApp();
