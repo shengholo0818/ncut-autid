@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NCUT Mechanical Credit Audit Tool 勤益科大機械系學分審查</title>
-<meta name="apple-mobile-web-app-title" content="勤益 ME學分">
+<title>全域通用學分審查系統 | Universal Credit Audit</title>
+<meta name="apple-mobile-web-app-title" content="學分審查">
 <link rel="apple-touch-icon" href="icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -12,8 +12,8 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <style>
 :root {
---accent-burgundy: rgb(124, 45, 61);
---accent-blue: rgb(59, 130, 246);
+--accent-primary: rgb(44, 62, 80);
+--accent-secondary: rgb(52, 152, 219);
 --bg-main: rgb(248, 250, 252);
 --card-bg: rgb(255, 255, 255);
 --border: rgb(235, 233, 227);
@@ -33,396 +33,143 @@ margin: 0;
 padding: 0;
 padding-bottom: 80px;
 }
-.web-logo {
-display: block;
-width: 120px;
-height: auto;
-margin: 20px auto;
-border-radius: 12px;
-}
 .header-area {
-background: linear-gradient(180deg, rgb(30, 41, 59) 0%, rgb(15, 23, 42) 100%);
+background: linear-gradient(135deg, var(--accent-primary) 0%, #1a252f 100%);
 color: #fff;
 padding: 18px 20px;
-border-radius: 0 14px 14px;
+border-radius: 0 0 14px 14px;
 width: 100%;
 max-width: 1360px;
 margin: 0 auto 20px auto;
-border-bottom: 4px solid var(--accent-burgundy);
-box-shadow:
-inset 0 1px 0 rgba(255, 255, 255, 0.15),
-0 4px 6px -1px rgba(0, 0, 0, 0.1),
-0 10px 20px -3px rgba(0, 0, 0, 0.2);
+box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 box-sizing: border-box;
-overflow: hidden;
-}
-.header-area h1 {
-margin: 0;
-font-size: 1.15rem;
-font-weight: 800;
-color: #fff;
-text-align: center;
-letter-spacing: 0.5px;
-text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-white-space: nowrap;
-}
-.container {
-max-width: 1360px;
-width: 100%;
-margin: 0 auto;
-padding: 0 20px 20px 20px;
-box-sizing: border-box;
-}
-.summary-card {
-background: #fff;
-border-radius: 14px;
-padding: 18px;
-border: 1px solid var(--border);
-box-shadow: 0 4px 12px rgba(0,0,0,0.02);
-margin-bottom: 20px;
-}
-.summary-label {
-font-size: 0.85rem;
-font-weight: bold;
-color: var(--text-muted);
-text-align: center;
-}
-.summary-main-row {
-display: flex;
-justify-content: center;
-align-items: baseline;
-gap: 15px;
-margin-top: 6px;
-}
-.summary-number {
-font-size: 2.2rem;
-font-weight: 800;
-color: var(--accent-burgundy);
-}
-.summary-number span {
-font-size: 0.9rem;
-color: var(--text);
-margin-left: 6px;
-font-weight: 600;
-}
-.summary-percent {
-font-size: 1.25rem;
-font-weight: 700;
-color: var(--accent-burgundy);
-}
-.progress-bar {
-height: 6px;
-background: rgb(235, 235, 230);
-border-radius: 4px;
-margin: 12px 0;
-overflow: hidden;
-}
-.progress-fill {
-height: 100%;
-background: var(--accent-burgundy);
-width: 0%;
-transition: width 0.4s ease;
-}
-.summary-subtext {
-font-size: 0.82rem;
-color: var(--text-muted);
-font-weight: 600;
-text-align: center;
-}
-.diagnostic-card {
-background: #fff;
-border: 1px solid var(--border);
-border-left: 5px solid var(--cls-retake);
-border-radius: 10px;
-padding: 14px 16px;
-margin-bottom: 20px;
-box-shadow: 0 4px 8px -1px rgba(0,0,0,0.01);
-}
-.diagnostic-card h4 { margin: 0 0 6px 0; font-size: 0.92rem; color: var(--accent-burgundy); font-weight: 800; }
-.diagnostic-card ul { margin: 0; padding-left: 15px; font-size: 0.82rem; color: #444; }
-.diagnostic-card li { margin-bottom: 4px; }
-.diag-section-title { font-weight: bold; margin-top: 4px; color: var(--text); display: inline-block; }
-
-.dashboard {
-display: grid;
-grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-gap: 12px;
-margin-bottom: 20px;
-}
-.card {
-background: #fff;
-padding: 16px 14px;
-border-radius: 10px;
-border: 1px solid var(--border);
-border-top: 4px solid var(--accent-blue);
-text-align: center;
-box-shadow: 0 2px 6px rgba(0,0,0,0.02);
 display: flex;
 flex-direction: column;
 align-items: center;
-justify-content: center;
+position: relative;
 }
-.card.required { border-top-color: var(--accent-blue); }
+.header-area h1 { margin: 0; font-size: 1.2rem; font-weight: 800; text-align: center; letter-spacing: 1px; }
+.header-area h2 { margin: 4px 0 0 0; font-size: 0.9rem; font-weight: 500; color: #cbd5e1; }
+.btn-settings { position: absolute; top: 15px; right: 15px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3); color: white; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+.btn-settings:hover { background: rgba(255,255,255,0.3); }
+
+.container { max-width: 1360px; width: 100%; margin: 0 auto; padding: 0 20px 20px 20px; box-sizing: border-box; }
+.summary-card { background: #fff; border-radius: 14px; padding: 18px; border: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.02); margin-bottom: 20px; }
+.summary-label { font-size: 0.85rem; font-weight: bold; color: var(--text-muted); text-align: center; }
+.summary-main-row { display: flex; justify-content: center; align-items: baseline; gap: 15px; margin-top: 6px; }
+.summary-number { font-size: 2.2rem; font-weight: 800; color: var(--accent-primary); }
+.summary-number span { font-size: 0.9rem; color: var(--text); margin-left: 6px; font-weight: 600; }
+.summary-percent { font-size: 1.25rem; font-weight: 700; color: var(--accent-secondary); }
+.progress-bar { height: 6px; background: rgb(235, 235, 230); border-radius: 4px; margin: 12px 0; overflow: hidden; }
+.progress-fill { height: 100%; background: var(--accent-secondary); width: 0%; transition: width 0.4s ease; }
+.summary-subtext { font-size: 0.82rem; color: var(--text-muted); font-weight: 600; text-align: center; }
+
+/* 設定面板樣式 */
+.settings-panel { display: none; background: #f8fafc; border: 2px solid var(--accent-secondary); padding: 18px; border-radius: 12px; margin-bottom: 20px; }
+.settings-panel.active { display: block; }
+.settings-panel h3 { margin: 0 0 12px 0; font-size: 1rem; color: var(--accent-primary); border-bottom: 1px solid #cbd5e1; padding-bottom: 6px; }
+.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.settings-item { display: flex; flex-direction: column; gap: 4px; }
+.settings-item label { font-size: 0.78rem; font-weight: bold; color: #475569; }
+.settings-item input { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; }
+.settings-btn-save { grid-column: span 2; background: var(--accent-secondary); color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; margin-top: 8px; }
+
+.diagnostic-card { background: #fff; border: 1px solid var(--border); border-left: 5px solid var(--cls-retake); border-radius: 10px; padding: 14px 16px; margin-bottom: 20px; }
+.diagnostic-card h4 { margin: 0 0 6px 0; font-size: 0.92rem; color: var(--accent-primary); font-weight: 800; }
+.diagnostic-card ul { margin: 0; padding-left: 15px; font-size: 0.82rem; color: #444; }
+.diagnostic-card li { margin-bottom: 4px; }
+
+.dashboard { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.card { background: #fff; padding: 16px 14px; border-radius: 10px; border: 1px solid var(--border); border-top: 4px solid var(--accent-secondary); text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.card.required { border-top-color: var(--accent-secondary); }
 .card.prof-elective { border-top-color: var(--cls-retake); }
 .card.other-elective { border-top-color: rgb(139, 92, 246); }
-.card h3 { margin: 0 0 8px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 4px; }
-.card .number { 
-font-size: 1.6rem; 
-font-weight: 800 !important; 
-color: var(--text); 
-margin-bottom: 6px; 
-letter-spacing: 1px;
-text-align: center;
-width: 100%;
-}
-.card .status { font-size: 0.8rem; font-weight: 700; text-align: center; width: 100%; }
+.card h3 { margin: 0 0 8px 0; font-size: 0.85rem; color: var(--text-muted); font-weight: 700; }
+.card .number { font-size: 1.6rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.card .status { font-size: 0.8rem; font-weight: 700; }
 
-/* 🌟 PDF 報告書專用高品質學術格式樣式 */
-.btn-pdf {
-    background: linear-gradient(135deg, var(--accent-burgundy) 0%, #991b1b 100%);
-    color: white; border: none; padding: 10px 20px; border-radius: 6px;
-    font-weight: bold; font-size: 0.85rem; cursor: pointer;
-    display: flex; align-items: center; gap: 6px;
-    box-shadow: 0 4px 8px rgba(124, 45, 61, 0.2); transition: transform 0.1s;
-}
-.btn-pdf:active { transform: scale(0.97); }
-.pdf-container { background: #fafafa; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; color: #334155; box-sizing: border-box; width: 100%; }
-.pdf-header { text-align: center; border-bottom: 2px solid var(--accent-burgundy); padding-bottom: 12px; margin-bottom: 18px; width: 100%; }
+.btn-pdf { background: linear-gradient(135deg, var(--accent-primary) 0%, #1a252f 100%); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+.btn-pdf:active { transform: scale(0.98); }
 
-.pdf-section {
-    margin-top: 16px; background: #fff; padding: 16px; border-radius: 8px; border: 1px solid #e2e8f0; text-align: left; width: 100%; box-sizing: border-box;
-    page-break-inside: avoid !important; break-inside: avoid !important;
-}
-.pdf-section h4 { margin: 0 0 10px 0; font-size: 0.95rem; color: var(--accent-burgundy); border-left: 4px solid var(--accent-burgundy); padding-left: 8px; font-weight: 800; }
-
-.pdf-semester-block {
-    margin-bottom: 15px;
-    width: 100%;
-}
-.pdf-table { width: 100%; border-collapse: collapse; margin-top: 8px; font-size: 0.82rem; text-align: center; table-layout: fixed; }
-
-/* 🚀 核心防斷裂技術：確保表格緊湊補滿，且字體絕不切半 */
-.pdf-table tr { 
-    page-break-inside: avoid !important; 
-    break-inside: avoid !important; 
-}
-.pdf-table th { background-color: #f8fafc; color: #475569; font-weight: 700; padding: 8px; border: 1px solid #e2e8f0; }
-.pdf-table td { padding: 8px; border: 1px solid #e2e8f0; color: #334155; word-break: break-all; }
-
-.pdf-badge { display: inline-block; padding: 2px 6px; font-size: 0.68rem; font-weight: bold; border-radius: 4px; color: #fff; text-align: center; white-space: nowrap; }
-.report-badge-failed { display: inline-block; background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; margin: 3px; break-inside: avoid; }
-.report-badge-retake { display: inline-block; background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; margin: 3px; break-inside: avoid; }
-.report-badge-container { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; width: 100%; }
-
-.backup-panel {
-background: rgb(242, 247, 244);
-border: 1px solid rgb(215, 230, 220);
-padding: 12px;
-border-radius: 10px;
-margin-bottom: 20px;
-}
-.backup-panel h5 { margin: 0 0 4px 0; font-size: 0.82rem; color: rgb(40, 90, 50); font-weight: 800; }
+.backup-panel { background: rgb(241, 245, 249); border: 1px solid #cbd5e1; padding: 12px; border-radius: 10px; margin-bottom: 20px; }
+.backup-panel h5 { margin: 0 0 6px 0; font-size: 0.82rem; color: var(--accent-primary); font-weight: 800; }
 .backup-flex { display: flex; gap: 8px; align-items: center; }
-.backup-input {flex: 1; font-size: 0.78rem !important; height: 32px !important; padding: 4px 8px !important; border: 1px solid rgb(200, 220, 210) !important; border-radius: 5px; background: #fff; box-sizing: border-box; }
-.btn-backup { background: rgb(40, 90, 50); color: white; border: none; padding: 0 14px; height: 32px; border-radius: 5px; font-weight: bold; font-size: 0.78rem; cursor: pointer; }
+.backup-input { flex: 1; font-size: 0.78rem; height: 32px; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 5px; box-sizing: border-box; }
+.btn-backup { background: var(--accent-primary); color: white; border: none; padding: 0 14px; height: 32px; border-radius: 5px; font-weight: bold; font-size: 0.78rem; cursor: pointer; }
 
-.control-panel {
-background: #fff;
-padding: 14px;
-border-radius: 10px;
-border: 1px solid var(--border);
-margin-bottom: 20px;
-box-shadow: 0 2px 6px rgba(0,0,0,0.01);
-}
-.search-box input {
-width: 100%;
-padding: 10px 14px;
-font-size: 0.88rem;
-border: 1px solid var(--border);
-border-radius: 6px;
-outline: none;
-box-sizing: border-box;
-background: rgb(245, 245, 242);
-}
-.search-box input:focus { border-color: var(--accent-blue); background: #fff; }
-.search-tip-box { display: none; font-size: 0.78rem; color: var(--accent-burgundy); font-weight: bold; margin-top: 6px; }
-.control-flex-row {
-display: flex;
-flex-direction: column;
-gap: 10px;
-margin-top: 12px;
-width: 100%;
-}
-[id="year-tabs"] {
-display: flex;
-gap: 8px;
-overflow-x: auto;
-width: 100%;
-padding-bottom: 4px;
--webkit-overflow-scrolling: touch;
-}
+/* 課表區塊樣式 (省略部分與原本相同，優化色彩) */
+.control-panel { background: #fff; padding: 14px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 20px; }
+.search-box input { width: 100%; padding: 10px 14px; font-size: 0.88rem; border: 1px solid var(--border); border-radius: 6px; outline: none; box-sizing: border-box; background: #f8fafc; }
+.search-box input:focus { border-color: var(--accent-secondary); background: #fff; }
+.search-tip-box { display: none; font-size: 0.78rem; color: var(--accent-primary); font-weight: bold; margin-top: 6px; }
+.control-flex-row { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; width: 100%; }
+[id="year-tabs"] { display: flex; gap: 8px; overflow-x: auto; width: 100%; padding-bottom: 4px; }
 .year-manage-btns { display: flex; gap: 8px; width: 100%; }
-.btn-manage {
-flex: 1; background: rgb(241, 245, 249); border: 1px solid rgb(215, 215, 210); padding: 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; color: rgb(30, 41, 59); text-align: center;
-}
-@media (min-width: 768px) {
-.control-flex-row { flex-direction: row; justify-content: space-between; align-items: center; }
-[id="year-tabs"] { width: auto; flex: 1; }
-.year-manage-btns { width: auto; }
-.btn-manage { flex: none; padding: 6px 14px; }
-}
-.btn-manage.add-year { background: rgb(239, 246, 255); color: rgb(37, 99, 235); border-color: rgb(191, 219, 254); }
-.btn-manage.del-year { background: rgb(254, 242, 242); color: rgb(220, 38, 38); border-color: rgb(254, 202, 202); }
-.tab-btn {
-background: rgb(240, 240, 235);
-border: none;
-padding: 8px 18px;
-font-size: 0.85rem;
-font-weight: 700;
-color: var(--text-muted);
-border-radius: 20px;
-cursor: pointer;
-white-space: nowrap;
-}
-.tab-btn.active { background: var(--accent-burgundy); color: #fff; }
+.btn-manage { flex: 1; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; color: #1e293b; text-align: center; }
+@media (min-width: 768px) { .control-flex-row { flex-direction: row; justify-content: space-between; align-items: center; } [id="year-tabs"] { width: auto; flex: 1; } .year-manage-btns { width: auto; } .btn-manage { flex: none; padding: 6px 14px; } }
+.tab-btn { background: #f1f5f9; border: none; padding: 8px 18px; font-size: 0.85rem; font-weight: 700; color: var(--text-muted); border-radius: 20px; cursor: pointer; white-space: nowrap; }
+.tab-btn.active { background: var(--accent-primary); color: #fff; }
+
 .year-wrapper { display: none; }
 .year-wrapper.active { display: block; }
 .semester-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
 @media (min-width: 850px) { .semester-grid { grid-template-columns: repeat(2, 1fr); } }
-.semester-card {
-background: #fff;
-border-radius: 12px;
-border: 1px solid var(--border);
-padding: 16px;
-box-shadow: 0 4px 12px rgba(0,0,0,0.01);
-}
-.semester-header {
-font-size: 1.05rem;
-font-weight: 800;
-color: rgb(30, 41, 59);
-margin-bottom: 12px;
-border-bottom: 2px solid rgb(245, 245, 242);
-padding-bottom: 6px;
-}
-.subjects-box-matrix {
-display: grid;
-grid-template-columns: repeat(2, 1fr);
-gap: 8px;
-margin-bottom: 12px;
-}
-@media (min-width: 600px) {
-.subjects-box-matrix { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-}
-.subject-square {
-background: rgb(248, 250, 252);
-border: 1px solid var(--border);
-border-radius: 8px;
-padding: 12px;
-display: flex;
-flex-direction: column;
-justify-content: space-between;
-min-height: 150px;
-box-sizing: border-box;
-position: relative;
-box-shadow: 0 2px 5px rgba(0,0,0,0.01);
-}
+.semester-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); }
+.semester-header { font-size: 1.05rem; font-weight: 800; color: #1e293b; margin-bottom: 12px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; }
+.subjects-box-matrix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; }
+@media (min-width: 600px) { .subjects-box-matrix { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } }
+.subject-square { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; min-height: 150px; box-sizing: border-box; position: relative; }
 .square-passed { border-left: 4px solid var(--cls-passed); }
 .square-waived { border-left: 4px solid var(--cls-waived); }
 .square-retake { border-left: 4px solid var(--cls-retake); }
 .square-failed { border-left: 4px solid var(--cls-failed); }
 
 .sub-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
-.badge {
-display: inline-block;
-padding: 2px 8px;
-font-size: 0.68rem;
-font-weight: 800;
-border-radius: 4px;
-color: #fff !important;
-text-align: center;
-white-space: nowrap;
-}
+.badge { display: inline-block; padding: 2px 8px; font-size: 0.68rem; font-weight: 800; border-radius: 4px; color: #fff !important; text-align: center; white-space: nowrap; }
 .bg-common { background-color: rgb(100, 116, 139) !important; }
-.bg-prof-req { background-color: rgb(59, 130, 246) !important; }
+.bg-prof-req { background-color: var(--accent-secondary) !important; }
 .bg-prof-el { background-color: var(--cls-retake) !important; }
 .bg-other-el { background-color: rgb(139, 92, 246) !important; }
 .sub-cre { font-size: 0.72rem; color: var(--text-muted); font-weight: 700; }
-.sub-title-area {
-font-size: 0.88rem;
-font-weight: 800;
-color: var(--text);
-margin: 6px 0;
-line-height: 1.3;
-min-height: 36px;
-display: flex;
-align-items: center;
-}
+.sub-title-area { font-size: 0.88rem; font-weight: 800; color: var(--text); margin: 6px 0; line-height: 1.3; min-height: 36px; display: flex; align-items: center; }
 .sub-controls { display: flex; flex-direction: column; gap: 4px; width: 100%; }
-input[type="text"], input[type="number"], select {
-background: rgb(255, 255, 255);
-border: 1px solid rgb(210, 210, 205);
-border-radius: 4px;
-padding: 4px 6px;
-color: var(--text);
-font-size: 0.78rem;
-height: 28px;
-box-sizing: border-box;
-font-weight: 600;
-}
+input[type="text"], input[type="number"], select { background: #fff; border: 1px solid #cbd5e1; border-radius: 4px; padding: 4px 6px; color: var(--text); font-size: 0.78rem; height: 28px; box-sizing: border-box; font-weight: 600; }
 input[type="number"] { text-align: center; }
 select { width: 100%; cursor: pointer; }
-input:disabled { background: rgb(235, 235, 230); color: rgb(150, 145, 145); font-weight: 800; text-align: center; }
-.gen-ed-select {
-margin-bottom: 4px;
-border-color: rgb(59, 130, 246);
-background-color: rgb(240, 246, 255);
-color: rgb(30, 64, 175);
-font-weight: 700;
-height: 28px;
-font-size: 0.78rem;
-}
-.retake-scheduler-zone {
-margin-top: 4px;
-border-top: 1px solid rgb(230, 230, 225);
-padding-top: 4px;
-width: 100%;
-}
-.retake-select {
-font-size: 0.72rem;
-height: 26px;
-background-color: rgb(255, 251, 235);
-border-color: rgb(253, 230, 138);
-color: rgb(180, 83, 9);
-font-weight: 700;
-padding: 2px;
-}
+.retake-scheduler-zone { margin-top: 4px; border-top: 1px solid #e2e8f0; padding-top: 4px; width: 100%; }
 .btn-set { display: flex; gap: 6px; margin-top: auto; }
-.btn-action {
-flex: 1; border: 1px solid rgb(210, 210, 205); background: #fff; padding: 6px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; cursor: pointer;
-}
-.btn-p-el { color: rgb(180, 83, 9); border-color: rgb(253, 230, 138); background: rgb(255, 251, 235); }
-.btn-o-el { color: rgb(109, 40, 217); border-color: rgb(221, 214, 254); background: rgb(245, 243, 255); }
-.btn-box-del {
-position: absolute; top: -4px; right: -4px; background: rgb(239, 68, 68); color: white; border: none; width: 16px; height: 16px; font-size: 9px; font-weight: bold; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 5;
-}
-footer {
-margin-top: 50px;
-padding: 24px 0;
-text-align: center;
-font-size: 0.78rem;
-color: var(--text-muted);
-border-top: 1px solid var(--border);
-font-weight: 600;
-letter-spacing: 0.5px;
-}
+.btn-action { flex: 1; border: 1px solid #cbd5e1; background: #fff; padding: 6px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; cursor: pointer; }
+.btn-box-del { position: absolute; top: -4px; right: -4px; background: #ef4444; color: white; border: none; width: 18px; height: 18px; font-size: 10px; font-weight: bold; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 5; }
+footer { margin-top: 50px; padding: 24px 0; text-align: center; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); font-weight: 600; letter-spacing: 0.5px; }
+
+/* 🚀 PDF 專用覆蓋層（徹底解決 iOS 白紙與跑位） */
+#pdf-overlay-generator { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #e2e8f0; z-index: 9999999; overflow-y: auto; }
+.pdf-loading-text { text-align: center; margin-top: 50px; font-size: 1.2rem; font-weight: 800; color: var(--accent-primary); }
 </style>
 <link rel="icon" href="favicon.png" type="image/png">
 </head>
 <body>
 <div class="header-area">
-<h1>國立勤益科技大學機械工程系學分審查</h1>
+<button class="btn-settings" onclick="toggleSettings()">⚙️ 系統設定</button>
+<h1 id="display-school-name">國立勤益科技大學</h1>
+<h2 id="display-dept-name">機械工程系 學分審查系統</h2>
 </div>
+
 <div class="container">
+<!-- ⚙️ 自訂校系與門檻面板 -->
+<div class="settings-panel" id="settings-panel">
+    <h3>⚙️ 自訂校系與畢業門檻</h3>
+    <div class="settings-grid">
+        <div class="settings-item"><label>學校名稱</label><input type="text" id="cfg-school" value="國立勤益科技大學"></div>
+        <div class="settings-item"><label>科系名稱</label><input type="text" id="cfg-dept" value="機械工程系"></div>
+        <div class="settings-item"><label>總畢業學分門檻</label><input type="number" id="cfg-total" value="131"></div>
+        <div class="settings-item"><label>必修學分門檻</label><input type="number" id="cfg-req" value="86"></div>
+        <div class="settings-item"><label>專業選修門檻</label><input type="number" id="cfg-prof" value="30"></div>
+        <div class="settings-item"><label>選修總門檻 (含專選+他選)</label><input type="number" id="cfg-elec" value="45"></div>
+        <button class="settings-btn-save" onclick="saveConfigAndReload()">💾 儲存設定並重新運算</button>
+    </div>
+</div>
+
 <div class="summary-card">
 <div class="summary-label">總畢業學分</div>
 <div class="summary-main-row">
@@ -430,7 +177,7 @@ letter-spacing: 0.5px;
 <div class="summary-percent" id="lbl-total-pct">0%</div>
 </div>
 <div class="progress-bar"><div class="progress-fill" id="fill-total-bar"></div></div>
-<div class="summary-subtext">含必修 86 學分 / 選修至少 45 學分</div>
+<div class="summary-subtext" id="lbl-subtext-thresholds">含必修 86 學分 / 選修至少 45 學分</div>
 </div>
 
 <div class="diagnostic-card" id="diag-box">
@@ -445,40 +192,34 @@ letter-spacing: 0.5px;
 <div class="status" id="lbl-req-stat">還差 86 學分</div>
 </div>
 <div class="card prof-elective">
-<h3>本系專業選修</h3>
+<h3 id="lbl-card-prof">本系專業選修</h3>
 <div class="number" id="lbl-p-el-cre">0 / 30</div>
 <div class="status" id="lbl-p-el-stat">還差 30 學分</div>
 </div>
 <div class="card other-elective">
 <h3>其他選修總計</h3>
 <div class="number" id="lbl-o-el-cre">0 / 15</div>
-<div class="status" id="lbl-o-el-stat">還差 45 學分</div>
+<div class="status" id="lbl-o-el-stat">輔助湊滿選修總量</div>
 </div>
 </div>
 
-<!-- 📊 乾淨按鈕區塊：網頁上只保留按鈕，不顯示巨大報告 -->
-<div class="summary-card" style="border-top: 4px solid var(--accent-burgundy);">
-    <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-        <div class="summary-label" style="font-size: 1.05rem; color: var(--text); font-weight: 800; text-align: left;">📊 歷年成績與畢業資格報告</div>
-        <button class="btn-pdf" id="btn-download-pdf">📥 下載 A4 PDF 報告</button>
-    </div>
-    
-    <!-- 🚀 核心：報告容器加上 display: none 完美隱藏，不佔用任何版面空間 -->
-    <div class="pdf-container" id="report-print-area" style="display: none;">
-    </div>
+<!-- 📊 乾淨下載按鈕區（不顯示龐大的歷年明細） -->
+<div class="summary-card" style="border-top: 4px solid var(--accent-primary);">
+    <button class="btn-pdf" id="btn-download-pdf" onclick="triggerPDFDownload()">📥 產生並下載完整 A4 報告書</button>
 </div>
 
 <div class="backup-panel">
-<h5>手動進度備份箱(增量超短代碼版)</h5>
+<h5>手動進度備份箱 (跨裝置轉移用)</h5>
 <div class="backup-flex">
 <input type="text" id="backup-text-field" class="backup-input" placeholder="填寫分數後自動生成備份代碼">
 <button class="btn-backup" id="btn-copy-backup">複製</button>
-<button class="btn-backup" style="background: rgb(59, 130, 246);" id="btn-restore-backup">還原</button>
+<button class="btn-backup" style="background: var(--accent-secondary);" id="btn-restore-backup">還原</button>
 </div>
 </div>
+
 <div class="control-panel">
 <div class="search-box">
-<input type="text" id="global-search" placeholder="輸入科目關鍵字快搜... (支援跨學年跨學期檢索)">
+<input type="text" id="global-search" placeholder="輸入科目關鍵字快搜... (支援跨學年檢索)">
 <div class="search-tip-box" id="search-tip">目前處於「全域搜尋模式」，已排開分頁。清空搜尋框即可還原標準學年分頁。</div>
 </div>
 <div class="control-flex-row" id="tab-controls-area">
@@ -491,10 +232,29 @@ letter-spacing: 0.5px;
 </div>
 <div id="main-schedule-box"></div>
 <footer>
-Copyright © 2026 羅聖閎. All Rights Reserved.
+Copyright © 2026. Universal Credit Audit System.
 </footer>
 </div>
+
+<!-- 🚀 實體覆蓋 PDF 生成區（保證手機與電腦皆 100% 不跑位、不變白紙） -->
+<div id="pdf-overlay-generator">
+    <div class="pdf-loading-text" id="pdf-loading-msg">⏳ 報告引擎運算中，請勿關閉視窗...</div>
+    <!-- 實際提供給 html2pdf 拍攝的 A4 專用畫布 -->
+    <div id="pdf-sandbox-canvas" style="width: 740px; margin: 20px auto; background: #fff; padding: 40px; box-sizing: border-box; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+    </div>
+</div>
+
 <script>
+/* 🎯 系統全域配置檔 */
+var appConfig = {
+    school: "國立勤益科技大學",
+    dept: "機械工程系",
+    targetTotal: 131,
+    targetReq: 86,
+    targetProf: 30,
+    targetElective: 45
+};
+
 var defaultCurriculumMatrix = {
 "y1_s1": [["國文(一)",3,"common"],["大一英文(一)",2,"common"],["英文聽講(一)",1,"common"],["體育(一)", 0,"common"], ["微積分(一)",3,"prof-req"],["程式語言",3,"prof-req"],["工廠實習",1,"prof-req"],["電腦輔助機械製圖",1,"prof-req"]],
 "y1_s2": [["國文(二)",3,"common"],["大一英文(二)",2,"common"],["英文聽講(二)",1,"common"],["體育(二)", 0,"common"], ["微積分(二)",3,"prof-req"],["靜力學",3,"prof-req"],["材料科學與工程",3,"prof-req"],["精密製造實習",1,"prof-req"]],
@@ -505,11 +265,60 @@ var defaultCurriculumMatrix = {
 "y4_s1": [["機械工程實驗(二)",1,"prof-req"]],
 "y4_s2": [["機械工程實驗(三)", 1,"prof-req"]]
 };
-var storageKey = "ncut_state_bulletproof_v32_final";
+
+var storageKey = "univ_credit_audit_data_v1"; // 改用新版 key 防衝突
+var configKey = "univ_credit_audit_config_v1";
 var activeYear = 1;
 var maxYearInState = 4;
 var appState = {};
 var isLocalStorageAvailable = false;
+
+function toggleSettings() {
+    var panel = document.getElementById('settings-panel');
+    panel.classList.toggle('active');
+}
+
+function loadConfigSafely() {
+    try {
+        var raw = window.localStorage.getItem(configKey);
+        if (raw) {
+            var parsed = JSON.parse(raw);
+            if (parsed.targetTotal) appConfig = parsed;
+        }
+    } catch(e) {}
+    
+    // 更新 UI input
+    document.getElementById('cfg-school').value = appConfig.school;
+    document.getElementById('cfg-dept').value = appConfig.dept;
+    document.getElementById('cfg-total').value = appConfig.targetTotal;
+    document.getElementById('cfg-req').value = appConfig.targetReq;
+    document.getElementById('cfg-prof').value = appConfig.targetProf;
+    document.getElementById('cfg-elec').value = appConfig.targetElective;
+    applyConfigToUI();
+}
+
+function applyConfigToUI() {
+    document.getElementById('display-school-name').innerText = appConfig.school;
+    document.getElementById('display-dept-name').innerText = appConfig.dept + " 學分審查系統";
+    document.getElementById('lbl-subtext-thresholds').innerText = "含必修 " + appConfig.targetReq + " 學分 / 選修至少 " + appConfig.targetElective + " 學分";
+    document.getElementById('lbl-card-prof').innerText = "專業選修 (門檻" + appConfig.targetProf + ")";
+}
+
+function saveConfigAndReload() {
+    appConfig.school = document.getElementById('cfg-school').value || "學校名稱";
+    appConfig.dept = document.getElementById('cfg-dept').value || "科系名稱";
+    appConfig.targetTotal = parseInt(document.getElementById('cfg-total').value) || 131;
+    appConfig.targetReq = parseInt(document.getElementById('cfg-req').value) || 86;
+    appConfig.targetProf = parseInt(document.getElementById('cfg-prof').value) || 30;
+    appConfig.targetElective = parseInt(document.getElementById('cfg-elec').value) || 45;
+    
+    try { window.localStorage.setItem(configKey, JSON.stringify(appConfig)); } catch(e) {}
+    
+    applyConfigToUI();
+    calculateCredits();
+    toggleSettings();
+    alert("設定已儲存並重新套用運算！");
+}
 
 function createEl(tag, className, text, parent) {
 var e = document.createElement(tag);
@@ -526,17 +335,11 @@ function findIdx(arr, val) {
 for (var i=0; i < arr.length; i++) { if (arr[i]==val) return i; }
 return -1;
 }
-var passedColors = {
-'通過': 'square-passed',
-'抵免': 'square-waived',
-'重修中': 'square-retake',
-'轉學補修': 'square-retake',
-'未修': 'square-failed',
-'未通過': 'square-failed'
-};
 function getSquareClass(status) {
-return passedColors[status] || 'square-failed';
+var colors = {'通過':'square-passed','抵免':'square-waived','重修中':'square-retake','轉學補修':'square-retake','未修':'square-failed','未通過':'square-failed'};
+return colors[status] || 'square-failed';
 }
+
 function getSelectedGenEdFields(currentSem, currentIdx) {
 var selected = [];
 for (var sem in appState) {
@@ -552,15 +355,14 @@ selected.push(item.field);
 }
 return selected;
 }
+
 function copyBackupCode() {
 var txtField = document.getElementById('backup-text-field');
 if (!txtField || txtField.value === "") { alert("目前尚無進度可供複製!"); return; }
 txtField.select(); txtField.setSelectionRange(0, 99999);
-try {
-document.execCommand('copy');
-alert("智慧增量超短代碼已複製到剪貼簿!");
-} catch (err) { alert("請手動複製:"+txtField.value); }
+try { document.execCommand('copy'); alert("智慧增量超短代碼已複製到剪貼簿!"); } catch (err) { alert("請手動複製:"+txtField.value); }
 }
+
 function importBackupCode() {
 var txtField = document.getElementById('backup-text-field');
 if (!txtField || txtField.value.trim() === "") { alert("請先貼上進度代碼!"); return; }
@@ -573,14 +375,11 @@ calculateCredits();
 alert("歷史修課進度已完美復原校正!");
 } catch(e) { alert("× 代碼結構損毀，請確認是否複製完整。"); }
 }
+
 function checkStorageAvailability() {
-try {
-window.localStorage.setItem('_test_', '1');
-window.localStorage.removeItem('_test_');
-isLocalStorageAvailable = true;
-} catch(e) { isLocalStorageAvailable = false; }
+try { window.localStorage.setItem('_test_', '1'); window.localStorage.removeItem('_test_'); isLocalStorageAvailable = true; } catch(e) { isLocalStorageAvailable = false; }
 }
-var passedOtherEl = 0;
+
 function getYearBaseLabel(yNum) { return (110+yNum); }
 function getSemesterText(y, sKey) {
 var base = getYearBaseLabel(y);
@@ -597,18 +396,15 @@ return yNum < chs.length? chs[yNum]+"學年":"第"+yNum+"學年";
 function getTimelineOrderedSemesters() {
 var list = [];
 for (var y=1; y <= maxYearInState; y++){
-list.push("y"+y+"_s1"); list.push("y"+y+"_s2");
-list.push("y"+y+"_s3"); list.push("y"+y+"_s4");
+list.push("y"+y+"_s1"); list.push("y"+y+"_s2"); list.push("y"+y+"_s3"); list.push("y"+y+"_s4");
 }
 return list;
 }
+
 function loadStateSafely() {
 var savedObj = null;
 if (isLocalStorageAvailable) {
-try {
-var raw = window.localStorage.getItem(storageKey);
-if (raw) savedObj = JSON.parse(raw);
-} catch(e) {}
+try { var raw = window.localStorage.getItem(storageKey); if (raw) savedObj = JSON.parse(raw); } catch(e) {}
 }
 decompressAndApplyState(savedObj);
 }
@@ -617,10 +413,9 @@ var compressed = compressState();
 var jsonStr = JSON.stringify(compressed);
 var txtField = document.getElementById('backup-text-field');
 if (txtField) txtField.value = btoa(encodeURIComponent(jsonStr));
-if (isLocalStorageAvailable) {
-try { window.localStorage.setItem(storageKey, jsonStr); } catch(e) {}
+if (isLocalStorageAvailable) { try { window.localStorage.setItem(storageKey, jsonStr); } catch(e) {} }
 }
-}
+
 function compressState() {
 var payload = [];
 for (var sem in appState) {
@@ -628,18 +423,14 @@ if (appState.hasOwnProperty(sem)) {
 var arr = appState[sem];
 for (var idx = 0; idx < arr.length; idx++) {
 var item = arr[idx];
-if (item.isCustom) {
-payload.push(['c', sem, item.name, item.cre, item.type, item.score, item.status, item.field, item.linkId]);
-} else {
-if (item.score !== "" || item.status !== "未修" || item.field !== "" || item.retakeTarget !== "") {
-payload.push(['o', sem, idx, item.score, item.status, item.field, item.retakeTarget, item.linkId]);
-}
-}
+if (item.isCustom) { payload.push(['c', sem, item.name, item.cre, item.type, item.score, item.status, item.field, item.linkId]); } 
+else { if (item.score !== "" || item.status !== "未修" || item.field !== "" || item.retakeTarget !== "") { payload.push(['o', sem, idx, item.score, item.status, item.field, item.retakeTarget, item.linkId]); } }
 }
 }
 }
 return {m: maxYearInState, d: payload };
 }
+
 function decompressAndApplyState(savedObj) {
 maxYearInState = (savedObj && savedObj.m)? savedObj.m: 4;
 appState = {};
@@ -647,11 +438,7 @@ for (var sem in defaultCurriculumMatrix) {
 if (defaultCurriculumMatrix.hasOwnProperty(sem)) {
 var src = defaultCurriculumMatrix[sem]; appState[sem] = [];
 for (var i=0; i < src.length; i++) {
-appState[sem].push({
-id: "off_" + sem + "_" + i, name: src[i][0], cre: src[i][1], type: src[i][2],
-score: "", status: "未修", field: "", linkId: null, isRetakeCopy: false, retakeTarget: "",
-isCustom: false
-});
+appState[sem].push({ id: "off_" + sem + "_" + i, name: src[i][0], cre: src[i][1], type: src[i][2], score: "", status: "未修", field: "", linkId: null, isRetakeCopy: false, retakeTarget: "", isCustom: false });
 }
 }
 }
@@ -667,42 +454,33 @@ var arr = savedObj.d[k]; var marker = arr[0];
 if (marker === 'o') {
 var sem = arr[1]; var idx = arr[2];
 if (appState[sem] && appState[sem][idx]) {
-appState[sem][idx].score = arr[3]; appState[sem][idx].status = arr[4];
-appState[sem][idx].field = arr[5]; appState[sem][idx].retakeTarget = arr[6];
-appState[sem][idx].linkId = arr[7];
+appState[sem][idx].score = arr[3]; appState[sem][idx].status = arr[4]; appState[sem][idx].field = arr[5]; appState[sem][idx].retakeTarget = arr[6]; appState[sem][idx].linkId = arr[7];
 }
 } else if (marker === 'c') {
 var sem = arr[1]; if (!appState[sem]) appState[sem] = [];
-appState[sem].push({
-id: "cust_" + Date.now() + "_" + Math.floor(Math.random()*10000), name: arr[2],
-cre: arr[3], type: arr[4],
-score: arr[5], status: arr[6], field: arr[7], linkId: arr[8],
-isRetakeCopy: (arr[2] && (arr[2].indexOf("[重修]") === 0 || arr[2].indexOf("[補修]") === 0)),
-retakeTarget: "", isCustom: true
-});
+appState[sem].push({ id: "cust_" + Date.now() + "_" + Math.floor(Math.random()*10000), name: arr[2], cre: arr[3], type: arr[4], score: arr[5], status: arr[6], field: arr[7], linkId: arr[8], isRetakeCopy: (arr[2] && (arr[2].indexOf("[重修]") === 0 || arr[2].indexOf("[補修]") === 0)), retakeTarget: "", isCustom: true });
 }
 }
 }
 }
+
 function expandNewYear() {
 maxYearInState++;
 appState["y" + maxYearInState + "_s1"] = []; appState["y" + maxYearInState + "_s2"] = [];
 appState["y" + maxYearInState + "_s3"] = []; appState["y" + maxYearInState + "_s4"] = [];
-saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks();
-calculateCredits();
+saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks(); calculateCredits();
 tabToYear(maxYearInState);
 }
 function shrinkLastYear() {
 if (maxYearInState <= 4) { alert("× 前四學年為基定對齊配置，不可再刪除!"); return; }
 if (confirm("確定要刪除整個學年與自訂資料嗎?")) {
-delete appState["y" + maxYearInState + "_s1"]; delete appState["y" + maxYearInState + "_s2"];
-delete appState["y" + maxYearInState + "_s3"]; delete appState["y" + maxYearInState + "_s4"];
+delete appState["y" + maxYearInState + "_s1"]; delete appState["y" + maxYearInState + "_s2"]; delete appState["y" + maxYearInState + "_s3"]; delete appState["y" + maxYearInState + "_s4"];
 maxYearInState--; if (activeYear > maxYearInState) activeYear = maxYearInState;
-saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks();
-calculateCredits();
+saveState(); rebuildTabsUI(); renderStructure(); renderAllBlocks(); calculateCredits();
 tabToYear(activeYear);
 }
 }
+
 function rebuildTabsUI() {
 var tabsBox = document.getElementById('year-tabs'); if (!tabsBox) return;
 tabsBox.innerHTML = "";
@@ -712,6 +490,7 @@ if (y === activeYear) btn.className = "tab-btn active";
 (function(num) { btn.addEventListener('click', function() { tabToYear(num); }); })(y);
 }
 }
+
 function renderStructure() {
 var container = document.getElementById('main-schedule-box'); if (!container) return;
 container.innerHTML = "";
@@ -736,6 +515,7 @@ var btnOther = createEl('button', 'btn-action btn-o-el', "+加選他選",btnSetD
 }
 }
 }
+
 function tabToYear(yNum) {
 activeYear = yNum; var tabBtns = document.querySelectorAll('.tab-btn');
 for (var i=0; i < tabBtns.length; i++) { tabBtns[i].className = "tab-btn"; }
@@ -745,6 +525,7 @@ for (var j=0; j < wrappers.length; j++) { wrappers[j].className = "year-wrapper"
 var targetBlock = document.getElementById("year-block-" + yNum);
 if (targetBlock) targetBlock.className = "year-wrapper active";
 }
+
 function createBoxDOM(sem, idx, item) {
 var box = createEl('div', 'subject-square ' + getSquareClass(item.status), null, null);
 box.id = "box-" + sem + "-" + idx; box.setAttribute('data-name', item.name);
@@ -826,6 +607,7 @@ else { tagDiv.style.color = "rgb(245,158,11)"; tagDiv.innerText = "重修追蹤�
 }
 return box;
 }
+
 function renderSemesterMatrix(sem) {
 var matrix = document.getElementById("matrix-" + sem); if (!matrix) return;
 matrix.innerHTML = "";
@@ -833,6 +615,7 @@ if (appState[sem]) {
 for (var i=0; i < appState[sem].length; i++) { matrix.appendChild(createBoxDOM(sem, i, appState[sem][i])); }
 }
 }
+
 function updateScore(sem, idx, val) {
 var item = appState[sem][idx]; if (!item) return;
 var trimmed = val.trim(); item.score = trimmed;
@@ -860,6 +643,7 @@ if (rSelect) rSelect.options[0].text = (item.status === '轉學補修')?"→ 安
 }
 calculateCredits();
 }
+
 function scheduleRetakeRoute(originSem, idx, targetSem) {
 var item = appState[originSem][idx]; if (!item) return;
 if (item.linkId) {
@@ -875,32 +659,23 @@ appState[semKey] = newArr;
 }
 }
 if (targetSem === "") {
-item.linkId = null; item.retakeTarget = ""; saveState();
-renderSemesterMatrix(originSem); calculateCredits(); return;
+item.linkId = null; item.retakeTarget = ""; saveState(); renderSemesterMatrix(originSem); calculateCredits(); return;
 }
 var sharedLinkId = item.linkId? item.linkId: "link_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
 item.linkId = sharedLinkId; item.retakeTarget = targetSem;
 var prefix = (item.status === '轉學補修')?"[補修]": "[重修]"; var cleanName = item.name;
 if (cleanName.indexOf("[重修]") === 0) cleanName = cleanName.substring(5);
 if (cleanName.indexOf("[補修]") === 0) cleanName = cleanName.substring(5);
-appState[targetSem].push({
-id: "retake_copy_" + Date.now(), name: prefix + cleanName, cre: item.cre, type: item.type,
-score: "", status: "未修", field: "", linkId: sharedLinkId, isRetakeCopy: true,
-retakeTarget: "", isCustom: true
-});
+appState[targetSem].push({ id: "retake_copy_" + Date.now(), name: prefix + cleanName, cre: item.cre, type: item.type, score: "", status: "未修", field: "", linkId: sharedLinkId, isRetakeCopy: true, retakeTarget: "", isCustom: true });
 saveState(); renderAllBlocks(); calculateCredits(); alert("已成功排入追蹤時程選單!");
 }
+
 function updateGenEdField(sem, idx, fieldVal) {
-if (appState[sem] && appState[sem][idx]) { appState[sem][idx].field = fieldVal;
-saveState(); renderAllBlocks(); calculateCredits(); }
+if (appState[sem] && appState[sem][idx]) { appState[sem][idx].field = fieldVal; saveState(); renderAllBlocks(); calculateCredits(); }
 }
 function addCustomBox(sem, elType) {
 if (!appState[sem]) appState[sem] = [];
-appState[sem].push({
-id: "cust_" + Date.now() + "_" + Math.floor(Math.random()*10000), name: "", cre: 3, type: elType,
-score: "", status: "未修", field: "", linkId: null, isRetakeCopy: false, retakeTarget: "",
-isCustom: true
-});
+appState[sem].push({ id: "cust_" + Date.now() + "_" + Math.floor(Math.random()*10000), name: "", cre: 3, type: elType, score: "", status: "未修", field: "", linkId: null, isRetakeCopy: false, retakeTarget: "", isCustom: true });
 saveState(); renderSemesterMatrix(sem); calculateCredits();
 }
 function deleteCustomBox(sem, idx) {
@@ -930,26 +705,17 @@ var box = document.getElementById("box-" + sem + "-" + idx);
 if (box) {
 box.className = "subject-square " + getSquareClass(item.status);
 var scoreInp = box.querySelector('.score-input');
-if (scoreInp) {
-scoreInp.value = item.score; scoreInp.disabled = (val === '抵免' || val === '轉學補修');
-scoreInp.placeholder = (val === '抵免' || val === '轉學補修')?"免":"分數";
-}
+if (scoreInp) { scoreInp.value = item.score; scoreInp.disabled = (val === '抵免' || val === '轉學補修'); scoreInp.placeholder = (val === '抵免' || val === '轉學補修')?"免":"分數"; }
 var existingZone = box.querySelector('.retake-scheduler-zone');
 if (existingZone) {
-if (val === '未通過' || val === '轉學補修') {
-existingZone.style.display = "block"; var rSelect = existingZone.querySelector('.retake-select');
-if (rSelect) rSelect.options[0].text = (val === '轉學補修')?"安排哪學期補修?":"安排哪學期重修?";
-} else { existingZone.style.display = "none"; }
+if (val === '未通過' || val === '轉學補修') { existingZone.style.display = "block"; var rSelect = existingZone.querySelector('.retake-select'); if (rSelect) rSelect.options[0].text = (val === '轉學補修')?"安排哪學期補修?":"安排哪學期重修?"; } 
+else { existingZone.style.display = "none"; }
 }
 }
 calculateCredits();
 }
 function updateCustomName(sem, idx, val) {
-if (appState[sem] && appState[sem][idx]) {
-appState[sem][idx].name = val.trim(); saveState();
-var box = document.getElementById("box-" + sem + "-" + idx); if (box) box.setAttribute('data-name', val.trim());
-calculateCredits();
-}
+if (appState[sem] && appState[sem][idx]) { appState[sem][idx].name = val.trim(); saveState(); var box = document.getElementById("box-" + sem + "-" + idx); if (box) box.setAttribute('data-name', val.trim()); calculateCredits(); }
 }
 function updateCustomCre(sem, idx, val) {
 if (appState[sem] && appState[sem][idx]) { appState[sem][idx].cre = parseFloat(val) || 0; saveState(); calculateCredits(); }
@@ -961,8 +727,7 @@ var wrappers = document.querySelectorAll('.year-wrapper'); var cards = document.
 if (q === "") {
 if (tabControls) tabControls.style.display = 'flex';
 if (tip) tip.style.display = 'none';
-var allBoxes = document.querySelectorAll('.subject-square');
-for (var a=0; a < allBoxes.length; a++) { allBoxes[a].style.display = ""; }
+var allBoxes = document.querySelectorAll('.subject-square'); for (var a=0; a < allBoxes.length; a++) { allBoxes[a].style.display = ""; }
 for (var c=0; c < cards.length; c++) { cards[c].style.display = ""; }
 tabToYear(activeYear); return;
 }
@@ -984,210 +749,16 @@ var semesters = getTimelineOrderedSemesters();
 for (var i = 0; i < semesters.length; i++) { renderSemesterMatrix(semesters[i]); }
 }
 
-// 🎯 高階深層報告自動編譯 (完全在背景產出 HTML 並裝入 display: none 的容器中)
-function generateDeepReportUI(total, req, prof, other, failedList, retakeList) {
-    var area = document.getElementById('report-print-area');
-    if (!area) return;
-    
-    var isGraduated = (req >= 86 && prof >= 30 && (prof + other) >= 45 && total >= 131);
-    var statusText = isGraduated ? "🎉 恭喜！畢業資格學分審查核算：『 已完全達標 』" : "⚠️ 畢業資格學分審查核算：『 尚未達標 』";
-    var statusColor = isGraduated ? "#10b981" : "#ef4444";
-    
-    var now = new Date();
-    var timeStr = now.getFullYear() + " 年 " + (now.getMonth() + 1) + " 月 " + now.getDate() + " 日 " + now.getHours() + " 時 " + now.getMinutes() + " 分";
-    
-    var genEdFields = [];
-    for (var sem in appState) {
-        if (appState.hasOwnProperty(sem)) {
-            appState[sem].forEach(function(item){
-                if(item.name === "博雅通識課程" && item.field && !hasItem(genEdFields, item.field)) { genEdFields.push(item.field); }
-            });
-        }
-    }
-    
-    var smartAdvice = "根據機械工程系課程地圖核心演算法分析：";
-    if (hasItem(failedList, "微積分(一)") || hasItem(failedList, "微積分(二)")) {
-        smartAdvice += "微積分為工程學之本，建議紮實奠定數學工具基礎，以免影響後續高階工程數學等學科推導。";
-    } else if (hasItem(failedList, "靜力學") || hasItem(failedList, "動力學(一)") || hasItem(failedList, "流體力學(一)") || hasItem(failedList, "熱力學(一)")) {
-        smartAdvice += "力學學科（靜力、動力、流體、熱力）為機械工程核心基石，物理直覺與公式推導並重，建議於時程規劃內優先重點攻克。";
-    } else if (isGraduated) {
-        smartAdvice += "幹得漂亮！所有的必修魔王與選修學分已全數通關。這極具紀律的學分曲線就和完美的健身體態一樣無懈可擊，準備安心畢業邁向下一個人生航道！";
-    } else {
-        smartAdvice += "目前核心進度穩定，請持續保持穩健修課節奏，有條不紊地將剩餘的選修學分補齊即可。";
-    }
-
-    var failedBadgesHtml = "";
-    if (failedList.length > 0) {
-        failedList.forEach(function(item) { failedBadgesHtml += `<span class="report-badge-failed">${item}</span>`; });
-    }
-
-    var retakeBadgesHtml = "";
-    if (retakeList.length > 0) {
-        retakeList.forEach(function(item) { retakeBadgesHtml += `<span class="report-badge-retake">${item}</span>`; });
-    }
-
-    var html = `
-        <div class="pdf-header">
-            <h2 style="margin: 0; color: rgb(15, 23, 42); font-size: 1.4rem; font-weight: 800; text-align: center;">國立勤益科技大學 機械工程系</h2>
-            <h3 style="margin: 6px 0 0 0; color: var(--accent-burgundy); font-size: 1.1rem; letter-spacing: 1px; text-align: center;">畢業資格全方位深層審查診斷報告</h3>
-            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 8px; text-align: center;">報告編譯時間：${timeStr} / 智慧工程審查系統 v5.0</div>
-        </div>
-        
-        <div style="background: ${statusColor}10; border-left: 5px solid ${statusColor}; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; font-weight: bold; color: ${statusColor}; font-size: 0.85rem; text-align: center; box-sizing: border-box; width: 100%;">
-            當前審查狀態：${statusText}
-        </div>
-        
-        <table style="width: 100%; border-collapse: collapse; margin: 15px 0; table-layout: fixed;">
-            <tr>
-                <td style="width: 50%; padding: 6px; box-sizing: border-box; vertical-align: middle;">
-                    <div style="background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; min-height: 75px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                        <div style="margin:0 0 4px 0; font-size:0.8rem; color:#64748b; font-weight: 700; text-align: center;">總畢業進度</div>
-                        <div style="font-size:1.35rem; font-weight:800; color:#1e293b; text-align: center;">${total}<span style="font-size: 0.8rem; font-weight: 600; color:#64748b;"> / 131 學分</span></div>
-                        <div style="font-size: 0.7rem; color: var(--accent-burgundy); font-weight: bold; margin-top: 4px; text-align: center;">達成率：${Math.floor((total/131)*100)}%</div>
-                    </div>
-                </td>
-                <td style="width: 50%; padding: 6px; box-sizing: border-box; vertical-align: middle;">
-                    <div style="background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; min-height: 75px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                        <div style="margin:0 0 4px 0; font-size:0.8rem; color:#64748b; font-weight: 700; text-align: center;">核心必修累計</div>
-                        <div style="font-size:1.35rem; font-weight:800; color:#1e293b; text-align: center;">${req}<span style="font-size: 0.8rem; font-weight: 600; color:#64748b;"> / 86 學分</span></div>
-                        <div style="font-size: 0.7rem; color: ${req >= 86 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px; text-align: center;">${req >= 86 ? '✓ 已達標' : '還差 '+(86-req)+' 學分'}</div>
-                    </div>
-                </td>
-            </tr>
-            <tr>
-                <td style="width: 50%; padding: 6px; box-sizing: border-box; vertical-align: middle;">
-                    <div style="background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; min-height: 75px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                        <div style="margin:0 0 4px 0; font-size:0.8rem; color:#64748b; font-weight: 700; text-align: center;">專業選修累計</div>
-                        <div style="font-size:1.35rem; font-weight:800; color:#1e293b; text-align: center;">${prof}<span style="font-size: 0.8rem; font-weight: 600; color:#64748b;"> / 30 學分</span></div>
-                        <div style="font-size: 0.7rem; color: ${prof >= 30 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px; text-align: center;">${prof >= 30 ? '✓ 已達標' : '還差 '+(30-prof)+' 學分'}</div>
-                    </div>
-                </td>
-                <td style="width: 50%; padding: 6px; box-sizing: border-box; vertical-align: middle;">
-                    <div style="background: #fff; padding: 14px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center; min-height: 75px; display: flex; flex-direction: column; justify-content: center; align-items: center;">
-                        <div style="margin:0 0 4px 0; font-size:0.8rem; color:#64748b; font-weight: 700; text-align: center;">選修總量 (專選+他選)</div>
-                        <div style="font-size:1.35rem; font-weight:800; color:#1e293b; text-align: center;">${prof + other}<span style="font-size: 0.8rem; font-weight: 600; color:#64748b;"> / 45 學分</span></div>
-                        <div style="font-size: 0.7rem; color: ${(prof + other) >= 45 ? '#10b981':'#ef4444'}; font-weight: bold; margin-top: 4px; text-align: center;">${(prof + other) >= 45 ? '✓ 已達標' : '還差 '+(45-(prof+other))+' 學分'}</div>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        
-        <div class="pdf-section">
-            <h4>💡 智慧大數據工程診斷評語</h4>
-            <p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #334155;">${smartAdvice}</p>
-        </div>
-        
-        <div class="pdf-section">
-            <h4>🎯 博雅通識領域均衡度</h4>
-            <p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #334155;">目前已確切修讀 <strong style="color:var(--accent-burgundy); font-weight:800;">${genEdFields.length}</strong> 個核心通識領域。已登錄之有效領域：${genEdFields.length > 0 ? genEdFields.join('、') : '暫無紀錄'}。</p>
-        </div>
-
-        ${failedList.length > 0 ? `
-        <div class="pdf-section">
-            <h4 style="color: #ef4444; border-left-color: #ef4444;">🚨 尚未修讀、轉學補修或未通過的核心科目</h4>
-            <div class="report-badge-container">${failedBadgesHtml}</div>
-        </div>
-        ` : `
-        <div class="pdf-section">
-            <h4 style="color: #10b981; border-left-color: #10b981;">🏆 核心必修進度狀態</h4>
-            <p style="margin: 0; font-size: 0.82rem; color: #334155; font-weight: 600;">🏆 優秀！目前無任何處於未通過或未修狀態的重大核心必修學科。</p>
-        </div>
-        `}
-        
-        ${retakeList.length > 0 ? `
-        <div class="pdf-section">
-            <h4 style="color: var(--accent-blue); border-left-color: var(--accent-blue);">⏳ 正在重修或補修追蹤中的排程科目</h4>
-            <div class="report-badge-container">${retakeBadgesHtml}</div>
-        </div>
-        ` : ''}
-        
-        <div class="pdf-section">
-            <h4>📜 歷年修課、成績與學分明細清單</h4>
-            <div id="pdf-dynamic-rows-area"></div>
-        </div>
-        
-        <div style="margin-top: 20px; text-align: center; font-size: 0.65rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 8px; width:100%;">
-            本報告由 NCUT 機械系學分審查工具自動編譯導出 • 僅供修課進度審查參考使用
-        </div>
-    `;
-    
-    area.innerHTML = html;
-    var dynamicRowsZone = area.querySelector('#pdf-dynamic-rows-area');
-    if (dynamicRowsZone) {
-        var tOrdered = getTimelineOrderedSemesters();
-        var rowsHtml = "";
-        for (var t = 0; t < tOrdered.length; t++) {
-            var sKey = tOrdered[t];
-            var subs = appState[sKey];
-            if (!subs || subs.length === 0) continue;
-            
-            var subRows = "";
-            subs.forEach(function(sub) {
-                if (sub.name.trim() === "") return;
-                var bColor = "rgb(100, 116, 139)"; var bText = "必修";
-                if (sub.type === 'prof-req') { bColor = "rgb(59, 130, 246)"; bText = "專必"; }
-                else if (sub.type === 'prof') { bColor = "var(--cls-retake)"; bText = "專選"; }
-                else if (sub.type === 'other') { bColor = "rgb(139, 92, 246)"; bText = "他選"; }
-                
-                var rStyle = "color: #e53e3e; background: #fff5f5;";
-                if (sub.status === '通過' || sub.status === '抵免') { rStyle = "color: #10b981;"; }
-                else if (sub.status === '重修中' || sub.status === '轉學補修') { rStyle = "color: #334155;"; }
-                
-                var scoreShow = sub.score !== "" ? sub.score + " 分" : sub.status;
-                var genEdShow = (sub.name === "博雅通識課程" && sub.field) ? `<br><span style="color:#64748b; font-size:0.7rem;">[${sub.field}]</span>` : "";
-                
-                subRows += `
-                    <tr style="${rStyle}">
-                        <td style="padding: 7px; border: 1px solid #e2e8f0; text-align: left; font-weight: 600;">${sub.name}${genEdShow}</td>
-                        <td style="padding: 7px; border: 1px solid #e2e8f0;"><span class="pdf-badge" style="background-color:${bColor}">${bText}</span></td>
-                        <td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: bold;">${sub.cre}</td>
-                        <td style="padding: 7px; border: 1px solid #e2e8f0; font-weight: 700;">${scoreShow}</td>
-                    </tr>
-                `;
-            });
-            
-            if (subRows !== "") {
-                var yV = parseInt(sKey.match(/^y(\d+)_/)[1]); var sV = sKey.split('_')[1];
-                rowsHtml += `
-                    <div class="pdf-semester-block">
-                        <div style="margin: 12px 0 6px 0; font-weight: 800; font-size: 0.85rem; color: var(--accent-burgundy); border-bottom: 1px solid #cbd5e1; padding-bottom: 2px;">📍 ${getSemesterText(yV, sV)}</div>
-                        <table class="pdf-table" style="width: 100%; border-collapse: collapse; font-size: 0.8rem; text-align: center; margin-bottom: 10px;">
-                            <thead>
-                                <tr style="background: #f8fafc; color: #475569;">
-                                    <th style="padding: 7px; border: 1px solid #e2e8f0; text-align: left;">科目名稱</th>
-                                    <th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">類別</th>
-                                    <th style="padding: 7px; border: 1px solid #e2e8f0; width: 15%;">學分</th>
-                                    <th style="padding: 7px; border: 1px solid #e2e8f0; width: 25%;">分數狀態</th>
-                                </tr>
-                            </thead>
-                            <tbody>${subRows}</tbody>
-                        </table>
-                    </div>
-                `;
-            }
-        }
-        dynamicRowsZone.innerHTML = rowsHtml || `<p style="text-align: center; color: #94a3b8; font-size: 0.8rem; margin: 15px 0;">目前尚未登錄任何科目進度。</p>`;
-    }
-}
-
+/* 🎯 主力核心運算：導入動態門檻變數 `appConfig` */
 function calculateCredits() {
 try {
-var passedCommon = 0;
-var passedProfReq = 0;
-var passedProfEl = 0;
-var localPassedOtherEl = 0;
-var completelyFailedReq = [];
-var currentlyRetakingReq = [];
-var successfullyPassedLinkIds = [];
+var passedCommon = 0; var passedProfReq = 0; var passedProfEl = 0; var localPassedOtherEl = 0;
+var completelyFailedReq = []; var currentlyRetakingReq = []; var successfullyPassedLinkIds = [];
 
 for (var sem in appState) {
 if (appState.hasOwnProperty(sem)) {
 var arr = appState[sem];
-for (var i=0; i < arr.length; i++) {
-var item = arr[i]; if (item.linkId && (item.status === '通過' || item.status === '抵免')) {
-if (!hasItem(successfullyPassedLinkIds, item.linkId)) successfullyPassedLinkIds.push(item.linkId);
-}
-}
+for (var i=0; i < arr.length; i++) { var item = arr[i]; if (item.linkId && (item.status === '通過' || item.status === '抵免')) { if (!hasItem(successfullyPassedLinkIds, item.linkId)) successfullyPassedLinkIds.push(item.linkId); } }
 }
 }
 var countedLinks = [];
@@ -1200,28 +771,17 @@ var isGroupPassed = item.linkId && hasItem(successfullyPassedLinkIds, item.linkI
 if (item.status === '通過' || item.status === '抵免'){
 if (item.linkId) {
 if (!hasItem(countedLinks, item.linkId)) {
-if (item.type === 'common') passedCommon += item.cre;
-else if (item.type === 'prof-req') passedProfReq += item.cre;
-else if (item.type === 'prof') passedProfEl += item.cre;
-else if (item.type === 'other') localPassedOtherEl += item.cre;
+if (item.type === 'common') passedCommon += item.cre; else if (item.type === 'prof-req') passedProfReq += item.cre; else if (item.type === 'prof') passedProfEl += item.cre; else if (item.type === 'other') localPassedOtherEl += item.cre;
 countedLinks.push(item.linkId);
 }
 } else {
-if (item.type === 'common') passedCommon += item.cre;
-else if (item.type === 'prof-req') passedProfReq += item.cre;
-else if (item.type === 'prof') passedProfEl += item.cre;
-else if (item.type === 'other') localPassedOtherEl += item.cre;
+if (item.type === 'common') passedCommon += item.cre; else if (item.type === 'prof-req') passedProfReq += item.cre; else if (item.type === 'prof') passedProfEl += item.cre; else if (item.type === 'other') localPassedOtherEl += item.cre;
 }
 } else if (isGroupPassed) {
-// Linked pass
 } else if (item.status === '重修中'){
-if ((item.type === 'common' || item.type === 'prof-req') && !item.isRetakeCopy) {
-if (!hasItem(currentlyRetakingReq, item.name)) currentlyRetakingReq.push(item.name);
-}
+if ((item.type === 'common' || item.type === 'prof-req') && !item.isRetakeCopy) { if (!hasItem(currentlyRetakingReq, item.name)) currentlyRetakingReq.push(item.name); }
 } else if (item.status === '未通過' || item.status === '未修' || item.status === '轉學補修') {
-if ((item.type === 'common' || item.type === 'prof-req') && !item.isRetakeCopy) {
-if (!hasItem(completelyFailedReq, item.name)) completelyFailedReq.push(item.name);
-}
+if ((item.type === 'common' || item.type === 'prof-req') && !item.isRetakeCopy) { if (!hasItem(completelyFailedReq, item.name)) completelyFailedReq.push(item.name); }
 }
 }
 }
@@ -1230,28 +790,28 @@ var sumRequiredPassed = passedCommon + passedProfReq;
 var sumElectivePassed = passedProfEl + localPassedOtherEl;
 var sumTotalPassed = sumRequiredPassed + sumElectivePassed;
 
-document.getElementById('lbl-total-cre').innerHTML = sumTotalPassed + " / 131<span>學分</span>";
-var pct = Math.floor((sumTotalPassed / 131) * 100); if (pct > 100) pct = 100;
+document.getElementById('lbl-total-cre').innerHTML = sumTotalPassed + " / " + appConfig.targetTotal + "<span>學分</span>";
+var pct = Math.floor((sumTotalPassed / appConfig.targetTotal) * 100); if (pct > 100) pct = 100;
 document.getElementById('lbl-total-pct').innerText = pct + "%";
 document.getElementById('fill-total-bar').style.width = pct + "%";
 
-document.getElementById('lbl-req-cre').innerText = sumRequiredPassed + " / 86";
-document.getElementById('lbl-p-el-cre').innerText = passedProfEl + " / 30";
-document.getElementById('lbl-o-el-cre').innerText = localPassedOtherEl + " / 15";
+document.getElementById('lbl-req-cre').innerText = sumRequiredPassed + " / " + appConfig.targetReq;
+document.getElementById('lbl-p-el-cre').innerText = passedProfEl + " / " + appConfig.targetProf;
+document.getElementById('lbl-o-el-cre').innerText = sumElectivePassed + " / " + appConfig.targetElective;
 
-var reqDeficit = 86 - sumRequiredPassed;
+var reqDeficit = appConfig.targetReq - sumRequiredPassed;
 var lblReq = document.getElementById('lbl-req-stat');
 if (lblReq) {
 if (reqDeficit > 0) { lblReq.innerText="還差 "+reqDeficit+" 學分"; lblReq.style.color = 'var(--cls-failed)'; }
 else { lblReq.innerText = "已達標"; lblReq.style.color = 'var(--cls-passed)'; }
 }
-var pElDeficit = 30 - passedProfEl;
+var pElDeficit = appConfig.targetProf - passedProfEl;
 var lblPEl = document.getElementById('lbl-p-el-stat');
 if (lblPEl) {
 if (pElDeficit > 0) { lblPEl.innerText="還差 "+pElDeficit+" 學分"; lblPEl.style.color = 'var(--cls-failed)'; }
 else { lblPEl.innerText="已達標"; lblPEl.style.color = 'var(--cls-passed)'; }
 }
-var elDeficit = 45 - sumElectivePassed;
+var elDeficit = appConfig.targetElective - sumElectivePassed;
 var lblO = document.getElementById('lbl-o-el-stat');
 if (lblO) {
 if (elDeficit > 0) { lblO.innerText="還差 " + elDeficit + " 學分"; lblO.style.color = 'var(--cls-failed)'; }
@@ -1262,80 +822,220 @@ var diagContent = document.getElementById('diag-content');
 var diagBox = document.getElementById('diag-box');
 if (diagContent && diagBox) {
 diagContent.innerHTML = "";
-if (sumRequiredPassed >= 86 && passedProfEl >= 30 && sumElectivePassed >= 45 && sumTotalPassed >= 131) {
-var sOK = createEl('span', null, "恭喜!您已全部達成畢業規定學分!已具備畢業資格!", diagContent);
+if (sumRequiredPassed >= appConfig.targetReq && passedProfEl >= appConfig.targetProf && sumElectivePassed >= appConfig.targetElective && sumTotalPassed >= appConfig.targetTotal) {
+var sOK = createEl('span', null, "恭喜! 您已滿足所有設定的畢業學分門檻，請再次向系辦確認最終資格!", diagContent);
 sOK.style.color = "var(--cls-passed)"; sOK.style.fontWeight = "bold";
 diagBox.style.borderLeftColor = 'var(--cls-passed)';
 } else {
 diagBox.style.borderLeftColor = 'var(--cls-retake)';
 var ul = createEl('ul', null, null, diagContent);
-if (86 - sumRequiredPassed > 0) {
-var li = createEl('li', null, null, ul);
-li.appendChild(document.createTextNode("必修學分累計仍差 "));
-createEl('strong', null, (86 - sumRequiredPassed), li);
-li.appendChild(document.createTextNode(" 學分。"));
+if (appConfig.targetReq - sumRequiredPassed > 0) {
+var li = createEl('li', null, null, ul); li.appendChild(document.createTextNode("必修學分累計仍差 ")); createEl('strong', null, (appConfig.targetReq - sumRequiredPassed), li); li.appendChild(document.createTextNode(" 學分。"));
 }
-if (30-passedProfEl > 0) {
-var li = createEl('li', null, null, ul);
-li.appendChild(document.createTextNode("專業選修尚差 "));
-createEl('strong', null, (30 - passedProfEl), li);
-li.appendChild(document.createTextNode(" 學分(底線30)。"));
+if (appConfig.targetProf - passedProfEl > 0) {
+var li = createEl('li', null, null, ul); li.appendChild(document.createTextNode("專業選修尚差 ")); createEl('strong', null, (appConfig.targetProf - passedProfEl), li); li.appendChild(document.createTextNode(" 學分(底線"+appConfig.targetProf+")。"));
 }
-if (sumElectivePassed < 45) {
-var li = createEl('li', null, null, ul);
-li.appendChild(document.createTextNode("選修總量(專業選修+其他選修)還缺 "));
-createEl('strong', null, (45 - sumElectivePassed), li);
-li.appendChild(document.createTextNode(" 學分。"));
+if (sumElectivePassed < appConfig.targetElective) {
+var li = createEl('li', null, null, ul); li.appendChild(document.createTextNode("選修總量(專業選修+其他選修)還缺 ")); createEl('strong', null, (appConfig.targetElective - sumElectivePassed), li); li.appendChild(document.createTextNode(" 學分。"));
 }
 if (completelyFailedReq.length > 0) {
-var liA = createEl('li', null, null, ul);
-createEl('div', 'diag-section-title',"尚未修讀、轉學補修或未通過的必修:", liA);
-var sA = createEl('span', null, completelyFailedReq.join('、'), liA);
-sA.style.color = "var(--cls-failed)"; sA.style.fontWeight = "bold";
+var liA = createEl('li', null, null, ul); createEl('div', 'diag-section-title',"尚未修讀、轉學補修或未通過的必修:", liA); var sA = createEl('span', null, completelyFailedReq.join('、'), liA); sA.style.color = "var(--cls-failed)"; sA.style.fontWeight = "bold";
 }
 if (currentlyRetakingReq.length > 0) {
-var liB = createEl('li', null, null, ul);
-createEl('div', 'diag-section-title',"正在重修或補修追蹤中的必修:", liB);
-var sB = createEl('span', null, currentlyRetakingReq.join('、'), liB);
-sB.style.color = "var(--accent-blue)"; sB.style.fontWeight = "bold";
+var liB = createEl('li', null, null, ul); createEl('div', 'diag-section-title',"正在重修或補修追蹤中的必修:", liB); var sB = createEl('span', null, currentlyRetakingReq.join('、'), liB); sB.style.color = "var(--accent-blue)"; sB.style.fontWeight = "bold";
 }
 }
 }
 
-// 同步更新隱藏在網頁底層的 A4 PDF 報告內容
-generateDeepReportUI(sumTotalPassed, sumRequiredPassed, passedProfEl, localPassedOtherEl, completelyFailedReq, currentlyRetakingReq);
+// 暫存全域供 PDF 調用
+window.cachedTotal = sumTotalPassed;
+window.cachedReq = sumRequiredPassed;
+window.cachedProf = passedProfEl;
+window.cachedOther = localPassedOtherEl;
+window.cachedElective = sumElectivePassed;
+window.cachedFailedList = completelyFailedReq;
+window.cachedRetakeList = currentlyRetakingReq;
 
 } catch(err) {
-if(document.getElementById('diag-content')) {
-    document.getElementById('diag-content').innerText="運算失敗: " + err.message;
+if(document.getElementById('diag-content')) document.getElementById('diag-content').innerText="運算失敗: " + err.message;
 }
 }
-}
 
-// 🎯 原地無痕移位列印核心：暫時解除隱藏狀態，拉出畫布進行列印，完畢後光速隱藏
-function downloadPDFReport() {
-    var element = document.getElementById('report-print-area');
-    if (!element) return;
+/* 🚀 PDF 專用：全裝置防白紙實體覆蓋層繪圖技術 */
+function triggerPDFDownload() {
+    var overlay = document.getElementById('pdf-overlay-generator');
+    var canvas = document.getElementById('pdf-sandbox-canvas');
+    if (!overlay || !canvas) return;
+    
+    // 1. 建立通用型診斷評語
+    var isGraduated = (window.cachedReq >= appConfig.targetReq && window.cachedProf >= appConfig.targetProf && window.cachedElective >= appConfig.targetElective && window.cachedTotal >= appConfig.targetTotal);
+    var statusText = isGraduated ? "🎉 恭喜！畢業資格學分審查核算：『 已完全達標 』" : "⚠️ 畢業資格學分審查核算：『 尚未達標 』";
+    var statusColor = isGraduated ? "#10b981" : "#ef4444";
+    
+    var smartAdvice = "根據大數據智慧診斷分析：";
+    if (window.cachedFailedList.length > 0) {
+        smartAdvice += "您尚有必修課程處於未通過或未修狀態，建議於後續學期優先將核心必修補齊，以免延誤畢業時程。";
+    } else if (isGraduated) {
+        smartAdvice += "幹得漂亮！所有的必修核心與選修門檻已全數通關。這極具紀律的學分曲線無懈可擊，請截圖本報告向系辦確認最終畢業資格，準備安心畢業！";
+    } else {
+        smartAdvice += "必修進度相對穩定，請持續關注專業選修與一般選修的學分累積狀態，有條不紊地將剩餘學分補齊即可。";
+    }
 
-    var btn = document.getElementById('btn-download-pdf');
-    var originalBtnText = btn.innerHTML;
-    btn.innerHTML = "⏳ 報告產出中...";
+    var now = new Date();
+    var timeStr = now.getFullYear() + " 年 " + (now.getMonth() + 1) + " 月 " + now.getDate() + " 日 " + now.getHours() + " 時 " + now.getMinutes() + " 分";
+    
+    var genEdFields = [];
+    for (var sem in appState) {
+        if (appState.hasOwnProperty(sem)) { appState[sem].forEach(function(item){ if(item.name === "博雅通識課程" && item.field && !hasItem(genEdFields, item.field)) { genEdFields.push(item.field); } }); }
+    }
 
-    // 🎯 核心：短暫解除隱藏，並將報告強制拉到最頂層 (0,0)，讓 iOS 看得到且不裁切電腦版
-    element.style.display = "block";
-    element.style.position = "absolute";
-    element.style.top = "0";
-    element.style.left = "0";
-    element.style.width = "650px";
-    element.style.maxWidth = "650px";
-    element.style.padding = "25px";
-    element.style.margin = "0";
-    element.style.background = "#ffffff";
-    element.style.zIndex = "-1"; // 將其藏在網頁背景底下，使用者畫面不會閃瞎
+    var failedBadgesHtml = "";
+    if (window.cachedFailedList.length > 0) { window.cachedFailedList.forEach(function(item) { failedBadgesHtml += `<span class="report-badge-failed">${item}</span>`; }); }
 
+    var retakeBadgesHtml = "";
+    if (window.cachedRetakeList.length > 0) { window.cachedRetakeList.forEach(function(item) { retakeBadgesHtml += `<span class="report-badge-retake">${item}</span>`; }); }
+
+    // 2. 構建歷年成績表格
+    var rowsHtml = "";
+    var tOrdered = getTimelineOrderedSemesters();
+    for (var t = 0; t < tOrdered.length; t++) {
+        var sKey = tOrdered[t]; var subs = appState[sKey];
+        if (!subs || subs.length === 0) continue;
+        
+        var subRows = "";
+        subs.forEach(function(sub) {
+            if (sub.name.trim() === "") return;
+            var bColor = "rgb(100, 116, 139)"; var bText = "必修";
+            if (sub.type === 'prof-req') { bColor = "rgb(52, 152, 219)"; bText = "專必"; }
+            else if (sub.type === 'prof') { bColor = "rgb(245, 158, 11)"; bText = "專選"; }
+            else if (sub.type === 'other') { bColor = "rgb(139, 92, 246)"; bText = "他選"; }
+            
+            var rStyle = "color: #e53e3e; background: #fff5f5;";
+            if (sub.status === '通過' || sub.status === '抵免') { rStyle = "color: #10b981;"; }
+            else if (sub.status === '重修中' || sub.status === '轉學補修') { rStyle = "color: #334155;"; }
+            
+            var scoreShow = sub.score !== "" ? sub.score + " 分" : sub.status;
+            var genEdShow = (sub.name === "博雅通識課程" && sub.field) ? `<br><span style="color:#64748b; font-size:0.7rem;">[${sub.field}]</span>` : "";
+            
+            subRows += `
+                <tr style="${rStyle}">
+                    <td style="padding: 7px; border: 1px solid #cbd5e1; text-align: left; font-weight: 600;">${sub.name}${genEdShow}</td>
+                    <td style="padding: 7px; border: 1px solid #cbd5e1;"><span class="sandbox-pdf-badge" style="background-color:${bColor}">${bText}</span></td>
+                    <td style="padding: 7px; border: 1px solid #cbd5e1; font-weight: bold;">${sub.cre}</td>
+                    <td style="padding: 7px; border: 1px solid #cbd5e1; font-weight: 700;">${scoreShow}</td>
+                </tr>
+            `;
+        });
+        
+        if (subRows !== "") {
+            var yV = parseInt(sKey.match(/^y(\d+)_/)[1]); var sV = sKey.split('_')[1];
+            rowsHtml += `
+                <div class="sandbox-pdf-semester-block">
+                    <div style="margin: 12px 0 6px 0; font-weight: 800; font-size: 0.85rem; color: var(--accent-primary); border-bottom: 1px solid #cbd5e1; padding-bottom: 2px;">📍 ${getSemesterText(yV, sV)}</div>
+                    <table class="sandbox-pdf-table">
+                        <thead>
+                            <tr style="background: #f8fafc; color: #475569;">
+                                <th style="padding: 7px; border: 1px solid #cbd5e1; text-align: left;">科目名稱</th>
+                                <th style="padding: 7px; border: 1px solid #cbd5e1; width: 15%;">類別</th>
+                                <th style="padding: 7px; border: 1px solid #cbd5e1; width: 15%;">學分</th>
+                                <th style="padding: 7px; border: 1px solid #cbd5e1; width: 25%;">分數狀態</th>
+                            </tr>
+                        </thead>
+                        <tbody>${subRows}</tbody>
+                    </table>
+                </div>
+            `;
+        }
+    }
+
+    // 3. 將 HTML 注入 PDF 沙盒實體畫布
+    canvas.innerHTML = `
+        <div class="sandbox-pdf-header">
+            <h2 style="margin: 0; color: var(--accent-primary); font-size: 1.5rem; font-weight: 800;">${appConfig.school} ${appConfig.dept}</h2>
+            <h3 style="margin: 6px 0 0 0; color: #475569; font-size: 1.1rem; letter-spacing: 1px;">畢業資格全方位深層審查診斷報告</h3>
+            <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 8px;">報告編譯時間：${timeStr} / 全域學分審查系統</div>
+        </div>
+        
+        <div style="background: ${statusColor}10; border-left: 5px solid ${statusColor}; padding: 12px 15px; border-radius: 4px; margin-bottom: 20px; font-weight: bold; color: ${statusColor}; font-size: 0.85rem; text-align: center;">
+            當前審查狀態：${statusText}
+        </div>
+        
+        <table style="width: 100%; border-collapse: collapse; margin: 15px 0; table-layout: fixed;">
+            <tr>
+                <td style="padding: 5px;">
+                    <div style="background: #fff; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
+                        <div style="font-size:0.8rem; color:#64748b; font-weight:700; margin-bottom:2px;">總畢業進度</div>
+                        <div style="font-size:1.3rem; font-weight:800; color:#1e293b;">${window.cachedTotal} / ${appConfig.targetTotal} <span style="font-size:0.75rem; color:#64748b;">學分</span></div>
+                    </div>
+                </td>
+                <td style="padding: 5px;">
+                    <div style="background: #fff; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
+                        <div style="font-size:0.8rem; color:#64748b; font-weight:700; margin-bottom:2px;">核心必修累計</div>
+                        <div style="font-size:1.3rem; font-weight:800; color:#1e293b;">${window.cachedReq} / ${appConfig.targetReq} <span style="font-size:0.75rem; color:#64748b;">學分</span></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding: 5px;">
+                    <div style="background: #fff; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
+                        <div style="font-size:0.8rem; color:#64748b; font-weight:700; margin-bottom:2px;">專業選修累計</div>
+                        <div style="font-size:1.3rem; font-weight:800; color:#1e293b;">${window.cachedProf} / ${appConfig.targetProf} <span style="font-size:0.75rem; color:#64748b;">學分</span></div>
+                    </div>
+                </td>
+                <td style="padding: 5px;">
+                    <div style="background: #fff; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; text-align: center;">
+                        <div style="font-size:0.8rem; color:#64748b; font-weight:700; margin-bottom:2px;">選修總量</div>
+                        <div style="font-size:1.3rem; font-weight:800; color:#1e293b;">${window.cachedElective} / ${appConfig.targetElective} <span style="font-size:0.75rem; color:#64748b;">學分</span></div>
+                    </div>
+                </td>
+            </tr>
+        </table>
+        
+        <div class="sandbox-pdf-section">
+            <h4>💡 智慧診斷評語</h4>
+            <p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #334155;">${smartAdvice}</p>
+        </div>
+        
+        <div class="sandbox-pdf-section">
+            <h4>🎯 博雅通識領域均衡度</h4>
+            <p style="margin: 0; font-size: 0.82rem; line-height: 1.45; color: #334155;">目前已確切修讀 <strong style="color:var(--accent-primary); font-weight:800;">${genEdFields.length}</strong> 個核心通識領域。已登錄之有效領域：${genEdFields.length > 0 ? genEdFields.join('、') : '暫無紀錄'}。</p>
+        </div>
+
+        ${window.cachedFailedList.length > 0 ? `
+        <div class="sandbox-pdf-section">
+            <h4 style="color: #ef4444; border-left-color: #ef4444;">🚨 尚未修讀、轉學補修或未通過的核心科目</h4>
+            <div class="report-badge-container">${failedBadgesHtml}</div>
+        </div>
+        ` : `
+        <div class="sandbox-pdf-section">
+            <h4 style="color: #10b981; border-left-color: #10b981;">🏆 核心必修進度狀態</h4>
+            <p style="margin: 0; font-size: 0.82rem; color: #334155; font-weight: 600;">🏆 優秀！目前無任何處於未通過或未修狀態的核心必修學科。</p>
+        </div>
+        `}
+        
+        ${window.cachedRetakeList.length > 0 ? `
+        <div class="sandbox-pdf-section">
+            <h4 style="color: var(--accent-secondary); border-left-color: var(--accent-secondary);">⏳ 正在重修或補修追蹤中的排程科目</h4>
+            <div class="report-badge-container">${retakeBadgesHtml}</div>
+        </div>
+        ` : ''}
+
+        <div class="sandbox-pdf-section">
+            <h4>📜 歷年修課、成績與學分明細清單</h4>
+            <div style="width: 100%; box-sizing: border-box;">${rowsHtml || '<p style="text-align:center; color:#94a3b8; font-size:0.8rem;">暫無課表數據</p>'}</div>
+        </div>
+        
+        <div style="margin-top: 25px; text-align: center; font-size: 0.65rem; color: #94a3b8; border-top: 1px solid #e2e8f0; padding-top: 8px; width:100%;">
+            本報告由全域學分審查工具動態編譯導出 • 僅供修課進度審查參考使用
+        </div>
+    `;
+
+    // 4. 強制打開畫面實體遮罩，讓系統強制渲染 (絕不變白紙)
+    overlay.style.display = 'block';
+    
     var opt = {
         margin:       [15, 15, 15, 15], 
-        filename:     'NCUT_Mechanical_Credit_Report.pdf',
+        filename:     'Credit_Report.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { 
             scale: 1.5,             
@@ -1343,34 +1043,32 @@ function downloadPDFReport() {
             letterRendering: false, 
             scrollY: 0, 
             scrollX: 0,
-            windowWidth: 720        
+            windowWidth: 780        
         },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak:    { mode: ['css', 'legacy'] }
     };
     
-    // 給予 200ms 讓畫面完全著色，確保不吐白紙
+    // 5. 給予 600ms 黃金緩衝，讓所有手機型號都能確保繪圖完成
     setTimeout(function() {
-        html2pdf().set(opt).from(element).save().then(function() {
-            // 下載完成，重新設定 display: none 隱藏報告
-            element.style.display = "none";
-            btn.innerHTML = originalBtnText;
+        html2pdf().set(opt).from(canvas).save().then(function() {
+            overlay.style.display = 'none'; // 完成後關閉遮罩
         }).catch(function(err) {
             console.error(err);
-            element.style.display = "none";
-            btn.innerHTML = originalBtnText;
+            overlay.style.display = 'none';
         });
-    }, 200);
+    }, 600);
 }
 
 function startApp() {
-checkStorageAvailability(); loadStateSafely();
+checkStorageAvailability(); 
+loadConfigSafely(); // 載入自訂門檻
+loadStateSafely();  // 載入課表
 document.getElementById('global-search').addEventListener('input', doGlobalSearch);
 document.getElementById('btn-add-year').addEventListener('click', expandNewYear);
 document.getElementById('btn-del-year').addEventListener('click', shrinkLastYear);
 document.getElementById('btn-copy-backup').addEventListener('click', copyBackupCode);
 document.getElementById('btn-restore-backup').addEventListener('click', importBackupCode);
-document.getElementById('btn-download-pdf').addEventListener('click', downloadPDFReport);
 
 rebuildTabsUI(); renderStructure(); renderAllBlocks(); calculateCredits();
 }
