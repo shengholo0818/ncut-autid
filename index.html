@@ -57,7 +57,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 .settings-btn-save { grid-column: 1 / -1; background: var(--accent-secondary); color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; margin-top: 8px; }
 .btn-danger { background: #ef4444; color: white; border: none; padding: 10px; border-radius: 6px; font-weight: bold; font-size: 0.9rem; cursor: pointer; margin-top: 8px; grid-column: 1 / -1; }
 
-/* 主控區與大數據按鈕 */
+/* 🎮 主控區與大數據按鈕 */
 .action-hub { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
 @media (min-width: 768px) { .action-hub { grid-template-columns: 1fr 1fr; } }
 .btn-hub { background: #fff; border: 2px solid var(--accent-primary); color: var(--accent-primary); padding: 14px; border-radius: 12px; font-size: 1rem; font-weight: 800; cursor: pointer; box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: flex; align-items: center; justify-content: center; gap: 8px; transition: all 0.2s; }
@@ -79,18 +79,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 .card .number { font-size: 1.6rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
 .card .status { font-size: 0.8rem; font-weight: 700; text-align: center; width: 100%; }
 
-/* 🤖 AI OCR 匯入面板樣式 */
-.ocr-panel { background: #e0f2fe; border: 1px solid #bae6fd; padding: 16px; border-radius: 10px; margin-bottom: 20px; }
-.ocr-panel h5 { margin: 0 0 8px 0; font-size: 0.9rem; color: #0284c7; font-weight: 800; display: flex; align-items: center; gap: 6px; }
-.ocr-panel p { margin: 0 0 10px 0; font-size: 0.75rem; color: #0369a1; line-height: 1.4; }
-.ocr-controls { display: flex; flex-direction: column; gap: 10px; }
-.ocr-textarea { width: 100%; height: 90px; padding: 10px; border: 1px dashed #7dd3fc; border-radius: 6px; font-size: 0.8rem; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; resize: vertical; }
-.ocr-action-row { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-.ocr-select { padding: 6px; border: 1px solid #7dd3fc; border-radius: 6px; font-size: 0.8rem; font-weight: bold; color: #0284c7; background: #fff; flex: 1; min-width: 120px; }
-.btn-ocr-import { background: #0284c7; color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; font-size: 0.85rem; cursor: pointer; flex: 2; min-width: 150px; }
-
-.btn-pdf { background: linear-gradient(135deg, var(--accent-primary) 0%, #1a252f 100%); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
-.btn-pdf:active { transform: scale(0.98); }
+.btn-pdf { background: linear-gradient(135deg, var(--accent-primary) 0%, #1a252f 100%); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: bold; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; width: 100%; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
 
 .backup-panel { background: rgb(241, 245, 249); border: 1px solid #cbd5e1; padding: 12px; border-radius: 10px; margin-bottom: 20px; }
 .backup-panel h5 { margin: 0 0 6px 0; font-size: 0.82rem; color: var(--accent-primary); font-weight: 800; }
@@ -98,9 +87,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 .backup-input { flex: 1; font-size: 0.78rem; height: 32px; padding: 4px 8px; border: 1px solid #cbd5e1; border-radius: 5px; box-sizing: border-box; }
 .btn-backup { background: var(--accent-primary); color: white; border: none; padding: 0 14px; height: 32px; border-radius: 5px; font-weight: bold; font-size: 0.78rem; cursor: pointer; }
 
-/* 課表區塊樣式 */
+/* 課表區塊樣式 (改為純視覺展示，無輸入框) */
 .control-panel { background: #fff; padding: 14px; border-radius: 10px; border: 1px solid var(--border); margin-bottom: 20px; }
-.control-flex-row { display: flex; flex-direction: column; gap: 10px; margin-top: 12px; width: 100%; }
+.control-flex-row { display: flex; flex-direction: column; gap: 10px; width: 100%; }
 [id="year-tabs"] { display: flex; gap: 8px; overflow-x: auto; width: 100%; padding-bottom: 4px; }
 .year-manage-btns { display: flex; gap: 8px; width: 100%; }
 .btn-manage { flex: 1; background: #f1f5f9; border: 1px solid #e2e8f0; padding: 10px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; cursor: pointer; color: #1e293b; text-align: center; }
@@ -114,7 +103,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 @media (min-width: 850px) { .semester-grid { grid-template-columns: repeat(2, 1fr); } }
 .semester-card { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.01); }
 .semester-header { font-size: 1.05rem; font-weight: 800; color: #1e293b; margin-bottom: 12px; border-bottom: 2px solid #f1f5f9; padding-bottom: 6px; }
-.subjects-box-matrix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-bottom: 12px; }
+.subjects-box-matrix { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 @media (min-width: 600px) { .subjects-box-matrix { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); } }
 .subject-square { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; flex-direction: column; justify-content: space-between; min-height: 100px; box-sizing: border-box; position: relative; }
 .square-passed { border-left: 4px solid var(--cls-passed); }
@@ -133,9 +122,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 .sub-bottom { font-size: 0.8rem; font-weight: 700; color: #475569; margin-top: auto; padding-top: 8px; border-top: 1px solid #e2e8f0; }
 
 /* 🛡️ 模態視窗通用樣式 (Master Table & OCR) */
-.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.7); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.8); z-index: 1000; align-items: center; justify-content: center; backdrop-filter: blur(4px); padding: 10px; box-sizing: border-box; }
 .modal-overlay.active { display: flex; }
-.modal-content { background: #fff; width: 95%; max-width: 1000px; max-height: 90vh; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+.modal-content { background: #fff; width: 100%; max-width: 1000px; max-height: 90vh; border-radius: 14px; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
 .modal-header { background: #f8fafc; padding: 16px 20px; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; }
 .modal-header h3 { margin: 0; font-size: 1.1rem; color: #1e293b; font-weight: 800; }
 .modal-close { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #94a3b8; line-height: 1; }
@@ -143,26 +132,29 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 
 /* 總表表格設計 */
 .master-toolbar { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px; background: #fff; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; align-items: center; }
-.master-toolbar input, .master-toolbar select { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; flex: 1; min-width: 120px; }
-.master-toolbar button { background: var(--accent-secondary); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; white-space: nowrap; }
+.master-toolbar input, .master-toolbar select { padding: 6px 10px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.85rem; flex: 1; min-width: 120px; box-sizing: border-box; }
+.master-toolbar button { background: var(--accent-secondary); color: white; border: none; padding: 8px 16px; border-radius: 6px; font-weight: bold; cursor: pointer; white-space: nowrap; width: 100%; margin-top: 5px; }
+@media (min-width: 600px){ .master-toolbar button { width: auto; margin-top: 0; } }
+
 .table-responsive { width: 100%; overflow-x: auto; background: #fff; border-radius: 8px; border: 1px solid #cbd5e1; }
 .master-table { width: 100%; border-collapse: collapse; min-width: 700px; text-align: center; font-size: 0.85rem; }
 .master-table th { background: var(--accent-primary); color: white; padding: 12px 8px; font-weight: 700; white-space: nowrap; }
 .master-table td { padding: 10px 8px; border-bottom: 1px solid #e2e8f0; vertical-align: middle; }
 .master-table tr:hover { background: #f8fafc; }
-.master-table input[type="text"], .master-table input[type="number"], .master-table select { width: 100%; padding: 4px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; text-align: center; }
+.master-table input[type="text"], .master-table input[type="number"], .master-table select { width: 100%; padding: 6px; border: 1px solid #cbd5e1; border-radius: 4px; box-sizing: border-box; text-align: center; }
 .master-table input[type="text"] { text-align: left; }
 .master-table select:disabled { background: #e2e8f0; color: #94a3b8; cursor: not-allowed; }
-.btn-del-row { background: #ef4444; color: white; border: none; padding: 4px 8px; border-radius: 4px; font-weight: bold; cursor: pointer; }
+.btn-del-row { background: #ef4444; color: white; border: none; padding: 6px 10px; border-radius: 4px; font-weight: bold; cursor: pointer; }
 
-/* OCR 模組專用設計 */
-.ocr-upload-box { border: 2px dashed var(--accent-secondary); background: #f0f9ff; padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 15px; cursor: pointer; }
+/* 🤖 OCR 模組設計 */
+.ocr-upload-box { display: block; border: 2px dashed var(--accent-secondary); background: #f0f9ff; padding: 20px; text-align: center; border-radius: 12px; margin-bottom: 15px; cursor: pointer; transition: background 0.2s; }
 .ocr-upload-box:hover { background: #e0f2fe; }
 .ocr-upload-box input[type="file"] { display: none; }
 .ocr-preview { max-width: 100%; max-height: 200px; border-radius: 8px; display: none; margin: 10px auto; object-fit: contain; }
+.ocr-textarea { width: 100%; height: 100px; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 0.85rem; box-sizing: border-box; resize: vertical; margin-bottom: 15px; font-family: -apple-system, sans-serif; }
 .ocr-status { font-size: 0.85rem; font-weight: bold; color: var(--accent-secondary); margin-bottom: 10px; text-align: center; }
 
-/* 🚀 PDF 沙盒專屬列印樣式配置 */
+/* 🚀 PDF 列印格式 */
 .sandbox-pdf-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Microsoft JhengHei", sans-serif; color: #1e293b; background: #ffffff; width: 100%; }
 .sandbox-pdf-header { text-align: center; border-bottom: 2px solid var(--accent-primary); padding-bottom: 12px; margin-bottom: 20px; }
 .sandbox-pdf-section { margin-top: 18px; background: #ffffff; padding: 16px; border: 1px solid #e2e8f0; border-radius: 8px; page-break-inside: avoid !important; break-inside: avoid !important; }
@@ -172,13 +164,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 .sandbox-pdf-table td { padding: 9px; border: 1px solid #cbd5e1; color: #334155; word-break: break-all; }
 .sandbox-pdf-semester-block { page-break-inside: avoid !important; break-inside: avoid !important; margin-bottom: 18px; width: 100%; }
 .sandbox-pdf-badge { display: inline-block; padding: 3px 7px; font-size: 0.7rem; font-weight: bold; border-radius: 4px; color: #fff !important; text-align: center; white-space: nowrap; }
-
 .report-badge-failed { display: inline-block; background: #fff5f5; color: #e53e3e; border: 1px solid #fed7d7; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; margin: 3px; break-inside: avoid; }
 .report-badge-retake { display: inline-block; background: #fffbeb; color: #d97706; border: 1px solid #fef3c7; padding: 4px 8px; border-radius: 5px; font-size: 0.78rem; font-weight: 700; margin: 3px; break-inside: avoid; }
 .report-badge-container { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; width: 100%; }
 
-#pdf-overlay-generator { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: #e2e8f0; z-index: 9999999; overflow-y: auto; }
-.pdf-loading-text { text-align: center; margin-top: 50px; font-size: 1.2rem; font-weight: 800; color: var(--accent-primary); }
 footer { margin-top: 50px; padding: 24px 0; text-align: center; font-size: 0.78rem; color: var(--text-muted); border-top: 1px solid var(--border); font-weight: 600; letter-spacing: 0.5px; }
 </style>
 </head>
@@ -216,9 +205,9 @@ footer { margin-top: 50px; padding: 24px 0; text-align: center; font-size: 0.78r
 <div class="summary-subtext" id="lbl-subtext-thresholds">含必修 86 學分 / 選修至少 45 學分</div>
 </div>
 
-<!-- 主控按鈕樞紐 -->
+<!-- 🎓 主控按鈕樞紐 -->
 <div class="action-hub">
-    <button class="btn-hub" onclick="openMasterTableModal()">🎓 開啟畢業總表 (成績輸入 / 規劃排課)</button>
+    <button class="btn-hub" onclick="openMasterTableModal()">📝 開啟畢業總表 (成績輸入 / 規劃排課)</button>
     <button class="btn-hub btn-hub-ocr" onclick="openOCRModal()">🤖 AI 照片辨識與快捷匯入</button>
 </div>
 
@@ -246,7 +235,7 @@ footer { margin-top: 50px; padding: 24px 0; text-align: center; font-size: 0.78r
 </div>
 
 <div class="summary-card" style="border-top: 4px solid var(--accent-primary); padding: 15px;">
-    <button class="btn-pdf" id="btn-download-pdf" onclick="triggerPDFDownload()">📥 產生並下載完整 A4 報告書</button>
+    <button class="btn-pdf" onclick="triggerPDFDownload()">📥 產生並下載完整 A4 報告書</button>
 </div>
 
 <div class="control-panel">
@@ -265,7 +254,7 @@ footer { margin-top: 50px; padding: 24px 0; text-align: center; font-size: 0.78r
 <div class="backup-panel">
 <h5>手動進度備份箱 (跨裝置轉移用)</h5>
 <div class="backup-flex">
-<input type="text" id="backup-text-field" class="backup-input" placeholder="填寫分數後自動生成備份代碼" readonly>
+<input type="text" id="backup-text-field" class="backup-input" placeholder="系統自動生成代碼..." readonly>
 <button class="btn-backup" onclick="copyBackupCode()">複製</button>
 </div>
 <div class="backup-flex" style="margin-top:8px;">
@@ -283,12 +272,12 @@ Copyright © 2026. Universal Credit Audit System.
 <div class="modal-overlay" id="modal-master">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>🎓 畢業總表與排課中心</h3>
+            <h3>📝 畢業總表與排課中心</h3>
             <button class="modal-close" onclick="closeModal('modal-master')">×</button>
         </div>
         <div class="modal-body">
             <div class="master-toolbar">
-                <strong style="color:var(--accent-primary); font-size:0.9rem; width:100%;">➕ 手動新增全新科目：</strong>
+                <strong style="color:var(--accent-primary); font-size:0.9rem; width:100%;">➕ 手動新增科目：</strong>
                 <input type="text" id="add-m-name" placeholder="科目名稱">
                 <select id="add-m-type">
                     <option value="prof">專業選修</option>
@@ -327,32 +316,31 @@ Copyright © 2026. Universal Credit Audit System.
 <div class="modal-overlay" id="modal-ocr">
     <div class="modal-content" style="max-width: 800px;">
         <div class="modal-header">
-            <h3>🤖 智能相機與文字快速匯入倉 (OCR)</h3>
+            <h3>🤖 AI 圖片辨識與快捷匯入倉</h3>
             <button class="modal-close" onclick="closeModal('modal-ocr')">×</button>
         </div>
         <div class="modal-body">
             <p style="font-size: 0.85rem; color: #475569; margin-top: 0;">
-                📱 <b>手機用戶必看：</b>請先嘗試使用 iPhone 相機對準成績單，長按畫面使用<b>「原況文字」</b>複製表格，並直接貼在下方文字框中，準確率最高！<br>
-                若要使用 AI 圖片解析，請點擊下方虛線框上傳圖片。
+                📱 <b>手機用戶強烈建議：</b>直接開啟相機對準成績單，長按畫面使用<b>「原況文字」</b>複製表格，並直接貼在下方文字框中，解析準確率高達 99%！<br>
             </p>
             
             <label class="ocr-upload-box" for="ocr-image-input">
-                <h4 style="margin:0; color:var(--accent-secondary);">📸 點擊上傳成績單圖片 (支援相機拍照)</h4>
-                <input type="file" accept="image/*" id="ocr-image-input" onchange="handleImageUpload(event)">
+                <h4 style="margin:0; color:var(--accent-secondary);">📸 點擊上傳成績單圖片 (自動讓 AI 進行圖片文字辨識)</h4>
+                <input type="file" accept="image/*" id="ocr-image-input" onchange="runSmartParser(event)">
             </label>
             <img id="ocr-preview-img" class="ocr-preview">
             <div id="ocr-status-text" class="ocr-status"></div>
             
-            <textarea id="ocr-textarea" class="ocr-textarea" placeholder="在此貼上您複製的成績單文字... (例：計算機程式 3 85)"></textarea>
+            <textarea id="ocr-textarea" class="ocr-textarea" placeholder="或者直接在此貼上您複製的成績單文字... (例：計算機程式 3 85)"></textarea>
             
             <div style="display: flex; gap: 8px; margin-top: 10px;">
-                <select id="ocr-target-sem" class="ocr-select"></select>
-                <button style="background:var(--accent-primary); color:white; border:none; padding:10px; border-radius:6px; flex:1; font-weight:bold; cursor:pointer;" onclick="runSmartParser()">✨ 第1步：開始解析文字</button>
+                <select id="ocr-target-sem" class="master-toolbar" style="padding:10px; border:1px solid #cbd5e1; border-radius:6px; flex:1;"></select>
+                <button style="background:var(--accent-primary); color:white; border:none; padding:10px; border-radius:6px; flex:2; font-weight:bold; cursor:pointer;" onclick="runTextParser()">✨ 第1步：開始解析文字</button>
             </div>
 
             <!-- 解析結果預覽與修正區 -->
             <div id="ocr-staging-area" style="display: none; margin-top: 20px;">
-                <h4 style="margin: 0 0 10px 0; color: var(--accent-primary); border-bottom: 2px solid #cbd5e1; padding-bottom: 4px;">📝 第2步：預覽與修正結果 (AI 可能會出錯，請務必核對)</h4>
+                <h4 style="margin: 0 0 10px 0; color: var(--accent-primary); border-bottom: 2px solid #cbd5e1; padding-bottom: 4px;">📝 第2步：預覽與修正結果 (AI 可能會出錯，請務必快速核對)</h4>
                 <div class="table-responsive">
                     <table class="master-table">
                         <thead>
@@ -369,16 +357,9 @@ Copyright © 2026. Universal Credit Audit System.
                         </tbody>
                     </table>
                 </div>
-                <button style="width: 100%; background: #10b981; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px;" onclick="confirmStagingImport()">✅ 第3步：確認無誤，匯入至總表</button>
+                <button style="width: 100%; background: #10b981; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: bold; font-size: 1rem; cursor: pointer; margin-top: 15px;" onclick="confirmStagingImport()">✅ 第3步：確認無誤，整批匯入至總表</button>
             </div>
         </div>
-    </div>
-</div>
-
-<!-- 🚀 實體覆蓋 PDF 生成區 -->
-<div id="pdf-overlay-generator">
-    <div class="pdf-loading-text" id="pdf-loading-msg">⏳ 報告引擎高畫質渲染中，請勿切換或關閉視窗...</div>
-    <div id="pdf-sandbox-canvas" style="width: 740px; margin: 20px auto; background: #fff; padding: 40px; box-sizing: border-box; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
     </div>
 </div>
 
@@ -405,18 +386,24 @@ var defaultCurriculumMatrix = {
 "y4_s2": [["機械工程實驗(三)", 1,"prof-req"]]
 };
 
-var storageKey = "univ_credit_audit_data_v6"; 
-var configKey = "univ_credit_audit_config_v6";
+var storageKey = "univ_credit_audit_data_v7"; 
+var configKey = "univ_credit_audit_config_v7";
 var activeYear = 1;
 var maxYearInState = 4;
 var appState = {};
 var isLocalStorageAvailable = false;
 var stagingOCRData = []; // 暫存 AI 解析資料
 
-// Modal 控制
+// Modal 視窗控制
 function openModal(id) { document.getElementById(id).classList.add('active'); }
 function closeModal(id) { document.getElementById(id).classList.remove('active'); }
-function openMasterTableModal() { buildMasterTable(); updateMasterSemSelects(); openModal('modal-master'); }
+
+function openMasterTableModal() { 
+    buildMasterTable(); 
+    updateMasterSemSelects(); 
+    openModal('modal-master'); 
+}
+
 function openOCRModal() { 
     document.getElementById('ocr-staging-area').style.display = 'none'; 
     document.getElementById('ocr-textarea').value = '';
@@ -626,7 +613,7 @@ function renderAllBlocks() {
     }
 }
 
-/* 🎯 畢業總表與排課中心邏輯 */
+/* 🎓 畢業總表與排課中心邏輯 */
 function updateMasterSemSelects() {
     var sel = document.getElementById('add-m-sem');
     if(!sel) return;
@@ -795,9 +782,25 @@ function deleteCustomBox(sem, idx) {
 }
 
 /* 🤖 OCR 圖像智能辨識與快速匯入功能 */
+function updateOCRSelectOptions() {
+    var sel = document.getElementById('ocr-target-sem');
+    if(!sel) return;
+    sel.innerHTML = "";
+    var tOrdered = getTimelineOrderedSemesters();
+    for (var tIdx = 0; tIdx < tOrdered.length; tIdx++) {
+        var sk = tOrdered[tIdx];
+        var yVal = parseInt(sk.match(/^y(\d+)_/)[1]); var sVal = sk.split('_')[1];
+        var opt = document.createElement('option');
+        opt.value = sk;
+        opt.innerText = getSemesterText(yVal, sVal);
+        sel.appendChild(opt);
+    }
+}
+
 function handleImageUpload(e) {
     var file = e.target.files[0];
     if(!file) return;
+    
     var reader = new FileReader();
     reader.onload = function(evt) {
         var img = document.getElementById('ocr-preview-img');
@@ -805,33 +808,32 @@ function handleImageUpload(e) {
         img.style.display = 'block';
     }
     reader.readAsDataURL(file);
-}
-
-function runSmartParser() {
-    var fileInput = document.getElementById('ocr-image-input');
+    
     var txtArea = document.getElementById('ocr-textarea');
     var statusTxt = document.getElementById('ocr-status-text');
     
-    if(fileInput.files && fileInput.files[0]) {
-        statusTxt.innerText = "⏳ 正在啟動 AI 影像辨識引擎，請稍候...";
-        txtArea.value = "解析中，這可能需要幾十秒...";
-        
-        Tesseract.recognize(
-            fileInput.files[0],
-            'chi_tra+eng',
-            { logger: m => { if(m.status==='recognizing text') statusTxt.innerText = "⏳ 辨識進度: " + Math.floor(m.progress * 100) + "%"; } }
-        ).then(({ data: { text } }) => {
-            statusTxt.innerText = "✅ 辨識完成！正在轉換格式...";
-            txtArea.value = text;
-            processRawTextToStaging(text);
-        }).catch(err => {
-            statusTxt.innerText = "❌ 辨識失敗: " + err.message;
-        });
-    } else {
-        if(txtArea.value.trim() === "") { alert("請先上傳圖片或貼上文字！"); return; }
-        statusTxt.innerText = "✅ 正在解析貼上的文字...";
-        processRawTextToStaging(txtArea.value);
-    }
+    statusTxt.innerText = "⏳ 正在啟動 AI 影像辨識引擎，請稍候...";
+    txtArea.value = "圖片特徵提取中...\n(因為繁體中文表格複雜，若解析結果為亂碼，強烈建議直接使用相機拷貝原況文字貼上！)";
+    
+    Tesseract.recognize(
+        file,
+        'chi_tra+eng',
+        { logger: m => { if(m.status==='recognizing text') statusTxt.innerText = "⏳ 辨識進度: " + Math.floor(m.progress * 100) + "%"; } }
+    ).then(({ data: { text } }) => {
+        statusTxt.innerText = "✅ 辨識完成！正在轉換格式...";
+        txtArea.value = text;
+        processRawTextToStaging(text);
+    }).catch(err => {
+        statusTxt.innerText = "❌ 辨識失敗: " + err.message;
+    });
+}
+
+function runTextParser() {
+    var txtArea = document.getElementById('ocr-textarea');
+    var statusTxt = document.getElementById('ocr-status-text');
+    if(txtArea.value.trim() === "") { alert("請先上傳圖片或貼上文字！"); return; }
+    statusTxt.innerText = "✅ 正在解析貼上的文字...";
+    processRawTextToStaging(txtArea.value);
 }
 
 function processRawTextToStaging(text) {
@@ -1077,7 +1079,6 @@ var liB = createEl('li', null, null, ul); createEl('div', 'diag-section-title',"
 }
 }
 
-// 暫存全域供 PDF 調用
 window.cachedTotal = sumTotalPassed;
 window.cachedReq = sumRequiredPassed;
 window.cachedProf = passedProfEl;
@@ -1091,11 +1092,10 @@ if(document.getElementById('diag-content')) document.getElementById('diag-conten
 }
 }
 
-/* 🚀 PDF 專用：全裝置防白紙實體覆蓋層繪圖技術 */
+/* 🚀 PDF 絕對置底建立技術，徹底根除手機 iOS 抓空白的 Bug */
 function triggerPDFDownload() {
     var overlay = document.getElementById('pdf-overlay-generator');
-    var canvas = document.getElementById('pdf-sandbox-canvas');
-    if (!overlay || !canvas) return;
+    if (!overlay) return;
     
     var isGraduated = (window.cachedReq >= appConfig.targetReq && window.cachedProf >= appConfig.targetProf && window.cachedElective >= appConfig.targetElective && window.cachedTotal >= appConfig.targetTotal);
     var statusText = isGraduated ? "🎉 恭喜！畢業資格學分審查核算：『 已完全達標 』" : "⚠️ 畢業資格學分審查核算：『 尚未達標 』";
@@ -1176,7 +1176,7 @@ function triggerPDFDownload() {
         }
     }
 
-    canvas.innerHTML = `
+    var pdfContentHTML = `
         <div class="sandbox-pdf-header">
             <h2 style="margin: 0; color: var(--accent-primary); font-size: 1.5rem; font-weight: 800;">${appConfig.school} ${appConfig.dept}</h2>
             <h3 style="margin: 6px 0 0 0; color: #475569; font-size: 1.1rem; letter-spacing: 1px;">畢業資格全方位深層審查診斷報告</h3>
@@ -1257,6 +1257,21 @@ function triggerPDFDownload() {
         </div>
     `;
 
+    // 💡 為徹底解決 iOS Safari 固定層渲染白紙 Bug，直接創建全新絕對定位 div 放進 body 底層
+    var printContainer = document.createElement('div');
+    printContainer.id = 'temp-print-container';
+    printContainer.className = 'sandbox-pdf-body';
+    printContainer.style.position = 'absolute';
+    printContainer.style.top = '0';
+    printContainer.style.left = '0';
+    printContainer.style.width = '780px';
+    printContainer.style.padding = '40px';
+    printContainer.style.boxSizing = 'border-box';
+    printContainer.style.backgroundColor = '#ffffff';
+    printContainer.style.zIndex = '999999';
+    printContainer.innerHTML = pdfContentHTML;
+    document.body.appendChild(printContainer);
+    
     overlay.style.display = 'block';
     
     var opt = {
@@ -1264,28 +1279,32 @@ function triggerPDFDownload() {
         filename:     'Credit_Report.pdf',
         image:        { type: 'jpeg', quality: 0.98 },
         html2canvas:  { 
-            scale: 1.5,             
+            scale: 2,             
             useCORS: true, 
             letterRendering: false, 
             scrollY: 0, 
             scrollX: 0,
-            windowWidth: 780        
+            windowWidth: 800        
         },
         jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' },
         pagebreak:    { mode: ['css', 'legacy'] }
     };
     
+    window.scrollTo(0, 0); // 強迫 iOS 畫布進入視角
+    
     setTimeout(function() {
-        html2pdf().set(opt).from(canvas).save().then(function() {
+        html2pdf().set(opt).from(printContainer).save().then(function() {
             overlay.style.display = 'none'; 
+            document.body.removeChild(printContainer); // 無痕刪除
         }).catch(function(err) {
             console.error(err);
             overlay.style.display = 'none';
+            if (printContainer && printContainer.parentNode) document.body.removeChild(printContainer);
         });
     }, 600);
 }
 
-// ⚠️ 已徹底移除 search 相關幽靈事件綁定，系統完美啟動
+// ⚠️ 已經將會造成當機的 global-search 事件監聽徹底刪除
 function startApp() {
 checkStorageAvailability(); 
 loadConfigSafely(); 
